@@ -1,5 +1,6 @@
 (function () {
   const ui = window.EMERGENCY_UI;
+  const DEFAULT_EVENT_ID = "EVT-20260930-001";
   let state = { records: [], filtered: [], page: 1, pageSize: 10, editId: "", stockId: "", stockAction: "" };
   const store = () => window.EMERGENCY_STORE;
   const text = (value) => ui.escapeHtml(value || "-");
@@ -47,8 +48,8 @@
     const formNode = document.getElementById("stockForm"); if (!formNode?.reportValidity()) return; const quantity = Number(new FormData(formNode).get("quantity")); if (!Number.isInteger(quantity) || quantity <= 0) { ui.showToast("数量必须大于 0", "error"); return; }
     const raw = state.records.find((record) => record.resourceId === state.stockId); const item = normalize(raw); const action = state.stockAction; if (action === "outbound" && quantity > item.available) { ui.showToast("可用库存不足", "error"); return; }
     try {
-      if (action === "lock" && store()?.lockResource) store().lockResource("", item.resourceId, quantity);
-      else if (action === "release" && store()?.releaseResource) store().releaseResource("", item.resourceId, quantity);
+      if (action === "lock" && store()?.lockResource) store().lockResource(DEFAULT_EVENT_ID, item.resourceId, quantity);
+      else if (action === "release" && store()?.releaseResource) store().releaseResource(DEFAULT_EVENT_ID, item.resourceId, quantity);
       else {
         let next = { ...item };
         if (action === "inbound") { next.total += quantity; next.available += quantity; }
