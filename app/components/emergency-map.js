@@ -49,10 +49,17 @@
     function focusEvent(event) { if (event?.latitude && event?.longitude) map.setView([Number(event.latitude), Number(event.longitude)], Math.max(map.getZoom(), 16)); }
     function startSelect(shape, onComplete) {
       clearSelection();
-      const handler = shape === "circle" ? new L.Circle(map.getCenter(), 160, { color: "#135AFA", fillOpacity: 0.08 }).addTo(map) : new L.Polygon([map.getBounds().getNorthWest(), map.getBounds().getNorthEast(), map.getBounds().getSouthEast()], { color: "#135AFA", fillOpacity: 0.08 }).addTo(map);
-      selectedLayer = handler;
-      onComplete?.({ type: shape, bounds: handler.getBounds(), center: handler.getBounds().getCenter() });
-      return handler;
+      element.classList.add("is-selecting");
+      const finish = (latlng) => {
+        element.classList.remove("is-selecting");
+        const handler = shape === "circle" ? new L.Circle(latlng, 160, { color: "#135AFA", fillOpacity: 0.08 }).addTo(map) : new L.Polygon([[latlng.lat + 0.001, latlng.lng - 0.001], [latlng.lat + 0.001, latlng.lng + 0.001], [latlng.lat - 0.001, latlng.lng + 0.001], [latlng.lat - 0.001, latlng.lng - 0.001]], { color: "#135AFA", fillOpacity: 0.08 }).addTo(map);
+        selectedLayer = handler;
+        onComplete?.({ type: shape, bounds: handler.getBounds(), center: handler.getBounds().getCenter() });
+        return handler;
+      };
+      const onClick = (event) => { map.off("click", onClick); finish(event.latlng); };
+      map.on("click", onClick);
+      return { cancel: () => { map.off("click", onClick); element.classList.remove("is-selecting"); } };
     }
     function clearSelection() { if (selectedLayer) { map.removeLayer(selectedLayer); selectedLayer = null; } }
     function destroy() { window.clearTimeout(fallbackTimer); map.remove(); }

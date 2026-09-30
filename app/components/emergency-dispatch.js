@@ -11,6 +11,7 @@
     panelOpen: true,
     layerVisibility: { events: true, personnel: true, resources: true, vehicles: true, cameras: true },
     map: null,
+    selectMode: false,
   };
 
   const cameras = [
@@ -64,8 +65,11 @@
     const event = currentEvent();
     const plan = event && (store.getPlan?.(event.planId) || store.matchPlans?.(event)?.[0]);
     const steps = plan?.steps?.length ? plan.steps : ["确认事件位置", "信息通报", "人员调度", "物资调拨", "视频联动", "现场反馈", "事件关闭"].map((name, index) => ({ stepId: `mock-step-${index + 1}`, order: index + 1, name, type: name, status: index === 0 ? "执行中" : "未开始", required: true }));
-    const dispatch = store.getDispatch?.(event?.eventId) || { activeStepId: steps[0]?.stepId, completedStepIds: [] };
-    target.innerHTML = `<div class="dispatch-plan"><div class="dispatch-tab-heading"><div><strong>${ui.escapeHtml(plan?.name || "燃气泄漏一级响应预案")}</strong><span>${ui.escapeHtml(event?.eventId || "-")}</span></div><button class="btn btn-primary" type="button" data-dispatch-action="confirm-event" ${event?.status === "待确认" ? "" : "disabled"}>确认事件</button></div><div class="dispatch-step-list">${steps.map((step, index) => { const status = step.status || ((dispatch.completedStepIds || []).includes(step.stepId) ? "已完成" : (dispatch.activeStepId === step.stepId ? "执行中" : "未开始")); return `<div class="dispatch-step-item ${status === "执行中" ? "active" : ""}"><span class="dispatch-step-index">${index + 1}</span><div class="dispatch-step-copy"><strong>${ui.escapeHtml(step.name)}</strong><small>${ui.escapeHtml(step.type || "处置步骤")} · ${status}</small></div><div class="dispatch-step-actions">${status === "执行中" ? `<button class="btn btn-primary" type="button" data-dispatch-step="complete" data-step-id="${ui.escapeHtml(step.stepId)}">完成</button><button class="btn btn-secondary" type="button" data-dispatch-step="skip" data-step-id="${ui.escapeHtml(step.stepId)}">跳过</button>` : status === "已完成" ? `<span class="status-tag success">已完成</span>` : ""}</div></div>`; }).join("")}</div></div>`;
+    const dispatch = store.getDispatch?.(event?.eventId) || { activeStepId: steps[0]?.stepId, completedStepIds: [], skippedStepIds: [] };
+    const completedIds = new Set(dispatch.completedStepIds || []);
+    const skippedIds = new Set(dispatch.skippedStepIds || []);
+    const firstPending = steps.find((step) => !completedIds.has(step.stepId) && !skippedIds.has(step.stepId));
+    target.innerHTML = `<div class="dispatch-plan"><div class="dispatch-tab-heading"><div><strong>${ui.escapeHtml(plan?.name || "燃气泄漏一级响应预案")}</strong><span>${ui.escapeHtml(event?.eventId || "-")}</span></div><button class="btn btn-primary" type="button" data-dispatch-action="confirm-event" ${event?.status === "待确认" ? "" : "disabled"}>确认事件</button></div><div class="dispatch-step-list">${steps.map((step, index) => { const status = step.status || (completedIds.has(step.stepId) ? "已完成" : (skippedIds.has(step.stepId) ? "已跳过" : (dispatch.activeStepId === step.stepId || (!dispatch.activeStepId && firstPending?.stepId === step.stepId) ? "执行中" : "未开始"))); return `<div class="dispatch-step-item ${status === "执行中" ? "active" : ""}"><span class="dispatch-step-index">${index + 1}</span><div class="dispatch-step-copy"><strong>${ui.escapeHtml(step.name)}</strong><small>${ui.escapeHtml(step.type || "处置步骤")} · ${status}</small></div><div class="dispatch-step-actions">${status === "执行中" ? `<button class="btn btn-primary" type="button" data-dispatch-step="complete" data-step-id="${ui.escapeHtml(step.stepId)}">完成</button><button class="btn btn-secondary" type="button" data-dispatch-step="skip" data-step-id="${ui.escapeHtml(step.stepId)}">跳过</button>` : status === "已完成" ? `<span class="status-tag success">已完成</span>` : status === "已跳过" ? `<span class="status-tag warning">已跳过</span>` : ""}</div></div>`; }).join("")}</div></div>`;
   }
 
   function renderSelected() {
@@ -99,17 +103,22 @@
     target.innerHTML = `<span>已圈选 ${list.length} 名人员</span><span class="selection-names">${list.map((person) => ui.escapeHtml(person.name)).join("、")}</span><button class="btn btn-primary" type="button" data-dispatch-action="call-selected"><i class="fa-solid fa-phone"></i> 确认群呼</button><button class="btn btn-secondary" type="button" data-dispatch-action="clear-select">取消</button>`;
   }
 
-  function completeStep(stepId, status) {
+  function completeStep(stepId, status, reason = "") {
     const event = currentEvent();
     if (!event) return;
     const dispatch = store.getDispatch?.(event.eventId) || { eventId: event.eventId, completedStepIds: [] };
     if (status === "已完成") dispatch.completedStepIds = [...new Set([...(dispatch.completedStepIds || []), stepId])];
-    dispatch.activeStepId = status === "已完成" ? null : stepId;
+    if (status === "已跳过") dispatch.skippedStepIds = [...new Set([...(dispatch.skippedStepIds || []), stepId])];
+    dispatch.activeStepId = null;
     store.saveDispatch?.(dispatch);
-    store.appendTimeline?.(event.eventId, { action: status === "已完成" ? "完成预案步骤" : "跳过预案步骤", title: stepId, operator: "当前指挥员", time: ui.nowText() });
+    store.appendTimeline?.(event.eventId, { action: status === "已完成" ? "完成预案步骤" : "跳过预案步骤", title: stepId, message: reason, operator: "当前指挥员", time: ui.nowText() });
     if (status === "已完成" && event.status === "已确认") store.transitionEvent?.(event.eventId, "处理中");
     renderPlan();
     ui.showToast(status === "已完成" ? "预案步骤已完成" : "已跳过当前步骤");
+  }
+
+  function openSkipStep(stepId) {
+    ui.openEntityDrawer({ title: "跳过预案步骤", body: `<label class="form-field"><span class="form-label form-required">跳过原因</span><textarea class="form-control textarea" id="dispatchSkipReason" placeholder="请输入跳过原因"></textarea></label>`, footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-dispatch-skip-save="${ui.escapeHtml(stepId)}">确认跳过</button>` });
   }
 
   function callSelected() {
@@ -147,7 +156,9 @@
     const step = event.target.closest("[data-dispatch-step]");
     if (tab) { state.activeTab = tab.dataset.dispatchTab; renderTab(); return; }
     if (row) { state.eventId = row.dataset.dispatchEventId; renderCommandBar(); renderLayerPanel(); renderTab(); updateMapLayers(); state.map?.focusEvent(currentEvent()); return; }
-    if (step) { completeStep(step.dataset.stepId, step.dataset.dispatchStep === "skip" ? "已跳过" : "已完成"); return; }
+    if (step) { if (step.dataset.dispatchStep === "skip") openSkipStep(step.dataset.stepId); else completeStep(step.dataset.stepId, "已完成"); return; }
+    const skipSave = event.target.closest("[data-dispatch-skip-save]");
+    if (skipSave) { const reason = document.getElementById("dispatchSkipReason")?.value.trim(); if (!reason) { ui.showToast("请输入跳过原因", "warning"); return; } completeStep(skipSave.dataset.dispatchSkipSave, "已跳过", reason); window.closeAppDrawer?.(); renderTab(); return; }
     if (event.target.closest("[data-dispatch-remove-person]")) { state.selectedIds = state.selectedIds.filter((id) => id !== event.target.closest("[data-dispatch-remove-person]").dataset.dispatchRemovePerson); renderSelectionBar(); renderSelected(); return; }
     if (action === "circle-select") { state.map?.startCircleSelect(selectByBounds); return; }
     if (action === "clear-select") { state.selectedIds = []; state.map?.clearSelection(); renderSelectionBar(); renderTab(); return; }
