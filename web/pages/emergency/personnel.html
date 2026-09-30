@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应急人员 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css"><link rel="stylesheet" href="../../assets/css/emergency.css">
+</head>
+<body class="emergency-page" data-menu-key="emergency.personnel" data-page-section="应急管理" data-page-title="应急人员">
+  <div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header>
+    <main class="main"><div class="screen-frame emergency-stack">
+      <section class="page-head emergency-page-head"><div></div><div class="btn-row"><button class="btn btn-primary" type="button" data-person-action="create"><i class="fa-solid fa-plus"></i> 新增人员</button></div></section>
+      <section class="emergency-metric-grid" id="personnelMetrics"></section>
+      <section class="emergency-panel">
+        <div class="emergency-panel-head"><h2 class="emergency-panel-title">统一通讯录</h2><span class="panel-helper">人员状态和调度资格实时同步</span></div>
+        <div class="emergency-filter-grid" id="personnelFilters">
+          <label class="form-field"><span class="form-label">姓名 / 手机号</span><input class="form-control" id="personnelKeyword" type="search" placeholder="搜索人员"></label>
+          <label class="form-field"><span class="form-label">所属单位</span><select class="form-control" id="personnelUnit"><option value="">全部单位</option></select></label>
+          <label class="form-field"><span class="form-label">人员类型</span><select class="form-control" id="personnelType"><option value="">全部类型</option></select></label>
+          <label class="form-field"><span class="form-label">当前状态</span><select class="form-control" id="personnelStatus"><option value="">全部状态</option><option>在线</option><option>离线</option><option>忙碌</option><option>休假</option></select></label>
+          <label class="form-field"><span class="form-label">可调度状态</span><select class="form-control" id="personnelDispatch"><option value="">全部状态</option><option>可调度</option><option>已调度</option><option>不可调度</option></select></label>
+          <div class="filter-actions"><button class="btn btn-primary" type="button" data-person-action="filter">查询</button><button class="btn btn-secondary" type="button" data-person-action="reset">重置</button></div>
+        </div>
+        <div class="emergency-table-wrap"><table class="emergency-table"><thead><tr><th>姓名</th><th>所属单位</th><th>人员类型</th><th>联系方式</th><th>当前状态</th><th>所在位置</th><th>可调度状态</th><th>操作</th></tr></thead><tbody id="personnelBody"></tbody></table></div>
+        <div id="personnelCount"></div>
+      </section>
+    </div></main>
+  </div>
+  <script src="../../../app/config/menu.js"></script><script src="../../../app/data/emergency-data.js"></script><script src="../../../app/components/sidebar.js"></script><script src="../../../app/components/header.js"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/emergency-common.js"></script><script src="../../../app/components/emergency-personnel.js"></script><script src="../../../app/components/requirement.js"></script>
+</body>
+</html>

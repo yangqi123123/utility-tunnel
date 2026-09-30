@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应急物资 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css"><link rel="stylesheet" href="../../assets/css/emergency.css">
+</head>
+<body class="emergency-page" data-menu-key="emergency.resources" data-page-section="应急管理" data-page-title="应急物资">
+  <div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header>
+    <main class="main"><div class="screen-frame emergency-stack">
+      <section class="page-head emergency-page-head"><div></div><div class="btn-row"><button class="btn btn-primary" type="button" data-resource-action="create"><i class="fa-solid fa-plus"></i> 新增物资</button></div></section>
+      <section class="emergency-metric-grid" id="resourceMetrics"></section>
+      <section class="emergency-panel">
+        <div class="emergency-panel-head"><h2 class="emergency-panel-title">应急物资台账</h2><span class="panel-helper">库存、位置和调拨状态统一管理</span></div>
+        <div class="emergency-filter-grid" id="resourceFilters">
+          <label class="form-field"><span class="form-label">物资名称</span><input class="form-control" id="resourceKeyword" type="search" placeholder="搜索物资"></label>
+          <label class="form-field"><span class="form-label">物资分类</span><select class="form-control" id="resourceCategory"><option value="">全部分类</option></select></label>
+          <label class="form-field"><span class="form-label">所在仓库</span><select class="form-control" id="resourceWarehouse"><option value="">全部仓库</option></select></label>
+          <label class="form-field"><span class="form-label">状态</span><select class="form-control" id="resourceStatus"><option value="">全部状态</option><option>可用</option><option>已占用</option><option>维修中</option><option>报废</option></select></label>
+          <label class="form-field"><span class="form-label">库存提醒</span><select class="form-control" id="resourceAlert"><option value="">全部</option><option value="low">低库存</option><option value="expiring">临期</option></select></label>
+          <div class="filter-actions"><button class="btn btn-primary" type="button" data-resource-action="filter">查询</button><button class="btn btn-secondary" type="button" data-resource-action="reset">重置</button></div>
+        </div>
+        <div class="emergency-table-wrap"><table class="emergency-table"><thead><tr><th>物资名称</th><th>分类</th><th>规格</th><th>可用数量</th><th>所在位置</th><th>负责人</th><th>状态</th><th>操作</th></tr></thead><tbody id="resourceBody"></tbody></table></div>
+        <div id="resourceCount"></div>
+      </section>
+    </div></main>
+  </div>
+  <script src="../../../app/config/menu.js"></script><script src="../../../app/data/emergency-data.js"></script><script src="../../../app/components/sidebar.js"></script><script src="../../../app/components/header.js"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/emergency-common.js"></script><script src="../../../app/components/emergency-resources.js"></script><script src="../../../app/components/requirement.js"></script>
+</body>
+</html>
