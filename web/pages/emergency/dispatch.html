@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应急调度台 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/emergency.css">
+  <link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css">
+</head>
+<body class="emergency-page emergency-dispatch-page" data-menu-key="emergency.dispatch" data-page-section="应急管理" data-page-title="应急调度台">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="dispatch-workspace">
+        <header class="dispatch-command-bar" id="dispatchCommandBar"></header>
+        <div id="dispatchMap" class="dispatch-map" aria-label="应急调度 GIS 地图"></div>
+        <aside class="dispatch-layer-panel" id="dispatchLayerPanel"></aside>
+        <nav class="dispatch-map-tools" aria-label="地图工具">
+          <button class="map-tool-btn" type="button" data-dispatch-action="focus-event" title="定位当前事件"><i class="fa-solid fa-crosshairs"></i><span>事件定位</span></button>
+          <button class="map-tool-btn" type="button" data-dispatch-action="circle-select" title="圈选范围内人员和车辆"><i class="fa-solid fa-draw-polygon"></i><span>圈选呼叫</span></button>
+          <button class="map-tool-btn" type="button" data-dispatch-action="clear-select" title="清除地图选择"><i class="fa-solid fa-eraser"></i><span>清除选择</span></button>
+          <button class="map-tool-btn" type="button" data-dispatch-action="toggle-fullscreen" title="切换全屏"><i class="fa-solid fa-expand"></i><span>全屏</span></button>
+        </nav>
+        <section class="dispatch-selection-bar hidden" id="dispatchSelectionBar"></section>
+        <section class="dispatch-bottom-panel" id="dispatchBottomPanel">
+          <div class="dispatch-bottom-handle"><button type="button" data-dispatch-action="toggle-panel" aria-label="展开或收起事件工作台"><i class="fa-solid fa-chevron-up"></i></button></div>
+          <div class="dispatch-tabs" role="tablist" aria-label="事件工作台">
+            <button class="dispatch-tab active" type="button" data-dispatch-tab="queue">事件队列</button>
+            <button class="dispatch-tab" type="button" data-dispatch-tab="plan">预案执行</button>
+            <button class="dispatch-tab" type="button" data-dispatch-tab="selected">调度对象</button>
+            <button class="dispatch-tab" type="button" data-dispatch-tab="video">视频联动</button>
+            <button class="dispatch-tab" type="button" data-dispatch-tab="timeline">操作时间线</button>
+          </div>
+          <div id="dispatchTabContent" class="dispatch-tab-content"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/data/emergency-data.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/emergency-common.js"></script>
+  <script src="../../../app/components/emergency-map.js"></script>
+  <script src="../../../app/components/emergency-dispatch.js"></script>
+</body>
+</html>

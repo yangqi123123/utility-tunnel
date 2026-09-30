@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>通话记录 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/emergency.css">
+</head>
+<body class="emergency-page emergency-calls-page" data-menu-key="emergency.calls" data-page-section="应急管理" data-page-title="通话记录">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="emergency-metric-grid" id="callMetrics"></section>
+        <section class="card emergency-filter-card"><div class="emergency-filter-grid" id="callFilters"></div></section>
+        <section class="card emergency-list-card"><div class="card-title-row"><div><h1 class="card-title">通话记录</h1><span class="card-subtitle">调度台、人员通讯录和预案通知自动归档</span></div><button class="btn btn-secondary" type="button" data-call-action="export"><i class="fa-solid fa-download"></i>导出</button></div><div class="table-wrap"><table class="table"><thead><tr><th>通话时间</th><th>事件编号</th><th>主叫人</th><th>被叫人</th><th>通话类型</th><th>通话结果</th><th>时长</th><th>操作</th></tr></thead><tbody id="callBody"></tbody></table></div><div class="pagination" id="callPagination"></div></section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/data/emergency-data.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/emergency-common.js"></script>
+  <script src="../../../app/components/emergency-calls.js"></script>
+</body>
+</html>
