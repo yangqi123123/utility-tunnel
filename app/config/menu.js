@@ -8,13 +8,14 @@
     },
     {
       key: "project",
-      label: "项目管理",
+      label: "管廊管理",
       icon: "fa-solid fa-building",
       children: [
         { key: "project.manage", label: "项目管理", href: "../project/project-management.html" },
-        { key: "project.building", label: "楼栋管理", href: "../project/building.html" },
-        { key: "project.floor", label: "楼层管理", href: "../project/floor.html" },
-        { key: "project.house", label: "房源管理", href: "../project/house.html" },
+        { key: "project.building", label: "管廊管理", href: "../project/building.html" },
+        { key: "project.floor", label: "舱室管理", href: "../project/floor.html" },
+        { key: "project.house", label: "区段管理", href: "../project/house.html" },
+        { key: "project.pipeline", label: "管线管理", href: "../project/pipeline.html" },
       ],
     },
     {
@@ -38,6 +39,18 @@
       ],
     },
     {
+      key: "broadcast",
+      label: "广播管理",
+      icon: "fa-solid fa-tower-broadcast",
+      children: [
+        { key: "broadcast.console", label: "广播控制台", href: "../broadcast/console.html" },
+        { key: "broadcast.tasks", label: "广播任务", href: "../broadcast/tasks.html" },
+        { key: "broadcast.terminals", label: "广播终端", href: "../broadcast/terminals.html" },
+        { key: "broadcast.resources", label: "音频资源", href: "../broadcast/resources.html" },
+        { key: "broadcast.logs", label: "广播日志", href: "../broadcast/logs.html" },
+      ],
+    },
+    {
       key: "energy",
       label: "能源管理",
       icon: "fa-solid fa-bolt",
@@ -48,6 +61,8 @@
         { key: "energy.photovoltaic", label: "光伏概览", href: "../energy/photovoltaic-overview.html" },
         { key: "energy.carbon", label: "碳排放数据", href: "../energy/carbon-data.html" },
         { key: "energy.carbon-setting", label: "碳排放设置", href: "../energy/carbon-setting.html" },
+        { key: "energy.warning", label: "能耗预警", href: "../energy/energy-warning.html" },
+        { key: "energy.warning-record", label: "能耗预警记录", href: "../energy/energy-warning-record.html" },
       ],
     },
     {
