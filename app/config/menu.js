@@ -39,33 +39,6 @@
       ],
     },
     {
-      key: "broadcast",
-      label: "广播管理",
-      icon: "fa-solid fa-tower-broadcast",
-      children: [
-        { key: "broadcast.console", label: "广播控制台", href: "../broadcast/console.html" },
-        { key: "broadcast.tasks", label: "广播任务", href: "../broadcast/tasks.html" },
-        { key: "broadcast.terminals", label: "广播终端", href: "../broadcast/terminals.html" },
-        { key: "broadcast.resources", label: "音频资源", href: "../broadcast/resources.html" },
-        { key: "broadcast.logs", label: "广播日志", href: "../broadcast/logs.html" },
-      ],
-    },
-    {
-      key: "energy",
-      label: "能源管理",
-      icon: "fa-solid fa-bolt",
-      children: [
-        { key: "energy.electricity", label: "用电概览", href: "../energy/electricity-overview.html" },
-        { key: "energy.water", label: "用水概览", href: "../energy/water-overview.html" },
-        { key: "energy.cooling", label: "冷量概览", href: "../energy/cooling-overview.html" },
-        { key: "energy.photovoltaic", label: "光伏概览", href: "../energy/photovoltaic-overview.html" },
-        { key: "energy.carbon", label: "碳排放数据", href: "../energy/carbon-data.html" },
-        { key: "energy.carbon-setting", label: "碳排放设置", href: "../energy/carbon-setting.html" },
-        { key: "energy.warning", label: "能耗预警", href: "../energy/energy-warning.html" },
-        { key: "energy.warning-record", label: "能耗预警记录", href: "../energy/energy-warning-record.html" },
-      ],
-    },
-    {
       key: "alarm-center",
       label: "报警中心",
       icon: "fa-solid fa-bell",
