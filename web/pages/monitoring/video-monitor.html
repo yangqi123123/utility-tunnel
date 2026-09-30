@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>视频监控 - 中建四局智能运营管理系统</title>
+  <title>视频监控 - 科学岛管廊监控中心</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
   <link rel="stylesheet" href="../../assets/css/monitoring.css">
@@ -21,12 +21,21 @@
             <div class="video-list" id="cameraList"></div>
           </aside>
           <section class="video-content">
-            <div class="video-stats">
+            <div class="video-stats" id="videoStats">
               <div class="video-stat"><span class="video-stat-icon"><i class="fa-solid fa-video"></i></span><span class="video-stat-label">摄像机总数</span><span class="video-stat-value">433</span></div>
               <div class="video-stat"><span class="video-stat-icon"><i class="fa-solid fa-camera"></i></span><span class="video-stat-label">枪式摄像机</span><span class="video-stat-value">132</span></div>
               <div class="video-stat"><span class="video-stat-icon"><i class="fa-solid fa-camera-retro"></i></span><span class="video-stat-label">半球摄像机</span><span class="video-stat-value">290</span></div>
               <div class="video-stat"><span class="video-stat-icon"><i class="fa-solid fa-bullseye"></i></span><span class="video-stat-label">球型摄像机</span><span class="video-stat-value">11</span></div>
-            </div>
+              </div>
+              <div class="video-ptz" id="videoPtz" hidden>
+                <div class="video-ptz-head"><span>云台控制</span><button type="button" class="video-ptz-close" id="ptzClose" aria-label="关闭云台控制"><i class="fa-solid fa-xmark"></i></button></div>
+                <div class="video-ptz-camera" id="ptzCameraName">未选择摄像机</div>
+                <div class="ptz-pad" aria-label="云台方向控制">
+                  <button type="button" data-ptz="up-left" aria-label="向左上"><i class="fa-solid fa-arrow-up-left"></i></button><button type="button" data-ptz="up" aria-label="向上"><i class="fa-solid fa-arrow-up"></i></button><button type="button" data-ptz="up-right" aria-label="向右上"><i class="fa-solid fa-arrow-up-right"></i></button>
+                  <button type="button" data-ptz="left" aria-label="向左"><i class="fa-solid fa-arrow-left"></i></button><button type="button" class="stop" data-ptz="stop" aria-label="停止"><i class="fa-solid fa-stop"></i></button><button type="button" data-ptz="right" aria-label="向右"><i class="fa-solid fa-arrow-right"></i></button>
+                  <button type="button" data-ptz="down-left" aria-label="向左下"><i class="fa-solid fa-arrow-down-left"></i></button><button type="button" data-ptz="down" aria-label="向下"><i class="fa-solid fa-arrow-down"></i></button><button type="button" data-ptz="down-right" aria-label="向右下"><i class="fa-solid fa-arrow-down-right"></i></button>
+                </div>
+              </div>
             <article class="video-panel">
               <div class="video-panel-head"><span>视频监控</span><div class="video-grid-switch" role="group" aria-label="宫格切换"><button type="button" data-grid="1" aria-label="单画面" title="单画面"><i class="grid-icon grid-1"></i></button><button type="button" class="active" data-grid="2" aria-label="四宫格" title="四宫格"><i class="grid-icon grid-4"><span></span><span></span><span></span><span></span></i></button><button type="button" data-grid="3" aria-label="九宫格" title="九宫格"><i class="grid-icon grid-9"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></i></button><button type="button" data-grid="4" aria-label="十二宫格" title="十二宫格"><i class="grid-icon grid-12"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></i></button></div></div>
               <div class="video-grid" id="videoGrid"></div>
@@ -44,7 +53,7 @@
   <script src="../../../app/components/requirement.js"></script>
   <script>
     const cameras = [
-      { name: "屋面电梯机房门口", floor: "5" }, { name: "35层vip电梯厅", floor: "5" }, { name: "屋面北侧人屋面", floor: "5" }, { name: "35楼南部通道", floor: "5" },
+      { name: "屋面电梯机房门口", floor: "5", ptz: true }, { name: "35层vip电梯厅", floor: "5", ptz: true }, { name: "屋面北侧人屋面", floor: "5", ptz: true }, { name: "35楼南部通道", floor: "5", ptz: true },
       { name: "B1 东侧入口道闸", floor: "1" }, { name: "西侧出口道闸", floor: "1" }, { name: "3号楼大厅", floor: "3" }, { name: "2号楼地下车库", floor: "2" }, { name: "4号楼消防通道", floor: "4" }, { name: "1号楼消防通道", floor: "1" }, { name: "2号楼电梯厅", floor: "2" }, { name: "3号楼地下车库", floor: "3" }
     ];
     const image = "../../assets/images/access-gate.jpg";
@@ -53,12 +62,17 @@
     let currentGrid = 2;
     let visibleCameras = [...cameras];
     function renderCameraList() { document.getElementById("cameraList").innerHTML = visibleCameras.map((camera, index) => `<button class="video-list-item ${index === 0 ? "active" : ""}" data-camera="${index}"><i class="fa-solid fa-video"></i><span>${camera.name}</span></button>`).join(""); }
-    function renderFeeds() { const start = (currentPage - 1) * pageSize; const pageCameras = visibleCameras.slice(start, start + pageSize); const columns = currentGrid === 1 ? 1 : currentGrid === 2 ? 2 : currentGrid === 3 ? 3 : 4; document.getElementById("videoGrid").style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`; document.getElementById("videoGrid").innerHTML = pageCameras.map((camera) => `<div class="video-feed"><div class="video-feed-title"><span>${camera.name}</span><span>在线</span></div><div class="video-screen"><img src="${image}" alt="${camera.name}监控画面"></div></div>`).join(""); document.getElementById("cameraCount").textContent = visibleCameras.length; document.getElementById("pageSizeLabel").textContent = pageSize; document.querySelector("[data-page-number]").textContent = currentPage; document.querySelector('[data-page="prev"]').classList.toggle("disabled", currentPage === 1); document.querySelector('[data-page="next"]').classList.toggle("disabled", currentPage >= Math.max(1, Math.ceil(visibleCameras.length / pageSize))); }
+    function renderFeeds() { const start = (currentPage - 1) * pageSize; const pageCameras = visibleCameras.slice(start, start + pageSize); const columns = currentGrid === 1 ? 1 : currentGrid === 2 ? 2 : currentGrid === 3 ? 3 : 4; document.getElementById("videoGrid").style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`; document.getElementById("videoGrid").innerHTML = pageCameras.map((camera, index) => `<div class="video-feed" data-feed-index="${start + index}"><div class="video-feed-title"><span>${camera.name}</span><span>在线</span></div><div class="video-screen"><img src="${image}" alt="${camera.name}监控画面">${camera.ptz ? `<button type="button" class="video-ptz-trigger" data-ptz-camera="${start + index}" aria-label="${camera.name}云台控制" title="云台控制"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>` : ""}<button type="button" class="video-fullscreen" data-fullscreen="${start + index}" aria-label="全屏查看${camera.name}" title="全屏查看"><i class="fa-solid fa-expand"></i></button></div></div>`).join(""); document.getElementById("cameraCount").textContent = visibleCameras.length; document.getElementById("pageSizeLabel").textContent = pageSize; document.querySelector("[data-page-number]").textContent = currentPage; document.querySelector('[data-page="prev"]').classList.toggle("disabled", currentPage === 1); document.querySelector('[data-page="next"]').classList.toggle("disabled", currentPage >= Math.max(1, Math.ceil(visibleCameras.length / pageSize))); }
     function filterFloor() { const floor = document.getElementById("floorFilter").value; visibleCameras = floor === "all" ? [...cameras] : cameras.filter((camera) => camera.floor === floor); currentPage = 1; renderCameraList(); renderFeeds(); }
     document.getElementById("floorFilter").addEventListener("change", filterFloor);
-    document.addEventListener("click", (event) => { const gridButton = event.target.closest("[data-grid]"); if (gridButton) { currentGrid = Number(gridButton.dataset.grid); pageSize = currentGrid === 1 ? 1 : currentGrid === 2 ? 4 : currentGrid === 3 ? 9 : 12; currentPage = 1; document.querySelectorAll("[data-grid]").forEach((button) => button.classList.toggle("active", button === gridButton)); renderFeeds(); } const pageButton = event.target.closest("[data-page]"); if (pageButton) { const totalPages = Math.max(1, Math.ceil(visibleCameras.length / pageSize)); currentPage = pageButton.dataset.page === "prev" ? Math.max(1, currentPage - 1) : Math.min(totalPages, currentPage + 1); renderFeeds(); } const camera = event.target.closest("[data-camera]"); if (camera) { document.querySelectorAll("[data-camera]").forEach((item) => item.classList.toggle("active", item === camera)); } });
+    function openPtz(index) { const camera = visibleCameras[index]; if (!camera || !camera.ptz) return; document.getElementById("videoStats").hidden = true; document.getElementById("videoPtz").hidden = false; document.getElementById("ptzCameraName").textContent = `${camera.name} · 在线`; document.querySelectorAll(".video-feed").forEach((feed) => feed.classList.toggle("ptz-selected", Number(feed.dataset.feedIndex) === index)); }
+    function closePtz() { document.getElementById("videoStats").hidden = false; document.getElementById("videoPtz").hidden = true; document.querySelectorAll(".video-feed").forEach((feed) => feed.classList.remove("ptz-selected")); }
+    async function toggleFullscreen(feed) { if (document.fullscreenElement) { await document.exitFullscreen?.(); return; } if (feed.requestFullscreen) await feed.requestFullscreen(); else feed.classList.add("is-fullscreen"); }
+    document.getElementById("ptzClose").addEventListener("click", closePtz);
+    document.addEventListener("click", (event) => { const gridButton = event.target.closest("[data-grid]"); if (gridButton) { currentGrid = Number(gridButton.dataset.grid); pageSize = currentGrid === 1 ? 1 : currentGrid === 2 ? 4 : currentGrid === 3 ? 9 : 12; currentPage = 1; closePtz(); document.querySelectorAll("[data-grid]").forEach((button) => button.classList.toggle("active", button === gridButton)); renderFeeds(); } const pageButton = event.target.closest("[data-page]"); if (pageButton) { const totalPages = Math.max(1, Math.ceil(visibleCameras.length / pageSize)); currentPage = pageButton.dataset.page === "prev" ? Math.max(1, currentPage - 1) : Math.min(totalPages, currentPage + 1); closePtz(); renderFeeds(); } const camera = event.target.closest("[data-camera]"); if (camera) { document.querySelectorAll("[data-camera]").forEach((item) => item.classList.toggle("active", item === camera)); } const ptzTrigger = event.target.closest("[data-ptz-camera]"); if (ptzTrigger) openPtz(Number(ptzTrigger.dataset.ptzCamera)); const fullscreen = event.target.closest("[data-fullscreen]"); if (fullscreen) toggleFullscreen(fullscreen.closest(".video-feed")); const ptzButton = event.target.closest("[data-ptz]"); if (ptzButton) { document.querySelectorAll("[data-ptz]").forEach((button) => button.classList.remove("active")); ptzButton.classList.add("active"); } });
     renderCameraList();
     renderFeeds();
   </script>
 </body>
 </html>
+
