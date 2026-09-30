@@ -33,7 +33,7 @@
     if (!children || !children.length) return "";
     return `
       <div class="submenu submenu-depth-${depth}">
-        ${children.map((child) => {
+        ${children.filter((child) => !child.hidden).map((child) => {
           const active = isActive(child, currentKey);
           const href = firstHref(child);
           const lotRoute = child.key?.startsWith("lot.") ? ` data-lot-route="${child.key}"` : "";
@@ -173,8 +173,8 @@
     target.innerHTML = `
       <div class="brand">
         <a class="brand-link" href="../home/home.html" aria-label="返回工作台">
-          <img class="brand-logo" src="../../assets/images/cscec-logo.png" alt="中建四局">
-          <span class="brand-name">智能运营管理系统</span>
+          <img class="brand-logo" src="../../assets/images/science-island-icon.png" alt="">
+          <span class="brand-name">科学岛管廊监控中心</span>
         </a>
       </div>
       <nav class="nav" aria-label="主导航">

@@ -1,0 +1,12 @@
+# Internal agent / workspace data
+.workbuddy/
+.superpowers/
+
+# Temporary working files
+tmp/
+tmp_broadcast_api.txt
+outputs/
+
+# Python cache
+__pycache__/
+*.pyc

@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>管线管理</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <style>
+    .pipeline-table{min-width:1680px}
+    .pipeline-table th,.pipeline-table td{white-space:nowrap}
+    .pipeline-toolbar{padding:16px 24px 0;margin-bottom:12px}
+    .pipeline-toolbar .btn-row{flex-wrap:wrap;justify-content:flex-end}
+    .pipeline-drawer-grid,.pipeline-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+    .pipeline-drawer-grid .full{grid-column:1/-1}
+    .status-tag{display:inline-flex;padding:2px 8px;border-radius:2px;font-size:12px}
+    .status-tag.success{color:#0c9a8e;background:#e7faf7}
+    .status-tag.info{color:#135afa;background:#eaf0ff}
+    .status-tag.warning{color:#b98308;background:#fff5d9}
+    .status-tag.muted{color:#50565d;background:#eef1f4}
+    .pipeline-import-box{position:relative;min-height:180px;display:grid;place-items:center;align-content:center;gap:8px;border:1px dashed #c9d5eb;border-radius:4px;color:var(--text-secondary);background:#fafcff;cursor:pointer;text-align:center}
+    .pipeline-import-box.dragover{border-color:var(--primary);background:var(--primary-bg)}
+    .pipeline-import-box input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+    .pipeline-import-box i{color:var(--primary);font-size:38px}
+    .pipeline-import-file{margin:12px 0 0;color:var(--text-primary)}
+    .pipeline-import-actions{display:flex;justify-content:flex-end;margin-top:16px}
+    .pipeline-filter-tip{margin:0 24px 12px;padding:8px 12px;background:#eaf0ff;color:#135afa;border-radius:4px;font-size:13px}
+    .pipeline-filter-tip a{color:#135afa;margin-left:12px;text-decoration:underline}
+    /* 详情页：tab + 文件资料（间距对齐管廊详情） */
+    .pipeline-detail .tabs{margin-bottom:16px}
+    .pipeline-detail .tab{min-width:88px}
+    .pipeline-files-toolbar{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}
+    .pipeline-files-actions{display:flex;gap:8px;align-items:flex-end}
+    .pipeline-detail-table{min-width:620px}
+    /* 上传文件的嵌套抽屉 */
+    .pipeline-nested-drawer{position:fixed;z-index:1250;top:0;right:0;width:min(560px,92vw);height:100vh;display:flex;flex-direction:column;background:#fff;box-shadow:-8px 0 24px rgba(26,28,31,.18)}
+    .pipeline-nested-drawer-head{min-height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--divider)}
+    .pipeline-nested-drawer-head h2{margin:0;font-size:16px;color:var(--text-title)}
+    .pipeline-nested-drawer-body{flex:1;overflow:auto;padding:24px;display:grid;gap:16px;align-content:start}
+    .pipeline-nested-drawer-foot{min-height:56px;display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:12px 24px;border-top:1px solid var(--divider)}
+    .pipeline-nested-close{width:28px;height:28px;border:0;background:transparent;color:var(--text-secondary);font-size:20px;cursor:pointer}
+    /* 筛选区：一行默认最多 4 个条件，超出折叠，逻辑对齐设备管理页 */
+    .pipeline-filter-card{padding:16px 24px}
+    .pipeline-filter-card .filter-actions{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr)) auto auto auto;gap:16px;align-items:end}
+    .pipeline-filter-card .filter-actions>.btn{align-self:end}
+    .pipeline-filter-card .filter-actions>.btn[data-action="collapse"]{white-space:nowrap}
+    .location-cascade{display:contents}
+    .pipeline-filter-card .extra-filter{display:none}
+    .pipeline-filter-card.expanded .extra-filter{display:block}
+    /* 列表固定区域滚动：页面不滚动，仅表格区域滚动 */
+    .pipeline-page .main{overflow:hidden;display:flex}
+    .pipeline-page .screen-frame.stack{display:flex;flex-direction:column;gap:16px;width:100%;min-height:0}
+    .pipeline-list-card{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+    .pipeline-list-card .table-wrap{flex:1;min-height:0}
+    .pipeline-list-card .table-wrap::after{display:none}
+    @media(max-width:640px){.pipeline-filter-card .filter-actions{grid-template-columns:1fr}.pipeline-filter-card .filter-actions>.btn[data-action="collapse"]{grid-column:auto}}
+    @media(max-width:600px){.pipeline-drawer-grid,.pipeline-detail-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body class="pipeline-page" data-menu-key="project.pipeline" data-page-section="管廊管理" data-page-title="管线管理">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="card filters pipeline-filter-card">
+          <div class="filter-actions">
+            <label class="form-field"><span class="form-label">关键词</span><input class="form-control" data-filter="keyword" placeholder="请输入管线编码或名称"></label>
+            <label class="form-field"><span class="form-label">管线类型</span><select class="form-control" data-filter="type"><option value="">请选择</option><option>电力</option><option>给水</option><option>燃气</option><option>通信</option></select></label>
+            <label class="form-field"><span class="form-label">管线状态</span><select class="form-control" data-filter="status"><option value="">请选择</option><option>建设中</option><option>待完善</option><option>已完工</option><option>停用</option></select></label>
+            <div class="location-cascade" data-filter-location-cascade>
+              <label class="form-field"><span class="form-label">所属项目</span><select class="form-control" data-filter="project" data-field="project" data-cascade></select></label>
+              <label class="form-field extra-filter" data-filter-extra><span class="form-label">所属管廊</span><select class="form-control" data-filter="corridor" data-field="corridor" data-cascade></select></label>
+              <label class="form-field extra-filter" data-filter-extra><span class="form-label">所属舱室</span><select class="form-control" data-filter="cabin" data-field="cabin" data-cascade></select></label>
+              <label class="form-field extra-filter" data-filter-extra><span class="form-label">所属区段</span><select class="form-control" data-filter="section" data-field="section" data-cascade></select></label>
+            </div>
+            <button class="btn btn-ghost" type="button" data-action="collapse"><span>展开</span> <i class="fa-solid fa-chevron-down"></i></button>
+            <button class="btn btn-secondary" type="button" data-action="reset">重置</button>
+            <button class="btn btn-primary" type="button" data-action="search">搜索</button>
+          </div>
+        </section>
+        <section class="card pipeline-list-card">
+          <div class="card-title-row pipeline-toolbar">
+            <h2 class="card-title">管线档案</h2>
+            <div class="btn-row">
+              <button class="btn btn-secondary" type="button" data-action="import"><i class="fa-solid fa-file-import"></i> 导入</button>
+              <button class="btn btn-secondary" type="button" data-action="export"><i class="fa-solid fa-file-export"></i> 导出</button>
+              <button class="btn btn-secondary" type="button" data-action="delete-selected" disabled><i class="fa-solid fa-trash"></i> 删除</button>
+              <button class="btn btn-primary" type="button" data-action="create"><i class="fa-solid fa-plus"></i> 新增管线</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table pipeline-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" data-select-all></th>
+                  <th>管线编码</th><th>管线名称</th><th>管线类型</th>
+                  <th>所属项目</th><th>所属管廊</th><th>所属舱室</th><th>所属区段</th>
+                  <th>管径</th><th>材质</th><th>长度（m）</th><th>权属单位</th>
+                  <th>管线状态</th><th>投运日期</th><th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="pipelineTable"></tbody>
+            </table>
+          </div>
+          <div class="pagination"><span>共 <strong id="pipelineCount">0</strong> 条，每页显示 10 条</span><span class="page-item disabled">‹</span><span class="page-item active">1</span><span class="page-item disabled">›</span></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../assets/vendor/xlsx.full.min.js"></script>
+  <script>
+    const locationTree=[{ name:'光谷科学岛综合开发项目',corridors:[  { name:'高新大道综合管廊',cabins:[    { name:'综合舱',sections:['防火分区','通风口'] },    { name:'电力舱',sections:['出入口','吊装口'] },    { name:'燃气舱',sections:['防火分区','通风口'] }  ]},  { name:'科学岛大道综合管廊',cabins:[    { name:'电力舱',sections:['出入口','吊装口'] },    { name:'燃气舱',sections:['防火分区','通风口'] }  ]}]},{ name:'科学岛东区管廊延伸工程',corridors:[  { name:'科学岛东区综合管廊',cabins:[    { name:'综合舱',sections:['出入口','吊装口'] }  ]}]}];
+    // 模拟“区段下已关联设备”的数据（与区段管理页设备数一致）：高新大道综合管廊各区段均已关联设备，禁止删除其下管线
+    const deviceLinkedSections=new Set(['高新大道综合管廊||防火分区','高新大道综合管廊||出入口','高新大道综合管廊||通风口','高新大道综合管廊||吊装口']);
+    const deviceLinked=p=>deviceLinkedSections.has(`${p.corridor}||${p.section}`);
+    const pipelines=[{id:1,code:'PL-W-001',name:'金山给水管线',type:'给水',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'综合舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'金山运营中心',diameter:'DN500',material:'球墨铸铁',length:'1840',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:2,code:'PL-T-002',name:'金山通信光缆',type:'通信',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'综合舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'金山运营中心',diameter:'DN100',material:'单模光纤',length:'2350',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:3,code:'PL-E-003',name:'金山电力电缆',type:'电力',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'电力舱',section:'出入口',media:'电能',owner:'国网武汉供电',operator:'金山运营中心',diameter:'DN150',material:'铝芯电缆',length:'2200',maintainer:'电力维保公司',contact:'张工 13800000001',status:'建设中',date:'2024-03-18',remark:''},{id:4,code:'PL-G-004',name:'金山燃气管道',type:'燃气',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'电力舱',section:'吊装口',media:'天然气',owner:'中燃城市燃气',operator:'金山运营中心',diameter:'DN300',material:'PE100',length:'1260',maintainer:'中燃维保中心',contact:'王工 13800000003',status:'已完工',date:'2025-01-20',remark:''},{id:5,code:'PL-W-005',name:'金山给水管线二',type:'给水',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'燃气舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'金山运营中心',diameter:'DN400',material:'球墨铸铁',length:'1500',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:6,code:'PL-T-006',name:'金山通信光缆二',type:'通信',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'燃气舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'金山运营中心',diameter:'DN100',material:'单模光纤',length:'1800',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:7,code:'PL-E-007',name:'科学岛电力主线',type:'电力',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'电力舱',section:'出入口',media:'电能',owner:'国芯武汉供电',operator:'科学岛运营中心',diameter:'DN150',material:'铝芯电缆',length:'2200',maintainer:'武汉电力维保',contact:'张工 13800000001',status:'建设中',date:'2024-03-18',remark:''},{id:8,code:'PL-G-008',name:'科学岛燃气专线',type:'燃气',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'电力舱',section:'吊装口',media:'天然气',owner:'中燃城市燃气',operator:'科学岛运营中心',diameter:'DN300',material:'PE100',length:'1260',maintainer:'中燃维保中心',contact:'王工 13800000003',status:'已完工',date:'2025-01-20',remark:''},{id:9,code:'PL-W-009',name:'科学岛给水线',type:'给水',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'燃气舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'科学岛运营中心',diameter:'DN400',material:'球墨铸铁',length:'1500',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:10,code:'PL-T-010',name:'科学岛通信线',type:'通信',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'燃气舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'科学岛运营中心',diameter:'DN100',material:'单模光纤',length:'1800',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:11,code:'PL-W-011',name:'东区给水管线',type:'给水',project:'科学岛东区管廊延伸工程',corridor:'科学岛东区综合管廊',cabin:'综合舱',section:'出入口',media:'自来水',owner:'武汉东区水务集团',operator:'科学岛东区运维中心',diameter:'DN500',material:'球墨铸铁',length:'1200',maintainer:'东区维保队',contact:'林工 13800000005',status:'建设中',date:'2025-09-01',remark:''},{id:12,code:'PL-G-012',name:'东区燃气管道',type:'燃气',project:'科学岛东区管廊延伸工程',corridor:'科学岛东区综合管廊',cabin:'综合舱',section:'吊装口',media:'天然气',owner:'武汉东区燃气公司',operator:'科学岛东区运维中心',diameter:'DN300',material:'PE100',length:'1200',maintainer:'东区维保中心',contact:'吴工 13800000006',status:'待完善',date:'2025-09-01',remark:''}];
+    const defs=[
+      ['管线编码','code'],['管线名称','name'],['管线类型','type'],
+      ['所属项目','project'],['所属管廊','corridor'],['所属舱室','cabin'],['所属区段','section'],
+      ['介质类型','media'],['权属单位','owner'],['运营单位','operator'],
+      ['管径','diameter'],['材质','material'],['长度（m）','length'],
+      ['维保单位','maintainer'],['联系人','contact'],['管线状态','status'],['备注','remark']
+    ];
+    const importHeaders=defs.map(d=>d[0]);
+    const requiredKeys=['code','name','type','project','corridor','cabin','section','status'];
+    const opts={ type:['电力','给水','燃气','通信'],status:['建设中','待完善','已完工','停用'] };
+    const table=document.getElementById('pipelineTable');
+    const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    const tag=s=>s==='已完工'?'success':s==='待完善'?'info':s==='停用'?'muted':'warning';
+    function showMessage(title,message){ window.openAppConfirm({ title,message,confirmText:'知道了' }); }
+    function ensureXlsx(){ if(window.XLSX) return true; showMessage('提示','Excel 组件加载失败，请刷新页面后重试。'); return false; }
+    function downloadWorkbook(book,name){ const content=XLSX.write(book,{ bookType:'xlsx',type:'array' }); const blob=new Blob([content],{ type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000); }
+
+    const sectionQuery=new URLSearchParams(location.search).get('section');
+    const inSection=p=>!sectionQuery||p.section===sectionQuery;
+    let view=pipelines.filter(inSection);
+    function applyFilters(){
+      const f=Object.fromEntries([...document.querySelectorAll('[data-filter]')].map(x=>[x.dataset.filter,x.value]));
+      view=pipelines.filter(p=>inSection(p)
+        &&(!f.keyword||p.code.includes(f.keyword)||p.name.includes(f.keyword))
+        &&(!f.type||p.type===f.type)
+        &&(!f.status||p.status===f.status)
+        &&(!f.project||p.project===f.project)
+        &&(!f.corridor||p.corridor===f.corridor)
+        &&(!f.cabin||p.cabin===f.cabin)
+        &&(!f.section||p.section===f.section));
+    }
+    function render(){
+      table.innerHTML=view.length?view.map(p=>`<tr><td><input type="checkbox" data-check data-id="${p.id}"></td>${['code','name','type','project','corridor','cabin','section','diameter','material','length','owner'].map(k=>`<td>${esc(p[k])}</td>`).join('')}<td><span class="status-tag ${tag(p.status)}">${esc(p.status)}</span></td><td>${esc(p.date)}</td><td><button class="table-action" type="button" data-detail="${p.id}">详情</button><button class="table-action" type="button" data-edit="${p.id}">编辑</button><button class="table-action status-danger" type="button" data-delete="${p.id}">删除</button></td></tr>`).join(''):'<tr><td class="empty-cell" colspan="15">暂无数据</td></tr>';
+      document.getElementById('pipelineCount').textContent=view.length;
+      document.querySelector('[data-action="delete-selected"]').disabled=!document.querySelector('[data-check]:checked');
+      document.querySelector('[data-select-all]').checked=false;
+    }
+    if(sectionQuery){
+      const tip=document.createElement('div');
+      tip.className='pipeline-filter-tip';
+      tip.innerHTML=`当前仅显示区段「${esc(sectionQuery)}」关联的管线<a href="pipeline.html">清除筛选</a>`;
+      const listCard=document.querySelector('.pipeline-list-card');
+      listCard.insertBefore(tip,listCard.querySelector('.table-wrap'));
+    }
+
+    // 所属项目 / 所属管廊 / 所属舱室 / 所属区段 级联下拉
+    const cascadeLevels=['project','corridor','cabin','section'];
+    const cascadeLabels=['所属项目','所属管廊','所属舱室','所属区段'];
+    function cascadeOptions(values,index){
+      if(index===0) return locationTree.map(x=>x.name);
+      const project=locationTree.find(x=>x.name===values.project);
+      if(index===1) return (project?.corridors||[]).map(x=>x.name);
+      const corridor=project?.corridors.find(x=>x.name===values.corridor);
+      if(index===2) return (corridor?.cabins||[]).map(x=>x.name);
+      const cabin=corridor?.cabins.find(x=>x.name===values.cabin);
+      return cabin?.sections||[];
+    }
+    function bindCascade(root,initial={}){
+      const values={ ...initial };
+      const refresh=()=>cascadeLevels.forEach((key,index)=>{
+        const field=root.querySelector(`[data-field="${key}"]`);
+        if(!field) return;
+        const options=cascadeOptions(values,index);
+        field.innerHTML=`<option value="">请选择${cascadeLabels[index]}</option>${options.map(o=>`<option value="${esc(o)}" ${o===values[key]?'selected':''}>${esc(o)}</option>`).join('')}`;
+        field.disabled=index>0&&!values[cascadeLevels[index-1]];
+      });
+      refresh();
+      root.addEventListener('change',e=>{
+        const field=e.target.closest('[data-cascade]');
+        if(!field) return;
+        const index=cascadeLevels.indexOf(field.dataset.field);
+        values[field.dataset.field]=field.value;
+        cascadeLevels.slice(index+1).forEach(k=>{ values[k]=''; });
+        refresh();
+      });
+      return { reset(){ cascadeLevels.forEach(k=>{ values[k]=''; }); refresh(); } };
+    }
+    function control(key,p){
+      if(cascadeLevels.includes(key)) return `<select class="form-control" data-field="${key}" data-cascade></select>`;
+      if(opts[key]) return `<select class="form-control" data-field="${key}"><option value="">请选择</option>${opts[key].map(x=>`<option value="${x}" ${x===p[key]?'selected':''}>${x}</option>`).join('')}</select>`;
+      return `<input class="form-control" data-field="${key}" value="${esc(p[key]||'')}" placeholder="请输入">`;
+    }
+    // 管线文件资料（mock：与管线相关的图纸/验收/维保资料）
+    const fileTypes=['管线图纸','验收资料','维保资料','其他资料'];
+    const pipelineFiles=[
+      { id:1,type:'管线图纸',name:'科学岛电力主干线竣工图.pdf',size:'3.6 MB' },
+      { id:2,type:'验收资料',name:'科学岛燃气专线验收报告.pdf',size:'1.8 MB' },
+      { id:3,type:'维保资料',name:'金山给水管线2026年度维保记录.xlsx',size:'420 KB' },
+      { id:4,type:'其他资料',name:'金山通信光缆点位说明.docx',size:'860 KB' }
+    ];
+    let detailPipeline=null;
+    function detailInfo(p){
+      return `<section class="detail-section"><h3 class="detail-title">管线信息</h3><div class="detail-grid">${defs.map(d=>`<div class="info-item"><span class="info-label">${d[0]}</span><span class="info-value">${d[1]==='status'?`<span class="status-tag ${tag(p.status)}">${esc(p.status)}</span>`:(esc(p[d[1]]||'')||'-')}</span></div>`).join('')}</div></section><section class="detail-section"><h3 class="detail-title">备注</h3><p class="detail-text">${esc(p.remark||'-')}</p></section>`;
+    }
+    function filesBody(files=pipelineFiles){
+      return `<div class="pipeline-files-toolbar"><div class="pipeline-files-actions"><label class="form-field"><span class="form-label">文件类型</span><select class="form-control" data-file-filter-type><option value="">全部</option>${fileTypes.map(t=>`<option>${t}</option>`).join('')}</select></label><label class="form-field"><span class="form-label">文件名</span><input class="form-control" data-file-filter-name placeholder="请输入文件名"></label><button class="btn btn-secondary" type="button" data-file-search>查询</button><button class="btn btn-primary" type="button" data-file-upload><i class="fa-solid fa-cloud-arrow-up"></i> 上传</button></div></div><div class="table-wrap"><table class="table pipeline-detail-table"><thead><tr><th>文件类型</th><th>文件名</th><th>操作</th></tr></thead><tbody>${files.length?files.map(f=>`<tr data-file-id="${f.id}"><td>${esc(f.type)}</td><td>${esc(f.name)}</td><td><button class="table-action" type="button" data-file-preview>预览</button><button class="table-action" type="button" data-file-download>下载</button><button class="table-action status-danger" type="button" data-file-delete>删除</button></td></tr>`).join(''):'<tr><td class="empty-cell" colspan="3">暂无文件资料</td></tr>'}</tbody></table></div>`;
+    }
+    function rerenderFiles(){
+      const panel=document.querySelector('[data-detail-panel="files"]');
+      if(panel&&detailPipeline) panel.innerHTML=filesBody();
+    }
+    function openNestedDrawer({title,body,footer}){
+      document.querySelector('.pipeline-nested-drawer')?.remove();
+      const drawer=document.createElement('aside');
+      drawer.className='pipeline-nested-drawer';
+      drawer.setAttribute('role','dialog');
+      drawer.setAttribute('aria-modal','true');
+      drawer.innerHTML=`<header class="pipeline-nested-drawer-head"><h2>${esc(title)}</h2><button class="pipeline-nested-close" type="button" data-nested-close aria-label="关闭">×</button></header><main class="pipeline-nested-drawer-body">${body}</main><footer class="pipeline-nested-drawer-foot">${footer}</footer>`;
+      document.body.append(drawer);
+      drawer.addEventListener('click',e=>{ if(e.target.closest('[data-nested-close]')) drawer.remove(); });
+      return drawer;
+    }
+    function openFileUpload(){
+      const drawer=openNestedDrawer({
+        title:'上传文件',
+        body:`<label class="form-field form-item"><span class="form-label form-required">文件类型</span><select class="form-control" data-upload-type>${fileTypes.map(t=>`<option>${t}</option>`).join('')}</select></label><label class="pipeline-import-box"><input type="file" data-upload-file accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"><i class="fa-solid fa-cloud-arrow-up"></i><strong data-upload-name>点击选择文件</strong><span>支持 PDF、Word、Excel、图片格式</span></label>`,
+        footer:'<button class="btn btn-secondary" type="button" data-nested-close>取消</button><button class="btn btn-primary" type="button" data-upload-confirm>确认上传</button>'
+      });
+      drawer.querySelector('[data-upload-file]').addEventListener('change',e=>{ const file=e.target.files[0]; if(file) drawer.querySelector('[data-upload-name]').textContent=file.name; });
+      drawer.querySelector('[data-upload-confirm]').addEventListener('click',()=>{
+        const file=drawer.querySelector('[data-upload-file]').files[0];
+        if(!file){ showMessage('提示','请选择需要上传的文件。'); return; }
+        pipelineFiles.unshift({ id:Date.now(),type:drawer.querySelector('[data-upload-type]').value,name:file.name,size:`${Math.max(1,Math.round(file.size/1024))} KB` });
+        drawer.remove(); rerenderFiles();
+        showMessage('上传成功',`已上传文件：${file.name}`);
+      });
+    }
+    function openPipeline(mode,p={}){
+      const detail=mode==='detail';
+      detailPipeline=detail?p:null;
+      const body=detail
+        ?`<div class="pipeline-detail"><div class="tabs" role="tablist"><button class="tab active" type="button" data-detail-tab="info">管线信息</button><button class="tab" type="button" data-detail-tab="files">文件资料</button></div><div data-detail-panel="info">${detailInfo(p)}</div><div class="hidden" data-detail-panel="files">${filesBody()}</div></div>`
+        :`<div class="pipeline-drawer-grid">${defs.map(d=>`<label class="form-field form-item ${d[1]==='remark'?'full':''}"><span class="form-label ${requiredKeys.includes(d[1])?'form-required':''}">${d[0]}</span>${d[1]==='remark'?`<textarea class="form-control textarea" data-field="remark" placeholder="请输入">${esc(p.remark||'')}</textarea>`:control(d[1],p)}</label>`).join('')}</div>`;
+      window.openAppDrawer({
+        title:detail?'管线详情':mode==='edit'?'编辑管线':'新增管线',
+        subtitle:'管廊管理 · 管线管理',
+        body,
+        footer:`<button class="btn btn-secondary" type="button" data-drawer-close>${detail?'关闭':'取消'}</button>${detail?'':`<button class="btn btn-primary" type="button" data-save-pipeline="${mode==='edit'?p.id:''}">确认</button>`}`
+      });
+      if(!detail) bindCascade(document.getElementById('drawerBody'),{ project:p.project,corridor:p.corridor,cabin:p.cabin,section:p.section });
+    }
+    function savePipeline(id){
+      const body=document.getElementById('drawerBody');
+      const data=Object.fromEntries([...body.querySelectorAll('[data-field]')].map(x=>[x.dataset.field,x.value.trim()]));
+      const missing=defs.filter(d=>requiredKeys.includes(d[1])&&!data[d[1]]).map(d=>d[0]);
+      if(missing.length){ showMessage('提示',`请完善必填项：${missing.join('、')}`); return; }
+      if(id){
+        const target=pipelines.find(x=>String(x.id)===String(id));
+        if(target) Object.assign(target,data);
+      }else{
+        pipelines.unshift({ ...data,id:Date.now(),date:new Date().toISOString().slice(0,10) });
+      }
+      applyFilters(); render(); window.closeAppDrawer();
+      showMessage('提示',id?'管线信息已更新':'管线新增成功');
+    }
+    function removePipelines(ids){
+      ids.forEach(id=>{ const i=pipelines.findIndex(x=>String(x.id)===String(id)); if(i>=0) pipelines.splice(i,1); });
+      applyFilters(); render();
+    }
+    function tryDelete(list){
+      const blocked=list.find(p=>deviceLinked(p));
+      if(blocked){ showMessage('提示','当前区段下关联了设备，将无法删除，请解除关联后删除'); return; }
+      window.openAppConfirm({
+        title:'删除管线',
+        message:list.length>1?`确认删除选中的 ${list.length} 条管线吗？`:`确认删除管线「${list[0].name}」吗？`,
+        confirmText:'确认删除',
+        onConfirm:()=>removePipelines(list.map(p=>p.id))
+      });
+    }
+    // 导入 / 导出 / 模板
+    let pendingImportFile=null;
+    function setImportFile(file){
+      if(!file) return;
+      if(!/\.(xlsx|xls)$/i.test(file.name)){ pendingImportFile=null; showMessage('提示','请选择 xlsx 或 xls 格式文件。'); return; }
+      pendingImportFile=file;
+      const text=document.querySelector('[data-import-file-name]');
+      if(text) text.textContent=file.name;
+    }
+    function openImport(){
+      pendingImportFile=null;
+      window.openAppDrawer({
+        title:'导入管线',
+        subtitle:'管廊管理 · 管线管理',
+        body:`<label class="pipeline-import-box" data-import-drop><input type="file" data-import-file accept=".xlsx,.xls"><i class="fa-solid fa-cloud-arrow-up"></i><strong>点击或拖拽文件到此处上传</strong><span>支持 xlsx、xls 格式</span></label><p class="pipeline-import-file" data-import-file-name>尚未选择文件</p><div class="pipeline-import-actions"><button class="btn btn-secondary" type="button" data-template><i class="fa-solid fa-download"></i> 下载模板</button></div>`,
+        footer:'<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-confirm-import>确认导入</button>'
+      });
+      const box=document.querySelector('[data-import-drop]');
+      box.addEventListener('dragover',e=>{ e.preventDefault(); box.classList.add('dragover'); });
+      box.addEventListener('dragleave',()=>box.classList.remove('dragover'));
+      box.addEventListener('drop',e=>{ e.preventDefault(); box.classList.remove('dragover'); setImportFile(e.dataTransfer.files[0]); });
+      document.querySelector('[data-import-file]').addEventListener('change',e=>setImportFile(e.target.files[0]));
+    }
+    function downloadTemplate(){
+      if(!ensureXlsx()) return;
+      const sample=['PL-E-000','示例电力管线','电力','光谷科学岛综合开发项目','高新大道综合管廊','综合舱','防火分区','电能','示例权属单位','示例运营单位','DN150','铝芯电缆','1000','示例维保单位','张工 13800000000','建设中','示例备注'];
+      const sheet=XLSX.utils.aoa_to_sheet([importHeaders,sample]);
+      const book=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(book,sheet,'管线导入模板');
+      downloadWorkbook(book,'管线导入模板.xlsx');
+    }
+    function exportPipelines(){
+      if(!ensureXlsx()) return;
+      const rows=[importHeaders,...view.map(p=>defs.map(d=>p[d[1]]||''))];
+      const sheet=XLSX.utils.aoa_to_sheet(rows);
+      const book=XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(book,sheet,'管线管理');
+      downloadWorkbook(book,'管线管理.xlsx');
+    }
+    async function confirmImport(){
+      if(!pendingImportFile){ showMessage('提示','请先选择需要导入的 Excel 文件。'); return; }
+      if(!ensureXlsx()) return;
+      try{
+        const workbook=XLSX.read(await pendingImportFile.arrayBuffer(),{ type:'array' });
+        const sheet=workbook.Sheets[workbook.SheetNames[0]];
+        const headerRow=XLSX.utils.sheet_to_json(sheet,{ header:1,range:0,blankrows:false })[0]||[];
+        const missing=importHeaders.filter(h=>!headerRow.includes(h));
+        if(missing.length){ showMessage('导入失败',`缺少必填表头：${missing.join('、')}`); return; }
+        const rows=XLSX.utils.sheet_to_json(sheet,{ defval:'' });
+        let success=0,failed=0;
+        rows.forEach(row=>{
+          const valid=defs.filter(d=>requiredKeys.includes(d[1])).every(d=>String(row[d[0]]).trim());
+          if(!valid){ failed+=1; return; }
+          const item={ id:Date.now()+success,date:new Date().toISOString().slice(0,10) };
+          defs.forEach(d=>{ item[d[1]]=String(row[d[0]]).trim(); });
+          pipelines.unshift(item); success+=1;
+        });
+        if(!success){ showMessage('导入失败',`没有可导入的有效数据，共 ${failed} 条数据校验失败。`); return; }
+        applyFilters(); render(); window.closeAppDrawer();
+        showMessage('导入完成',`成功导入 ${success} 条，失败 ${failed} 条。`);
+      }catch(error){
+        showMessage('导入失败','文件无法解析，请检查文件格式和内容。');
+      }
+    }
+
+    render();
+    const filterCard=document.querySelector('.pipeline-filter-card');
+    const collapseButton=filterCard.querySelector('[data-action="collapse"]');
+    const filterCascade=bindCascade(document.querySelector('[data-filter-location-cascade]'),{});
+    document.addEventListener('change',e=>{
+      if(e.target.matches('[data-select-all]')) document.querySelectorAll('[data-check]').forEach(x=>x.checked=e.target.checked);
+      if(e.target.matches('[data-check]')||e.target.matches('[data-select-all]')) document.querySelector('[data-action="delete-selected"]').disabled=!document.querySelector('[data-check]:checked');
+    });
+    document.addEventListener('click',e=>{
+      const detailTab=e.target.closest('[data-detail-tab]');
+      if(detailTab){ document.querySelectorAll('[data-detail-tab]').forEach(t=>t.classList.toggle('active',t===detailTab)); document.querySelectorAll('[data-detail-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.detailPanel!==detailTab.dataset.detailTab)); return; }
+      if(e.target.closest('[data-file-search]')){ const panel=document.querySelector('[data-detail-panel="files"]'); const type=panel?.querySelector('[data-file-filter-type]')?.value||''; const name=(panel?.querySelector('[data-file-filter-name]')?.value||'').trim(); if(panel) panel.innerHTML=filesBody(pipelineFiles.filter(f=>(!type||f.type===type)&&(!name||f.name.includes(name)))); return; }
+      if(e.target.closest('[data-file-upload]')){ openFileUpload(); return; }
+      if(e.target.closest('[data-file-preview]')){ showMessage('文件预览','当前原型已读取文件资料，可在正式环境接入在线预览服务。'); return; }
+      if(e.target.closest('[data-file-download]')){ showMessage('文件下载','文件下载已提交。'); return; }
+      if(e.target.closest('[data-file-delete]')){ const row=e.target.closest('[data-file-id]'); const file=pipelineFiles.find(x=>String(x.id)===row?.dataset.fileId); if(file){ pipelineFiles.splice(pipelineFiles.indexOf(file),1); rerenderFiles(); } return; }
+      const a=e.target.closest('[data-action]')?.dataset.action;
+      if(a==='collapse'){ const expanded=filterCard.classList.toggle('expanded'); collapseButton.querySelector('span').textContent=expanded?'收起':'展开'; collapseButton.querySelector('i').className=expanded?'fa-solid fa-chevron-up':'fa-solid fa-chevron-down'; }
+      if(a==='search'){ applyFilters(); render(); }
+      if(a==='reset'){ document.querySelectorAll('[data-filter]').forEach(x=>x.value=''); filterCascade.reset(); applyFilters(); render(); }
+      if(a==='create') openPipeline('create');
+      if(a==='import') openImport();
+      if(a==='export') exportPipelines();
+      if(a==='delete-selected'){
+        const ids=[...document.querySelectorAll('[data-check]:checked')].map(x=>x.dataset.id);
+        if(ids.length) tryDelete(pipelines.filter(p=>ids.includes(String(p.id))));
+      }
+      if(e.target.closest('[data-template]')) downloadTemplate();
+      if(e.target.closest('[data-confirm-import]')) confirmImport();
+      const save=e.target.closest('[data-save-pipeline]');
+      if(save) savePipeline(save.dataset.savePipeline);
+      const del=e.target.closest('[data-delete]');
+      if(del){ const p=pipelines.find(x=>String(x.id)===del.dataset.delete); if(p) tryDelete([p]); }
+      const d=e.target.closest('[data-detail]');
+      if(d) openPipeline('detail',pipelines.find(p=>String(p.id)===d.dataset.detail));
+      const ed=e.target.closest('[data-edit]');
+      if(ed) openPipeline('edit',pipelines.find(p=>String(p.id)===ed.dataset.edit));
+    });
+  </script>
+</body>
+</html>

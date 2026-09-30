@@ -1,95 +1,396 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>项目管理 - 中建四局智能运营管理系统</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
-  <link rel="stylesheet" href="../../assets/css/project-management.css?v=1">
-</head>
-<body class="project-page" data-menu-key="project.manage" data-page-section="项目管理" data-page-title="项目管理">
-  <div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header>
-    <main class="main"><div class="screen-frame stack">
-      <section class="project-card">
-        <div class="project-tabs" role="tablist" aria-label="项目管理信息页签"><button class="project-tab active" type="button" data-project-tab="basic">基础信息</button><button class="project-tab" type="button" data-project-tab="extension">扩展信息</button></div>
-        <div class="project-basic project-form active" data-project-panel="basic">
-          <div class="project-form-grid">
-            <label class="project-field"><span class="form-label form-required">项目名称</span><input class="form-control" value="厦门金山财富中心" disabled placeholder="请输入项目名称"></label>
-            <label class="project-field"><span class="form-label form-required">项目编号</span><input class="form-control" value="XMJS-2026-001" disabled placeholder="请输入项目编号"></label>
-            <label class="project-field"><span class="form-label form-required">建筑名称</span><input class="form-control" value="金山财富中心" disabled placeholder="请输入建筑名称"></label>
-            <label class="project-field"><span class="form-label form-required">建筑规模</span><input class="form-control" value="128000" disabled placeholder="请输入建筑规模"></label>
-            <label class="project-field full"><span class="form-label">项目地址</span><span class="project-location"><select class="form-control" disabled><option>福建省 / 厦门市</option><option>福建省 / 福州市</option></select><input class="form-control" value="湖里区金山路 88 号" disabled placeholder="请输入项目详细地址"></span></label>
-            <label class="project-field"><span class="form-label form-required">经纬度</span><span class="project-location"><input class="form-control" value="118.146" disabled placeholder="经度"><input class="form-control" value="24.512" disabled placeholder="纬度"><button class="map-locate-btn" type="button" data-map-location title="地图定位" aria-label="地图定位"><i class="fa-solid fa-location-dot"></i></button></span></label>
-            <label class="project-field"><span class="form-label form-required">工程用途</span><select class="form-control" data-dictionary="projectUsage" disabled></select></label>
-            <label class="project-field"><span class="form-label form-required">项目经理</span><input class="form-control" value="郭晓明" disabled placeholder="请输入项目经理"></label>
-            <label class="project-field"><span class="form-label form-required">联系电话</span><input class="form-control" value="13800001234" disabled placeholder="请输入联系电话"></label>
-            <label class="project-field"><span class="form-label form-required">建筑面积</span><span class="project-unit-input"><input class="form-control" value="128000" disabled placeholder="请输入建筑面积"><span class="project-unit">m²</span></span></label>
-            <label class="project-field"><span class="form-label form-required">工程状态</span><select class="form-control" data-dictionary="projectStatus" disabled></select></label>
-            <label class="project-field"><span class="form-label">开工日期</span><input class="form-control" type="date" value="2026-09-02" disabled></label>
-            <label class="project-field"><span class="form-label">竣工日期</span><input class="form-control" type="date" value="2028-12-31" disabled></label>
-            <label class="project-field"><span class="form-label">建设单位</span><input class="form-control" value="中建四局" disabled></label>
-            <label class="project-field"><span class="form-label">设计单位</span><input class="form-control" value="华东建筑设计研究院" disabled></label>
-            <label class="project-field"><span class="form-label">施工单位</span><input class="form-control" value="中建四局建设有限公司" disabled></label>
-            <label class="project-field full"><span class="form-label">项目定位</span><input class="form-control" value="城市综合体、办公及配套商业" disabled placeholder="请输入项目定位"></label>
-            <label class="project-field full"><span class="form-label">项目概况</span><textarea class="form-control" disabled placeholder="请输入项目概况">厦门金山财富中心是集办公、商业与公共配套于一体的综合建设项目。</textarea></label>
-          </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>项目管理</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../assets/css/tob-ui.css" />
+    <link rel="stylesheet" href="../../assets/css/project-management.css?v=3" />
+  </head>
+  <body
+    class="project-page"
+    data-menu-key="project.manage"
+    data-page-section="管廊管理"
+    data-page-title="项目管理"
+  >
+    <div class="app-shell">
+      <aside id="app-sidebar" class="sidebar"></aside>
+      <header id="app-header" class="header"></header>
+      <main class="main">
+        <div class="screen-frame stack">
+          <section class="project-filter-card">
+            <div class="project-filter-grid">
+              <label
+                ><span class="form-label">项目名称</span
+                ><input
+                  class="form-control"
+                  data-filter="name"
+                  placeholder="请输入项目名称" /></label
+              ><label><span class="form-label">项目编码</span><input class="form-control" data-filter="code" placeholder="请输入项目编码" /></label
+              ><label
+                ><span class="form-label">项目类型</span
+                ><select class="form-control" data-filter="type">
+                  <option value="">请选择</option>
+                  <option>综合管廊</option><option>缆线管廊</option><option>地下管廊</option><option>跨河管廊</option>
+                </select></label
+              ><label
+                ><span class="form-label">项目状态</span
+                ><select class="form-control" data-filter="status">
+                  <option value="">请选择</option>
+                  <option>建设中</option>
+                  <option>待完善</option>
+                  <option>已完工</option>
+                  <option>停用</option>
+                </select></label
+              >
+              <button class="btn btn-ghost" data-action="collapse">
+                <span>展开</span> <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <button class="btn btn-secondary" data-action="reset">重置</button>
+              <button class="btn btn-primary" data-action="search">搜索</button>
+              <label class="extra-filter"
+                ><span class="form-label">项目负责人</span><input class="form-control" data-filter="owner" placeholder="请输入项目负责人" /></label
+              ><label class="extra-filter"
+                ><span class="form-label">所在区域</span
+                ><select class="form-control" data-filter="region">
+                  <option value="">请选择</option>
+                  <option>东湖高新区</option><option>洪山区</option><option>江夏区</option><option>汉阳区</option>
+                </select></label
+              ><label class="extra-filter"
+                ><span class="form-label">建设单位</span><input class="form-control" data-filter="builder" placeholder="请输入建设单位" /></label
+              ><label class="extra-filter"
+                ><span class="form-label">运营单位</span><input class="form-control" data-filter="operator" placeholder="请输入运营单位" /></label
+              >
+            </div>
+          </section>
+          <section class="project-list-card">
+            <div class="project-toolbar">
+              <h2>项目档案</h2>
+              <div class="project-toolbar-actions">
+                <button class="btn btn-secondary" data-action="export"><i class="fa-solid fa-file-export"></i> 导出</button>
+                <button class="btn btn-secondary" data-action="delete-selected" disabled><i class="fa-solid fa-trash"></i> 删除</button>
+                <button class="btn btn-primary project-create-button" data-action="create">
+                  <i class="fa-solid fa-plus"></i> 新增项目
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table project-table">
+                <thead>
+                  <tr>
+                    <th class="check-cell"><input type="checkbox" data-select-all aria-label="全选" /></th>
+                    <th>项目编码</th>
+                    <th>项目名称</th>
+                    <th>项目类型</th>
+                    <th>建设单位</th>
+                    <th>运营单位</th>
+                    <th>所在区域</th>
+                    <th>项目状态</th>
+                    <th>舱室数量</th>
+                    <th>管廊数量</th>
+                    <th>区段数量</th>
+                    <th>管线数量</th>
+                    <th>设备数量</th>
+                    <th>项目负责人</th>
+                    <th>建设开始日期</th>
+                    <th>计划完工日期</th>
+                    <th>最后更新时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="projectRows"></tbody>
+              </table>
+            </div>
+            <div class="project-pagination">
+              <span id="projectCount"></span
+              ><span>10条/页　‹　«　<b>1</b>　»　›</span>
+            </div>
+          </section>
         </div>
-        <div class="project-extension project-form" data-project-panel="extension">
-          <div class="project-form-grid">
-            <div class="project-field upload-field"><span class="form-label">项目平面图</span><div class="upload-box" data-upload-zone="plan"><input type="file" accept="image/*" hidden data-upload-input="plan"><button class="upload-trigger" type="button"><i class="fa-solid fa-cloud-arrow-up"></i><span>点击上传项目平面图</span></button><small class="upload-help">支持 jpg、jpeg、png、gif、webp、bmp 格式，仅限上传 1 个文件</small><div class="upload-list" data-upload-list="plan"></div></div></div>
-            <label class="project-field"><span class="form-label">合同金额</span><span class="project-unit-input"><input class="form-control" value="68000" disabled><span class="project-unit">万元</span></span></label>
-            <label class="project-field"><span class="form-label">合同签订日期</span><input class="form-control" type="date" value="2026-09-02" disabled></label>
-            <label class="project-field"><span class="form-label">合同开工日期</span><input class="form-control" type="date" value="2026-09-02" disabled></label>
-            <label class="project-field"><span class="form-label">合同竣工日期</span><input class="form-control" type="date" value="2028-12-31" disabled></label>
-            <label class="project-field"><span class="form-label">占地面积</span><span class="project-unit-input"><input class="form-control" value="42000" disabled><span class="project-unit">m²</span></span></label>
-            <label class="project-field"><span class="form-label">楼栋数</span><input class="form-control" value="6" disabled></label>
-            <div class="project-field upload-field"><span class="form-label">荣誉奖项</span><div class="upload-box" data-upload-zone="awards"><input type="file" accept="image/*" multiple hidden data-upload-input="awards"><button class="upload-trigger" type="button"><i class="fa-solid fa-cloud-arrow-up"></i><span>点击上传荣誉奖项</span></button><small class="upload-help">支持 jpg、jpeg、png、gif、webp、bmp 格式，可上传多个文件</small><div class="upload-list" data-upload-list="awards"></div></div></div>
-            <div class="project-field upload-field"><span class="form-label">荣誉证书</span><div class="upload-box" data-upload-zone="certificates"><input type="file" accept="image/*,.pdf" multiple hidden data-upload-input="certificates"><button class="upload-trigger" type="button"><i class="fa-solid fa-cloud-arrow-up"></i><span>点击上传荣誉证书</span></button><small class="upload-help">支持 jpg、jpeg、png、gif、webp、bmp、pdf 格式，可上传多个文件</small><div class="upload-list" data-upload-list="certificates"></div></div></div>
-            <div class="project-field upload-field"><span class="form-label">视频</span><div class="upload-box" data-upload-zone="video"><input type="file" accept="video/*" hidden data-upload-input="video"><button class="upload-trigger" type="button"><i class="fa-solid fa-cloud-arrow-up"></i><span>点击上传视频（仅限1个）</span></button><small class="upload-help">支持 mp4、webm、mov、avi 格式，仅限上传 1 个视频</small><div class="upload-list" data-upload-list="video"></div></div></div>
-          </div>
-        </div>
-        <div class="project-actions"><button class="btn btn-primary" type="button" data-project-edit><i class="fa-solid fa-pen"></i><span>编辑</span></button></div>
-      </section>
-    </div></main>
-  </div>
-  <script src="../../../app/config/menu.js?v=project-1"></script>
-  <script src="../../../app/config/dictionary.js?v=project-1"></script>
-  <script src="../../../app/components/sidebar.js?v=project-1"></script>
-  <script src="../../../app/components/header.js?v=project-1"></script>
-  <script src="../../../app/components/drawer.js"></script>
-  <script src="../../../app/components/requirement.js"></script>
-  <script>
-    (() => {
-      const tabs = [...document.querySelectorAll('[data-project-tab]')];
-      const panels = [...document.querySelectorAll('[data-project-panel]')];
-      const inputs = [...document.querySelectorAll('.project-card input, .project-card select, .project-card textarea')];
-      const editButton = document.querySelector('[data-project-edit]');
-      let editing = false;
-      const uploadState = { plan: [], awards: [], certificates: [], video: [] };
-      document.querySelectorAll('[data-dictionary]').forEach((select) => {
-        const values = window.APP_DICTIONARY?.[select.dataset.dictionary] || [];
-        select.innerHTML = values.map((item) => `<option value="${item.value}">${item.label}</option>`).join('');
-        select.value = select.dataset.dictionary === 'projectStatus' ? 'building' : 'office';
-      });
-      tabs.forEach((tab) => tab.addEventListener('click', () => {
-        tabs.forEach((item) => item.classList.toggle('active', item === tab));
-        panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.projectPanel === tab.dataset.projectTab));
-      }));
-      editButton.addEventListener('click', () => {
-        editing = !editing;
-        inputs.forEach((input) => { input.disabled = !editing; });
-        editButton.querySelector('span').textContent = editing ? '保存' : '编辑';
-        editButton.querySelector('i').className = `fa-solid ${editing ? 'fa-check' : 'fa-pen'}`;
-        if (!editing) window.openAppDrawer?.({ title: '提示', subtitle: '项目管理', body: '<p>项目基础信息已保存（静态演示）。</p>', footer: '<button class="btn btn-primary" type="button" data-drawer-close>确认</button>' });
-      });
-      document.querySelectorAll('[data-map-location]').forEach((button) => button.addEventListener('click', () => {
-        window.openAppDrawer?.({ title: '地图定位', subtitle: '项目管理 · 经纬度', body: `<div class="map-picker"><div class="map-search"><input class="form-control" id="mapSearchInput" placeholder="搜索位置，例如：厦门金山路"><button class="btn btn-primary" type="button" id="mapSearchBtn">搜索</button></div><div class="map-canvas"><div class="map-grid"></div><div class="map-pin"><i class="fa-solid fa-location-dot"></i></div><div class="map-label">点击地图选择位置</div></div><div class="map-result" id="mapResult">当前坐标：118.146, 24.512</div></div>`, footer: '<button class="btn btn-secondary" data-drawer-close>取消</button><button class="btn btn-primary" id="mapConfirmBtn">确认选点</button>' });
-        setTimeout(() => { const input = document.getElementById('mapSearchInput'); const result = document.getElementById('mapResult'); document.getElementById('mapSearchBtn')?.addEventListener('click', () => { result.textContent = `搜索结果：${input.value || '厦门金山财富中心'}（118.146, 24.512）`; }); document.getElementById('mapConfirmBtn')?.addEventListener('click', () => { const fields = document.querySelectorAll('.project-location input'); fields[0].value = '118.146'; fields[1].value = '24.512'; window.closeAppDrawer?.(); }); }, 0);
-      }));
-      document.querySelectorAll('[data-upload-zone]').forEach((zone) => { const type = zone.dataset.uploadZone; const input = zone.querySelector('input'); zone.querySelector('.upload-trigger').addEventListener('click', () => input.click()); input.addEventListener('change', () => { const files = [...input.files]; uploadState[type] = ['video', 'plan'].includes(type) ? files.slice(0, 1) : [...uploadState[type], ...files]; input.value = ''; renderUploads(type); }); });
-      function renderUploads(type) { const list = document.querySelector(`[data-upload-list="${type}"]`); list.innerHTML = uploadState[type].map((file, index) => { const url = URL.createObjectURL(file); return `<div class="upload-item"><button type="button" class="upload-preview" data-preview-url="${url}" title="预览">${file.type.startsWith('image/') ? `<img src="${url}" alt="${file.name}">` : '<i class="fa-solid fa-file-video"></i>'}</button><span title="${file.name}">${file.name}</span><button type="button" class="upload-remove" data-upload-remove="${type}" data-upload-index="${index}" title="删除"><i class="fa-solid fa-trash"></i></button></div>`; }).join(''); }
-      document.addEventListener('click', (event) => { const remove = event.target.closest('[data-upload-remove]'); if (remove) { uploadState[remove.dataset.uploadRemove].splice(Number(remove.dataset.uploadIndex), 1); renderUploads(remove.dataset.uploadRemove); } const preview = event.target.closest('[data-preview-url]'); if (preview) window.openAppDrawer?.({ title: '文件预览', subtitle: '项目管理 · 扩展信息', body: `<div class="preview-view"><img src="${preview.dataset.previewUrl}" alt="预览图片"></div>`, footer: '<button class="btn btn-primary" data-drawer-close>关闭</button>' }); });
-    })();
-  </script>
-</body>
+      </main>
+    </div>
+    <script src="../../../app/config/menu.js"></script>
+    <script src="../../../app/components/sidebar.js"></script>
+    <script src="../../../app/components/header.js"></script>
+    <script src="../../../app/components/drawer.js"></script>
+    <script>
+      (() => {
+        let drawerDraft = null;
+        let drawerMode = "";
+        let drawerProjectId = null;
+        const projects = [
+          {
+            id: 1,
+            code: "PRJ-DH-001",
+            name: "光谷科学岛综合管廊一期",
+            shortName: "科学岛一期",
+            corridorProject: "光谷科学岛综合开发项目",
+            type: "综合管廊",
+            status: "建设中",
+            region: "东湖高新区",
+            addressRegion: "湖北省 / 武汉市",
+            address: "东湖高新区科学岛大道",
+            longitude: "114.447",
+            latitude: "30.489",
+            builder: "东湖高新区建设局",
+            designer: "武汉市政设计研究院",
+            constructor: "中建四局建设发展有限公司",
+            supervisor: "武汉工程建设监理有限公司",
+            operator: "光谷科学岛运维中心",
+            owner: "张建国",
+            phone: "13800001234",
+            corridorCount: 2,
+            cabinCount: 4,
+            sectionCount: 33,
+            pipelineCount: 16,
+            deviceCount: 286,
+            startDate: "2023-03-01",
+            plannedEndDate: "2026-12-31",
+            actualEndDate: "",
+            updatedAt: "2026-09-26 14:20",
+            description: "服务科学岛片区的综合管廊工程。",
+          },
+          {
+            id: 2,
+            code: "PRJ-DH-002",
+            name: "科学岛东区管廊延伸工程",
+            shortName: "东区延伸工程",
+            corridorProject: "科学岛东区管廊延伸工程",
+            type: "综合管廊",
+            status: "待完善",
+            region: "东湖高新区",
+            addressRegion: "湖北省 / 武汉市",
+            address: "东湖高新区未来一路",
+            longitude: "114.468",
+            latitude: "30.501",
+            builder: "东湖高新区建设局",
+            designer: "武汉市政设计研究院",
+            constructor: "中建四局建设发展有限公司",
+            supervisor: "武汉工程建设监理有限公司",
+            operator: "光谷科学岛运维中心",
+            owner: "李涛",
+            phone: "13900001234",
+            corridorCount: 0,
+            cabinCount: 0,
+            sectionCount: 0,
+            pipelineCount: 0,
+            deviceCount: 0,
+            startDate: "2026-10-01",
+            plannedEndDate: "2028-06-30",
+            actualEndDate: "",
+            updatedAt: "2026-09-22 09:10",
+            description: "东区新增管廊建设项目。",
+          },
+        ];
+        const esc = (v) =>
+          String(v ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+        const byId = (id) => projects.find((p) => p.id === +id);
+        function filtered() {
+          const val = (k) => document.querySelector(`[data-filter="${k}"]`)?.value.trim() || "";
+          const name = val("name"),
+            code = val("code"),
+            owner = val("owner"),
+            builder = val("builder"),
+            operator = val("operator"),
+            t = val("type"),
+            s = val("status"),
+            region = val("region");
+          return projects.filter(
+            (p) =>
+              (!name || p.name.includes(name)) &&
+              (!code || p.code.includes(code)) &&
+              (!t || p.type === t) &&
+              (!s || p.status === s) &&
+              (!owner || (p.owner || "").includes(owner)) &&
+              (!region || p.region === region) &&
+              (!builder || (p.builder || "").includes(builder)) &&
+              (!operator || (p.operator || "").includes(operator)),
+          );
+        }
+        const selectedIds = new Set();
+        function syncSelection() {
+          const deleteBtn = document.querySelector('[data-action="delete-selected"]');
+          if (deleteBtn) deleteBtn.disabled = selectedIds.size === 0;
+          const selectAll = document.querySelector("[data-select-all]");
+          if (selectAll) {
+            const boxes = [...document.querySelectorAll("[data-select-id]")];
+            selectAll.checked =
+              boxes.length > 0 && boxes.every((b) => selectedIds.has(+b.dataset.selectId));
+          }
+        }
+        function renderRows(list = filtered()) {
+          document.getElementById("projectRows").innerHTML = list.length
+            ? list
+                .map(
+                  (p) =>
+                    `<tr><td class="check-cell"><input type="checkbox" data-select-id="${p.id}" ${selectedIds.has(p.id) ? "checked" : ""} aria-label="选择${esc(p.name)}" /></td><td>${esc(p.code)}</td><td>${esc(p.name)}</td><td>${esc(p.type)}</td><td>${esc(p.builder)}</td><td>${esc(p.operator)}</td><td>${esc(p.region)}</td><td><span class="tag ${p.status === "建设中" ? "primary" : p.status === "停用" ? "danger" : p.status === "已完工" ? "success" : "warning"}">${esc(p.status)}</span></td><td>${p.cabinCount || 0}</td><td>${p.corridorCount || 0}</td><td>${p.sectionCount || 0}</td><td>${p.pipelineCount || 0}</td><td>${p.deviceCount || 0}</td><td>${esc(p.owner)}</td><td>${esc(p.startDate)}</td><td>${esc(p.plannedEndDate)}</td><td>${esc(p.updatedAt)}</td><td class="action-cell"><button class="table-action" data-project-action="detail" data-project-id="${p.id}">详情</button><button class="table-action" data-project-action="edit" data-project-id="${p.id}">编辑</button><button class="table-action" data-project-action="corridors" data-project-id="${p.id}">管廊管理</button><button class="table-action status-danger" data-project-action="delete" data-project-id="${p.id}">删除</button></td></tr>`,
+                )
+                .join("")
+            : '<tr><td colspan="18" class="empty-cell">暂无数据</td></tr>';
+          document.getElementById("projectCount").textContent =
+            `共 ${list.length} 条记录`;
+          syncSelection();
+        }
+        const fields = [
+          ["code", "项目编码"],
+          ["name", "项目名称"],
+          ["shortName", "项目简称"],
+          ["type", "项目类型"],
+          ["status", "项目状态"],
+          ["addressRegion", "项目地址"],
+          ["longitude", "经纬度"],
+          ["builder", "建设单位"],
+          ["designer", "设计单位"],
+          ["constructor", "施工单位"],
+          ["supervisor", "监理单位"],
+          ["operator", "运营单位"],
+          ["owner", "项目负责人"],
+          ["phone", "联系电话"],
+          ["startDate", "建设开始日期"],
+          ["plannedEndDate", "计划完工日期"],
+          ["actualEndDate", "实际完工日期"],
+          ["description", "项目简介"],
+        ];
+        function formBody(p = {}, detail = false) {
+          const regions = ["湖北省 / 武汉市", "福建省 / 厦门市", "广东省 / 广州市"];
+          return `<div class="project-drawer-grid">${fields.map(([k, l]) => {
+            const disabled = detail ? "disabled" : "";
+            if (k === "type") return `<label class="project-field"><span class="form-label form-required">项目类型</span><select class="form-control" data-project-field="type" ${disabled}><option value="">请选择</option>${["综合管廊","缆线管廊","地下管廊","跨河管廊"].map((type) => `<option ${type === p.type ? "selected" : ""}>${type}</option>`).join("")}</select></label>`;
+            if (k === "status") return `<label class="project-field"><span class="form-label">项目状态</span><select class="form-control" data-project-field="status" ${disabled}>${["建设中","待完善","已完工","停用"].map((status) => `<option ${status === (p.status || "待完善") ? "selected" : ""}>${status}</option>`).join("")}</select></label>`;
+            if (k === "addressRegion") return `<label class="project-field full"><span class="form-label">项目地址</span><span class="project-address"><select class="form-control" data-project-field="addressRegion" ${disabled}>${regions.map((region) => `<option ${region === (p.addressRegion || regions[0]) ? "selected" : ""}>${region}</option>`).join("")}</select><input class="form-control" data-project-field="address" value="${esc(p.address || "")}" placeholder="请输入详细地址" ${disabled}></span></label>`;
+            if (k === "longitude") return `<label class="project-field full"><span class="form-label">经纬度</span><span class="project-coordinates"><input class="form-control" data-project-field="longitude" value="${esc(p.longitude || "")}" placeholder="经度" ${disabled}><input class="form-control" data-project-field="latitude" value="${esc(p.latitude || "")}" placeholder="纬度" ${disabled}><button class="map-locate-btn" type="button" data-map-location ${disabled}><i class="fa-solid fa-location-dot"></i></button></span></label>`;
+            if (k === "description") return `<label class="project-field full"><span class="form-label">项目简介</span><textarea class="form-control textarea" rows="4" data-project-field="${k}" ${disabled}>${esc(p[k] || "")}</textarea></label>`;
+            const type = ["startDate", "plannedEndDate", "actualEndDate"].includes(k) ? "date" : "text";
+            const value = Object.prototype.hasOwnProperty.call(p, k) ? p[k] : "";
+            return `<label class="project-field"><span class="form-label ${["code", "name", "type"].includes(k) ? "form-required" : ""}">${l}</span><input class="form-control" type="${type}" data-project-field="${k}" value="${esc(value || "")}" ${disabled}></label>`;
+          }).join("")}</div>`;
+        }
+        function openProjectDrawer(mode, p = {}) {
+          drawerMode = mode;
+          drawerProjectId = p.id || null;
+          const d = mode === "detail";
+          window.openAppDrawer({
+            title: d ? "项目详情" : mode === "edit" ? "编辑项目" : "新增项目",
+            subtitle: "管廊管理 · 项目管理",
+            body: formBody(p, d),
+            footer: `<button class="btn btn-secondary" data-drawer-close>${d ? "关闭" : "取消"}</button>${d ? "" : `<button class="btn btn-primary" data-save-project data-mode="${mode}" data-project-id="${p.id || ""}">保存</button>`}`,
+          });
+          setTimeout(() => {
+            document
+              .querySelector("[data-save-project]")
+              ?.addEventListener("click", () => {
+                const o = {};
+                document
+                  .querySelectorAll("[data-project-field]")
+                  .forEach((x) => (o[x.dataset.projectField] = x.value));
+                if (!o.code || !o.name || !o.type) { const invalid = document.querySelector(`[data-project-field="${!o.code ? "code" : !o.name ? "name" : "type"}"]`); invalid?.classList.add("error"); return; }
+                if (mode === "edit") Object.assign(byId(p.id), o);
+                else
+                  projects.push({
+                    ...o,
+                    id: Math.max(...projects.map((x) => x.id)) + 1,
+                    cabinCount: 0,
+                    corridorCount: 0,
+                    sectionCount: 0,
+                    pipelineCount: 0,
+                    deviceCount: 0,
+                    updatedAt: "2026-09-30 10:00",
+                  });
+                renderRows();
+                closeAppDrawer();
+              });
+            document
+              .querySelector("[data-map-location]")
+              ?.addEventListener("click", () => {
+                drawerDraft = Object.fromEntries([...document.querySelectorAll("[data-project-field]")].map(x => [x.dataset.projectField, x.value]));
+                window.openAppDrawer({
+                  title: "地图定位",
+                  body: '<div class="map-canvas"><div class="map-pin"><i class="fa-solid fa-location-dot"></i></div></div>',
+                  footer:
+                    '<button class="btn btn-primary" id="mapOk">确认选点</button>',
+                });
+              });
+            document.getElementById("mapOk")?.addEventListener("click", () => {
+              drawerDraft = { ...(drawerDraft || {}), longitude: "114.447", latitude: "30.489" };
+              closeAppDrawer();
+              openProjectDrawer(drawerMode, { ...(drawerMode === "edit" ? byId(drawerProjectId) : {}), ...drawerDraft, id: drawerProjectId });
+            });
+          }, 0);
+        }
+        renderRows();
+        document.addEventListener("change", (e) => {
+          if (e.target.matches("[data-select-id]")) {
+            const id = +e.target.dataset.selectId;
+            if (e.target.checked) selectedIds.add(id);
+            else selectedIds.delete(id);
+            syncSelection();
+          }
+          if (e.target.matches("[data-select-all]")) {
+            const checked = e.target.checked;
+            document.querySelectorAll("[data-select-id]").forEach((b) => {
+              const id = +b.dataset.selectId;
+              if (checked) selectedIds.add(id);
+              else selectedIds.delete(id);
+            });
+            renderRows();
+          }
+        });
+        document.addEventListener("click", (e) => {
+          const a = e.target.closest("[data-action]")?.dataset.action;
+          if (a === "search" || a === "reset") {
+            if (a === "reset")
+              document
+                .querySelectorAll("[data-filter]")
+                .forEach((x) => (x.value = ""));
+            renderRows();
+          }
+          if (a === "refresh") renderRows();
+          if (a === "collapse") {
+            const card = document.querySelector(".project-filter-card");
+            const expanded = card.classList.toggle("expanded");
+            const btn = e.target.closest("[data-action=collapse]");
+            const label = btn.querySelector("span");
+            const icon = btn.querySelector("i");
+            if (label) label.textContent = expanded ? "收起" : "展开";
+            if (icon) icon.className = expanded ? "fa-solid fa-chevron-up" : "fa-solid fa-chevron-down";
+          }
+          if (a === "create") openProjectDrawer("create");
+          if (a === "export") window.openAppDrawer({ title: "导出项目", subtitle: "管廊管理 · 项目管理", body: "<p>已按当前筛选条件生成项目列表导出任务。</p>", footer: '<button class="btn btn-primary" data-drawer-close>知道了</button>' });
+          if (a === "delete-selected" && selectedIds.size > 0) {
+            const list = [...selectedIds].map(byId).filter(Boolean);
+            const blocked = list.filter((p) => p.corridorCount || p.cabinCount || p.sectionCount || p.pipelineCount || p.deviceCount);
+            if (blocked.length)
+              window.openAppConfirm({ title: "无法删除项目", message: `所选项目中「${blocked.map((p) => p.name).join("」、「")}」下关联了管廊/舱室/区段/管线/设备，将无法删除，请解除关联后删除。`, confirmText: "知道了" });
+            else
+              window.openAppConfirm({ title: "删除项目", message: `确认删除选中的 ${list.length} 个项目吗？删除后将无法恢复。`, confirmText: "确认删除", onConfirm: () => { list.forEach((p) => { const index = projects.indexOf(p); if (index >= 0) projects.splice(index, 1); selectedIds.delete(p.id); }); renderRows(); } });
+          }
+          const r = e.target.closest("[data-project-action]");
+          if (r) {
+            const p = byId(r.dataset.projectId),
+              x = r.dataset.projectAction;
+            if (x === "corridors") { window.location.href = `building.html?project=${encodeURIComponent(p.corridorProject || p.name)}`; return; }
+            if (x === "detail" || x === "edit") openProjectDrawer(x, p);
+            if (x === "delete")
+              p.corridorCount || p.cabinCount || p.sectionCount || p.pipelineCount || p.deviceCount
+                ? window.openAppConfirm({ title: "无法删除项目", message: "当前项目下关联了管廊/舱室/区段/管线/设备，将无法删除，请解除关联后删除。", confirmText: "知道了" })
+                : window.openAppConfirm({ title: "删除项目", message: `确认删除项目「${p.name}」吗？删除后将无法恢复。`, confirmText: "确认删除", onConfirm: () => { const index = projects.indexOf(p); if (index >= 0) projects.splice(index, 1); selectedIds.delete(p.id); renderRows(); } });
+          }
+        });
+      })();
+    </script>
+  </body>
 </html>

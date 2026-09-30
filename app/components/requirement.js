@@ -299,6 +299,11 @@
     }).join("");
   }
   document.addEventListener("DOMContentLoaded", () => {
+    if (document.body.dataset.menuKey === "broadcast.console") {
+      const script = document.createElement("script");
+      script.src = "../../assets/js/broadcast-multi-init.js";
+      document.body.append(script);
+    }
     if (!window.openAppDrawer) return;
     const doc = docs[document.body.dataset.menuKey] || docs.home;
     const button = document.createElement("button");

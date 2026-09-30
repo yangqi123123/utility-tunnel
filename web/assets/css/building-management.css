@@ -1,6 +1,12 @@
 .building-page .screen-frame { max-width: 1680px; }
 .building-filters .filter-field-extra { display: none; }
 .building-filters.is-expanded .filter-field-extra { display: block; }
+/* 筛选区：一行默认最多 4 个条件，超出折叠，逻辑对齐设备管理页 */
+.building-filters .filter-actions { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)) auto auto auto; gap: 16px; align-items: end; }
+.building-filters .filter-actions > .btn { align-self: end; }
+.building-filters .filter-actions > .btn[data-action="collapse"] { white-space: nowrap; }
+@media (max-width: 1100px) { .building-filters .filter-actions { grid-template-columns: repeat(2, minmax(150px, 1fr)) auto auto; } .building-filters .filter-actions > .btn[data-action="collapse"] { grid-column: 1; } }
+@media (max-width: 640px) { .building-filters .filter-actions { grid-template-columns: 1fr; } .building-filters .filter-actions > .btn[data-action="collapse"] { grid-column: auto; } }
 .building-list-card { overflow: hidden; }
 .building-toolbar { min-height: 56px; padding: 0 24px; }
 .building-toolbar .card-title { margin: 0; }
@@ -24,3 +30,7 @@
 .textarea-count-wrap .textarea { padding-bottom: 24px; }
 .textarea-count-wrap .field-count { position: absolute; right: 12px; bottom: 8px; margin: 0; line-height: 16px; pointer-events: none; }
 @media (max-width: 720px) { .building-toolbar { align-items: flex-start; flex-direction: column; gap: 12px; padding: 16px; } .building-toolbar .btn-row { flex-wrap: wrap; } }
+/* 跨页跳转带入的项目筛选提示条 */
+.filter-tip { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 8px 12px; border: 1px solid var(--primary); border-radius: 4px; background: var(--primary-bg); color: var(--text-primary); font-size: 13px; }
+.filter-tip > span { min-width: 0; }
+.filter-tip .btn-ghost { flex: 0 0 auto; }

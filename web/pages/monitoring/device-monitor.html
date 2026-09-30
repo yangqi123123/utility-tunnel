@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>设备监测 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/device-monitor.css">
+  <link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css">
+</head>
+<body class="device-monitor-page" data-menu-key="smart-monitoring.device" data-page-section="智能监测" data-page-title="设备监测">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="device-monitor-workspace">
+        <section class="device-monitor-toolbar">
+          <div class="toolbar-title"><h1>设备监测</h1><p>一张图查看全网设备位置、状态与实时运行数据</p></div>
+          <div class="toolbar-actions">
+            <label class="form-field search-field"><span class="form-label">设备搜索</span><input class="form-control" id="deviceSearch" placeholder="设备名称 / 编码"></label>
+            <label class="form-field"><span class="form-label">设备分类</span><select class="form-control" id="deviceType"><option value="all">全部分类</option><option value="sensor">传感器</option><option value="machine">机电设备</option><option value="fire">消防设备</option><option value="security">安防设备</option></select></label>
+            <label class="form-field"><span class="form-label">设备状态</span><select class="form-control" id="deviceStatus"><option value="all">全部状态</option><option value="online">在线 / 正常</option><option value="warn">预警</option><option value="fault">故障</option><option value="offline">离线</option></select></label>
+            <button class="btn btn-secondary" type="button" id="resetFilters"><i class="fa-solid fa-rotate-right"></i> 重置</button>
+            <button class="btn btn-primary" type="button" id="applyFilters"><i class="fa-solid fa-filter"></i> 应用筛选</button>
+          </div>
+        </section>
+
+        <section class="device-monitor-summary">
+          <article class="metric-card"><div class="metric-top"><span>设备总数</span><span class="metric-icon"><i class="fa-solid fa-layer-group"></i></span></div><strong class="metric-number" id="metricTotal">1,286</strong><small>覆盖 11 个子系统</small></article>
+          <article class="metric-card"><div class="metric-top"><span>在线 / 正常</span><span class="metric-icon"><i class="fa-solid fa-circle-check"></i></span></div><strong class="metric-number" id="metricOnline">1,214</strong><small><span class="text-success">94.4%</span> 在线率</small></article>
+          <article class="metric-card"><div class="metric-top"><span>预警设备</span><span class="metric-icon"><i class="fa-solid fa-triangle-exclamation"></i></span></div><strong class="metric-number" id="metricWarn">18</strong><small>甲烷 / 水位 / 通信质量</small></article>
+          <article class="metric-card"><div class="metric-top"><span>故障 / 离线</span><span class="metric-icon"><i class="fa-solid fa-plug-circle-xmark"></i></span></div><strong class="metric-number" id="metricFault">54</strong><small><span class="text-danger">4.2%</span> 需处理</small></article>
+        </section>
+
+        <section class="device-monitor-grid">
+          <aside class="device-monitor-left">
+            <div class="device-filter-block">
+              <h2>监测维度</h2>
+              <label class="filter-field"><span class="form-label">所属子系统</span><select class="form-control" id="systemFilter"><option value="all">全部子系统</option></select></label>
+              <label class="filter-field"><span class="form-label">所在位置 / 防火分区</span><select class="form-control" id="zoneFilter"><option value="all">全线 / 全部防火分区</option><option value="F0103">F0103 · 电力舱</option><option value="F0104">F0104 · 燃气舱</option><option value="F0112">F0112 · 水信舱</option><option value="F0116">F0116 · 综合舱</option></select></label>
+              <div class="monitor-chip-row" id="statusChips"><button class="monitor-chip active" data-status="all">全部</button><button class="monitor-chip" data-status="online"><i class="status-dot"></i>正常</button><button class="monitor-chip warn" data-status="warn"><i class="status-dot"></i>预警</button><button class="monitor-chip fault" data-status="fault"><i class="status-dot"></i>故障</button><button class="monitor-chip offline" data-status="offline"><i class="status-dot"></i>离线</button></div>
+            </div>
+            <section class="system-overview"><div class="device-monitor-panel-head"><h2>子系统在线率</h2><span>实时</span></div><div class="system-list" id="systemList"></div></section>
+            <section class="device-monitor-panel"><div class="device-monitor-panel-head"><h2>快捷图层</h2><span id="layerHint">已显示全部</span></div><div class="device-monitor-panel-body"><div class="monitor-chip-row" id="layerChips"><button class="monitor-chip active" data-layer="all">全部设备</button><button class="monitor-chip" data-layer="sensor">环境传感器</button><button class="monitor-chip" data-layer="machine">通风 / 排水 / 照明</button><button class="monitor-chip" data-layer="fire">消防设备</button><button class="monitor-chip" data-layer="security">安防设备</button></div></div></section>
+          </aside>
+
+          <section class="device-monitor-panel device-map-panel">
+            <div class="device-map-head"><strong>设备态势地图</strong><small id="mapSourceLabel">真实道路底图 · 实时点位</small><div class="map-actions"><div class="map-style-switch" role="group" aria-label="底图切换"><button class="map-style-btn active" type="button" data-map-style="street">标准地图</button><button class="map-style-btn" type="button" data-map-style="offline">离线地图</button></div><button class="btn btn-secondary" type="button" id="mapReset"><i class="fa-solid fa-crosshairs"></i> 复位</button><button class="btn btn-secondary" type="button" id="mapFullscreen"><i class="fa-solid fa-expand"></i> 全屏</button></div></div>
+            <div class="device-map" id="deviceMap" aria-label="设备态势地图"><div class="map-overlay">武汉光谷未来一路综合管廊 · 设备总览</div><div class="device-map-legend"><span><i></i>传感器</span><span><i class="machine"></i>机电</span><span><i class="fire"></i>消防</span><span><i class="security"></i>安防</span></div></div>
+          </section>
+
+          <aside class="device-monitor-right">
+            <section class="device-monitor-panel"><div class="device-monitor-panel-head"><h2>当前状态</h2><span id="resultCount">12 台</span></div><div class="health-grid"><div class="health-card"><span>在线 / 正常</span><strong class="good" id="healthOnline">9</strong></div><div class="health-card"><span>预警</span><strong class="warn" id="healthWarn">2</strong></div><div class="health-card"><span>故障</span><strong class="bad" id="healthFault">1</strong></div><div class="health-card"><span>离线</span><strong id="healthOffline">1</strong></div></div></section>
+            <section class="status-queue"><div class="device-monitor-panel-head"><h2>设备状态队列</h2><span>点击查看档案</span></div><div class="status-queue-list" id="statusQueue"></div></section>
+            <section class="sensor-snapshot"><div class="device-monitor-panel-head"><h2>环境实时值</h2><span>F0103</span></div><div class="snapshot-list"><div class="snapshot-item"><span>温度</span><strong id="sensorTemperature">26.4</strong><em>℃</em></div><div class="snapshot-item"><span>湿度</span><strong>78</strong><em>%</em></div><div class="snapshot-item"><span>氧气</span><strong>19.8</strong><em>%VOL</em></div><div class="snapshot-item"><span>甲烷</span><strong style="color:#c18a0d">42</strong><em>%LEL</em></div><div class="snapshot-item"><span>硫化氢</span><strong>2</strong><em>ppm</em></div><div class="snapshot-item"><span>集水井水位</span><strong>0.60</strong><em>m</em></div></div></section>
+          </aside>
+        </section>
+
+        <section class="device-monitor-bottom">
+          <section class="device-monitor-table-card"><div class="device-monitor-panel-head"><h2>设备监测明细</h2><span>当前筛选结果</span></div><div class="device-monitor-table-wrap"><table class="table device-monitor-table"><thead><tr><th>设备名称</th><th>所属系统</th><th>设备类型</th><th>位置</th><th>当前值 / 状态</th><th>状态</th><th>更新时间</th></tr></thead><tbody id="deviceTableBody"></tbody></table></div></section>
+          <section class="device-monitor-trend-card"><div class="device-monitor-panel-head"><h2>环境参数趋势</h2><span>近 30 分钟</span></div><div class="device-monitor-trend-body"><div class="trend-legend"><span><i></i>温度</span><span><i class="green"></i>湿度</span></div><svg viewBox="0 0 560 130" preserveAspectRatio="none" aria-label="环境参数趋势"><path d="M0 110H560M0 75H560M0 40H560" stroke="#e5eaf3" stroke-width="1"></path><path d="M0 88 C42 70 70 89 104 68 S170 48 210 69 S274 91 312 60 S380 46 420 58 S495 80 560 44" fill="none" stroke="#135AFA" stroke-width="2.5"></path><path d="M0 102 C50 96 88 101 120 86 S188 98 226 82 S292 72 334 91 S410 96 452 76 S518 86 560 66" fill="none" stroke="#14C9BA" stroke-width="2.5"></path><text x="4" y="126" fill="#86909C" font-size="10">14:00</text><text x="258" y="126" fill="#86909C" font-size="10">14:15</text><text x="518" y="126" fill="#86909C" font-size="10">14:30</text></svg></div></section>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script>
+    const devices = [
+      { id: "ENV-F0103-01", name: "电力舱温湿度传感器 01", system: "环境监测", type: "sensor", zone: "F0103", value: "26.4 ℃", status: "online", glyph: "温" },
+      { id: "ENV-F0103-02", name: "电力舱氧气传感器 02", system: "环境监测", type: "sensor", zone: "F0103", value: "19.8 %VOL", status: "online", glyph: "氧" },
+      { id: "ENV-F0104-01", name: "燃气舱甲烷探测器 01", system: "环境监测", type: "sensor", zone: "F0104", value: "42 %LEL", status: "warn", glyph: "甲" },
+      { id: "FAS-F0104-08", name: "点型感烟火灾探测器 08", system: "火灾自动报警系统", type: "fire", zone: "F0104", value: "正常", status: "online", glyph: "烟" },
+      { id: "MEC-F0103-01", name: "1# 送风机控制柜", system: "环境监测", type: "machine", zone: "F0103", value: "运行 · 1,420 r/min", status: "online", glyph: "风" },
+      { id: "MEC-F0112-02", name: "2# 集水井排水泵", system: "环境监测", type: "machine", zone: "F0112", value: "故障 · 过载保护", status: "fault", glyph: "泵" },
+      { id: "SEC-F0107-03", name: "固定式视频监控 03", system: "视频监控系统", type: "security", zone: "F0107", value: "在线 · 主码流", status: "online", glyph: "视" },
+      { id: "SEC-F0116-01", name: "智能井盖位移传感器 01", system: "智能井盖", type: "sensor", zone: "F0116", value: "离线 · 46 分钟", status: "offline", glyph: "盖" },
+      { id: "FAS-F0119-02", name: "防火门监控模块 02", system: "消防监控系统", type: "fire", zone: "F0119", value: "闭合 · 联动投入", status: "online", glyph: "门" },
+      { id: "PWR-F0101-01", name: "电力运行监测网关 01", system: "电力运行监测平台", type: "machine", zone: "F0101", value: "在线 · 2 ms", status: "online", glyph: "电" },
+      { id: "ACS-F0108-01", name: "门禁控制器 01", system: "门禁系统", type: "security", zone: "F0108", value: "在线 · 12 次/月", status: "online", glyph: "禁" },
+      { id: "ENV-F0112-03", name: "集水井水位传感器 03", system: "环境监测", type: "sensor", zone: "F0112", value: "0.60 m · 高位预警", status: "warn", glyph: "水" },
+    ];
+    const systemRows = [
+      ["火灾自动报警系统", 162, 162], ["环境监测", 248, 244], ["安全防范系统", 96, 94], ["视频监控系统", 118, 117], ["入侵报警", 72, 70], ["电子巡更", 56, 56], ["门禁系统", 148, 145], ["智能井盖", 40, 39], ["电力运行监测平台", 186, 182], ["消防监控系统", 92, 88], ["通信广播系统", 68, 64],
+    ];
+    const state = { system: "all", type: "all", status: "all", zone: "all", layer: "all", query: "" };
+    const statusText = { online: "在线 / 正常", warn: "预警", fault: "故障", offline: "离线" };
+    const typeText = { sensor: "传感器", machine: "机电设备", fire: "消防设备", security: "安防设备" };
+    const iconGlyph = { sensor: "◌", machine: "⚙", fire: "△", security: "◈" };
+    let map;
+    let markerLayer;
+    let baseLayers = [];
+    let mapStyle = "street";
+    const mapCenter = [30.4624, 114.4286];
+    const markerPositions = [[30.4684,114.4165],[30.4671,114.4192],[30.4658,114.4221],[30.4645,114.425],[30.4631,114.4278],[30.4617,114.4307],[30.4604,114.4335],[30.4589,114.4363],[30.4576,114.439],[30.4658,114.432],[30.4628,114.4238],[30.4597,114.429]];
+    function filteredDevices() { const query = state.query.toLowerCase(); return devices.filter((item) => (!query || `${item.name}${item.id}`.toLowerCase().includes(query)) && (state.system === "all" || item.system === state.system) && (state.type === "all" || item.type === state.type) && (state.status === "all" || item.status === state.status) && (state.zone === "all" || item.zone === state.zone) && (state.layer === "all" || item.type === state.layer)); }
+    function renderSystems() { const systemFilter = document.getElementById("systemFilter"); systemFilter.innerHTML = `<option value="all">全部子系统</option>${systemRows.map(([name]) => `<option value="${name}">${name}</option>`).join("")}`; document.getElementById("systemList").innerHTML = systemRows.map(([name, total, online]) => `<button type="button" class="system-item ${state.system === name ? "active" : ""}" data-system="${name}"><strong>${name}</strong><span class="system-count">${online}/${total}</span><span class="system-progress"><i class="${online / total < .97 ? "warn" : ""}" style="width:${online / total * 100}%"></i></span></button>`).join(""); document.querySelectorAll("[data-system]").forEach((item) => item.addEventListener("click", () => { state.system = item.dataset.system; systemFilter.value = state.system; renderAll(); })); }
+    function renderList() { const list = filteredDevices(); document.getElementById("resultCount").textContent = `${list.length} 台`; const counts = { online: 0, warn: 0, fault: 0, offline: 0 }; list.forEach((item) => counts[item.status]++); ["online", "warn", "fault", "offline"].forEach((key) => { document.getElementById(`health${key[0].toUpperCase()}${key.slice(1)}`).textContent = counts[key]; }); document.getElementById("statusQueue").innerHTML = list.map((item) => `<button type="button" class="status-row" data-device-id="${item.id}"><span class="row-icon">${item.glyph}</span><span><strong>${item.name}</strong><small>${item.system} · ${item.zone}</small></span><span class="status-text ${item.status}">${statusText[item.status]}</span></button>`).join("") || `<div class="empty-state">当前筛选条件下暂无设备</div>`; document.getElementById("deviceTableBody").innerHTML = list.map((item) => `<tr data-device-id="${item.id}"><td><strong>${item.name}</strong><small class="table-subtext">${item.id}</small></td><td>${item.system}</td><td>${typeText[item.type]}</td><td>${item.zone}</td><td>${item.value}</td><td><span class="status-text ${item.status}">${statusText[item.status]}</span></td><td>刚刚</td></tr>`).join("") || `<tr><td colspan="7" class="empty-state">当前筛选条件下暂无设备</td></tr>`; document.querySelectorAll("[data-device-id]").forEach((item) => item.addEventListener("click", () => openDevice(item.dataset.deviceId))); }
+    function renderMap() { if (!markerLayer) return; markerLayer.clearLayers(); filteredDevices().forEach((item, index) => { const pos = markerPositions[devices.findIndex((entry) => entry.id === item.id)] || markerPositions[index % markerPositions.length]; const icon = L.divIcon({ className: "device-marker-wrap", html: `<span class="device-marker ${item.type} ${item.status}">${iconGlyph[item.type]}</span>`, iconSize: [24, 24], iconAnchor: [12, 12] }); L.marker(pos, { icon }).addTo(markerLayer).on("click", () => openDevice(item.id)); }); }
+    function renderAll() { renderSystems(); renderList(); renderMap(); document.querySelectorAll("[data-status]").forEach((chip) => chip.classList.toggle("active", chip.dataset.status === state.status)); document.querySelectorAll("[data-layer]").forEach((chip) => chip.classList.toggle("active", chip.dataset.layer === state.layer)); const activeLayer = document.querySelector(`[data-layer="${state.layer}"]`); document.getElementById("layerHint").textContent = activeLayer ? activeLayer.textContent : "已显示全部"; }
+    function trendSvg(color) { return `<svg viewBox="0 0 560 160" preserveAspectRatio="none"><path d="M0 130H560M0 95H560M0 60H560M0 25H560" stroke="#e5eaf3"/><path d="M0 112 C38 93 66 115 101 86 S169 62 204 91 S273 112 308 78 S376 54 420 75 S496 97 560 48" fill="none" stroke="${color}" stroke-width="3"/><circle cx="560" cy="48" r="5" fill="${color}"/></svg>`; }
+    function openDevice(id) { const item = devices.find((entry) => entry.id === id); if (!item) return; const body = `<div class="monitor-detail-hero"><span class="monitor-detail-icon">${iconGlyph[item.type]}</span><div><strong>${item.name}</strong><small>${item.system} · ${item.zone} · ${item.id}</small></div><span class="tag ${item.status === "online" ? "tag-success" : item.status === "warn" ? "tag-warning" : "tag-danger"} monitor-detail-status">${statusText[item.status]}</span></div><section class="monitor-detail-section"><h3>基本信息档案</h3><div class="monitor-detail-grid"><div class="info-item"><span class="info-label">设备编码</span><span class="info-value">${item.id}</span></div><div class="info-item"><span class="info-label">设备类型</span><span class="info-value">${typeText[item.type]}</span></div><div class="info-item"><span class="info-label">所属系统</span><span class="info-value">${item.system}</span></div><div class="info-item"><span class="info-label">安装位置</span><span class="info-value">${item.zone} · 综合管廊</span></div><div class="info-item"><span class="info-label">当前值 / 状态</span><span class="info-value">${item.value}</span></div><div class="info-item"><span class="info-label">最近心跳</span><span class="info-value">${item.status === "offline" ? "46 分钟前" : "3 秒前"}</span></div></div></section><section class="monitor-detail-section"><h3>近 30 分钟趋势</h3><div class="monitor-detail-trend">${trendSvg(item.status === "warn" ? "#d59a11" : "#135AFA")}</div></section><section class="monitor-detail-section"><h3>运行说明</h3><p class="detail-text">该设备纳入设备监测平台统一采集，支持位置、状态和实时数值监测；状态变化将同步进入报警中心。</p></section>`; window.openAppDrawer({ title: "设备详情", body, footer: `<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button><button class="btn btn-primary" type="button" data-drawer-close>确认</button>` }); }
+    function bindEvents() { document.getElementById("applyFilters").addEventListener("click", () => { state.query = document.getElementById("deviceSearch").value.trim(); state.type = document.getElementById("deviceType").value; state.status = document.getElementById("deviceStatus").value; state.system = document.getElementById("systemFilter").value; state.zone = document.getElementById("zoneFilter").value; renderAll(); }); document.getElementById("resetFilters").addEventListener("click", () => { Object.assign(state, { system: "all", type: "all", status: "all", zone: "all", layer: "all", query: "" }); document.getElementById("deviceSearch").value = ""; document.getElementById("deviceType").value = "all"; document.getElementById("deviceStatus").value = "all"; document.getElementById("zoneFilter").value = "all"; renderAll(); }); document.querySelectorAll("[data-status]").forEach((chip) => chip.addEventListener("click", () => { state.status = chip.dataset.status; document.getElementById("deviceStatus").value = state.status; renderAll(); })); document.querySelectorAll("[data-layer]").forEach((chip) => chip.addEventListener("click", () => { state.layer = chip.dataset.layer; renderAll(); })); document.querySelectorAll("[data-map-style]").forEach((button) => button.addEventListener("click", () => setMapStyle(button.dataset.mapStyle))); document.getElementById("mapReset").addEventListener("click", () => map?.setView(mapCenter, 14)); document.getElementById("mapFullscreen").addEventListener("click", () => document.getElementById("deviceMap").requestFullscreen?.()); document.getElementById("deviceSearch").addEventListener("keydown", (event) => { if (event.key === "Enter") document.getElementById("applyFilters").click(); }); }
+    function clearBaseLayers() { if (!map) return; baseLayers.forEach((layer) => map.removeLayer(layer)); baseLayers = []; }
+    function setMapStyle(style) { if (!map) return; mapStyle = style; clearBaseLayers(); const mapElement = document.getElementById("deviceMap"); mapElement.classList.add("map-fallback"); document.querySelectorAll("[data-map-style]").forEach((button) => button.classList.toggle("active", button.dataset.mapStyle === style)); document.getElementById("mapSourceLabel").textContent = style === "offline" ? "离线道路底图 · 本地 SVG 资源" : "标准道路底图 · 本地 SVG 资源"; }
+    function initMap() { if (!window.L) return; map = L.map("deviceMap", { zoomControl: true, preferCanvas: true }).setView(mapCenter, 14); markerLayer = L.layerGroup().addTo(map); setMapStyle(mapStyle); }
+    document.addEventListener("DOMContentLoaded", () => { initMap(); bindEvents(); renderAll(); setInterval(() => { document.getElementById("sensorTemperature").textContent = (26.4 + (Math.random() - .5) * .4).toFixed(1); }, 3000); });
+  </script>
+</body>
+</html>

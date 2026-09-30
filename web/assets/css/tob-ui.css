@@ -29,6 +29,30 @@
   --z-drawer: 1000;
 }
 
+/* 广播资源与日志页面：沿用用户管理的紧凑筛选栅格。 */
+body[data-menu-key="broadcast.resources"] .resource-panel .filter-actions { grid-template-columns: repeat(2, minmax(0, 1fr)) 80px 80px !important; }
+body[data-menu-key="broadcast.logs"] .log-panel[data-panel="operation"] .filter-actions { grid-template-columns: repeat(3, minmax(0, 1fr)) 80px 80px !important; }
+body[data-menu-key="broadcast.logs"] .log-panel[data-panel="api"] .filter-actions { grid-template-columns: minmax(0, 1fr) 80px 80px !important; }
+body[data-menu-key="broadcast.resources"] .filter-actions .btn,
+body[data-menu-key="broadcast.logs"] .filter-actions .btn { min-width: 80px; }
+body[data-menu-key="broadcast.resources"] .broadcast-pagination,
+body[data-menu-key="broadcast.logs"] .broadcast-pagination { margin-top: 8px; }
+body[data-menu-key="broadcast.resources"] .resource-panel .table-wrap::after { content: "共 3 条记录，每页 10 条    1"; display: flex; align-items: center; justify-content: flex-end; min-height: 60px; padding: 16px 24px; color: var(--text-secondary); font-size: 14px; border-top: 1px solid var(--divider); }
+body[data-menu-key="broadcast.resources"] .resource-panel .filter-actions,
+body[data-menu-key="broadcast.logs"] .filter-actions { padding: 16px 24px; }
+body[data-menu-key="broadcast.resources"] .resource-panel .card-title-row,
+body[data-menu-key="broadcast.logs"] .card-title-row { padding: 16px 24px 0; margin-bottom: 12px; }
+body[data-menu-key="broadcast.resources"] .resource-panel .filter-actions { margin-bottom: 0; padding-bottom: 8px; }
+body[data-menu-key="broadcast.resources"] .resource-panel .card-title-row { padding-top: 8px; }
+body[data-menu-key="broadcast.resources"] .resource-summary { display: none; }
+body[data-menu-key="broadcast.logs"] .card-title-row > span { display: none; }
+body[data-menu-key="broadcast.logs"] .filter-actions { grid-template-columns: repeat(3, minmax(0, 1fr)) 80px 80px !important; }
+body[data-menu-key="broadcast.logs"] .filter-actions label:has(input[data-filter="operator"]) { display: none; }
+body[data-menu-key="broadcast.resources"] .resource-panel .card-title-row .btn { min-width: 80px; }
+body[data-menu-key="broadcast.resources"] .resource-panel .filter-actions .btn,
+body[data-menu-key="broadcast.logs"] .filter-actions .btn { height: 32px; padding: 0 16px; }
+body.broadcast-page .broadcast-multi-trigger::after { content: "\f107" !important; }
+
 * { box-sizing: border-box; }
 
 *,
@@ -108,9 +132,9 @@ button { border: 0; }
 }
 
 .sidebar .brand-logo {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   object-fit: contain;
 }
 
@@ -133,8 +157,8 @@ button { border: 0; }
   font-size: 16px;
   line-height: 1.35;
   font-weight: 700;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow-wrap: normal;
 }
 
 .entry-brand {

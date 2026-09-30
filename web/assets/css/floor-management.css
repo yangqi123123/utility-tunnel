@@ -1,11 +1,12 @@
 .floor-page .screen-frame { max-width: 1680px; }
-.floor-filters .floor-filter-extra { display: block; }
 .floor-list-card { overflow: hidden; }
 .floor-toolbar { min-height: 56px; padding: 0 24px; }
 .floor-toolbar .card-title { margin: 0; }
-.floor-table { min-width: 980px; }
+.floor-table { min-width: 1780px; }
+.floor-table th, .floor-table td { height: 40px; padding: 0 12px; }
+.floor-table .capacity-cell { max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
 .floor-table th, .floor-table td { white-space: nowrap; }
-.floor-table th:last-child, .floor-table td:last-child { min-width: 190px; }
+.floor-table th:last-child, .floor-table td:last-child { min-width: 150px; }
 .floor-page .table-actions-sticky th:last-child, .floor-page .table-actions-sticky td:last-child { position: sticky; right: 0; z-index: 2; background: #fff; box-shadow: -8px 0 16px rgba(26,28,31,.06); }
 .floor-page .table-actions-sticky th:last-child { background: var(--primary-bg); }
 .floor-page .table-actions-sticky tbody tr:hover td:last-child { background: #f7f9ff; }

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>能耗预警 - 中建四局智能运营管理系统</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/alarm-center.css">
+  <link rel="stylesheet" href="../../assets/css/energy-warning.css">
+</head>
+<body class="energy-warning-page" data-menu-key="energy.warning" data-page-section="能源管理" data-page-title="能耗预警" data-energy-warning-page="rules">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="card warning-list-card">
+          <div id="energyWarningTabs" class="warning-tabs" role="tablist" aria-label="能耗预警类型"></div>
+        </section>
+        <div id="energyWarningFilters"></div>
+        <section class="card warning-list-card">
+          <div class="card-title-row warning-toolbar"><div class="warning-title-group"><h1 class="card-title">能耗预警规则</h1></div><button class="btn btn-primary" type="button" data-ew-action="create"><i class="fa-solid fa-plus" aria-hidden="true"></i> 新增</button></div>
+          <div class="table-wrap"><table class="table warning-table"><thead><tr><th>序号</th><th>规则名称</th><th>能源类型</th><th>计划周期</th><th>计划用量</th><th>监测设备</th><th>预警等级</th><th>通知人员</th><th>启用状态</th><th>操作</th></tr></thead><tbody id="energyWarningBody"></tbody></table></div>
+          <div id="energyWarningPagination"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/data/energy-warning-data.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/energy-warning.js"></script>
+</body>
+</html>

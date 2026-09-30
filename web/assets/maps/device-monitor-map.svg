@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#e7edf0"/>
+  <path d="M0 80 C170 20 280 120 390 72 S670 54 780 126 S1050 182 1180 90 S1430 38 1600 112 L1600 0 0 0Z" fill="#d8e4e5"/>
+  <path d="M0 630 C180 560 270 695 420 640 S690 590 820 688 S1110 760 1270 650 S1480 570 1600 620 L1600 900 0 900Z" fill="#d2e2dd"/>
+  <path d="M420 0 C520 98 480 180 555 248 S645 408 588 500 S540 690 610 900 L800 900 C730 710 792 600 750 492 S700 280 628 198 S610 74 680 0Z" fill="#9fc1df" opacity=".75"/>
+  <path d="M1110 0 C1030 136 1115 240 1045 330 S975 520 1065 610 S1130 780 1080 900 L1310 900 C1360 774 1280 640 1334 520 S1400 290 1330 170 S1320 55 1370 0Z" fill="#a8c7e4" opacity=".7"/>
+  <g fill="none" stroke="#c4cdd0" stroke-width="2" opacity=".9">
+    <path d="M0 210 C260 160 420 220 650 196 S1070 180 1600 228"/><path d="M0 330 C220 290 400 360 620 326 S1110 300 1600 350"/><path d="M0 470 C300 420 480 510 720 462 S1180 430 1600 500"/><path d="M0 790 C250 730 430 820 680 770 S1120 742 1600 800"/>
+    <path d="M180 0 C260 180 205 310 265 450 S340 700 290 900"/><path d="M860 0 C800 170 910 305 840 470 S770 700 850 900"/><path d="M1480 0 C1410 180 1490 340 1420 520 S1360 760 1415 900"/>
+  </g>
+  <g fill="none" stroke-linecap="round">
+    <path d="M-40 740 C210 640 330 690 535 590 S880 360 1115 445 S1390 640 1640 500" stroke="#e4ab49" stroke-width="9"/>
+    <path d="M-40 740 C210 640 330 690 535 590 S880 360 1115 445 S1390 640 1640 500" stroke="#f6d28b" stroke-width="4"/>
+    <path d="M80 90 C310 155 480 110 650 170 S1000 320 1250 260 S1450 170 1640 230" stroke="#8870c9" stroke-width="8"/>
+    <path d="M80 90 C310 155 480 110 650 170 S1000 320 1250 260 S1450 170 1640 230" stroke="#b9a8e8" stroke-width="3.5"/>
+    <path d="M40 520 C300 480 410 520 590 480 S940 420 1160 530 S1400 650 1640 600" stroke="#58a987" stroke-width="3.5"/>
+    <path d="M80 520 C300 480 410 520 590 480 S940 420 1160 530 S1400 650 1640 600" stroke="#d3f0df" stroke-width="1" stroke-dasharray="7 6"/>
+  </g>
+  <g fill="#c7d9ca" opacity=".9"><path d="M120 220h180l60 80-90 70-190-30z"/><path d="M1220 120h220l60 120-100 80-240-50z"/><path d="M760 680h220l80 95-100 80H720z"/></g>
+  <g font-family="Microsoft YaHei,Arial,sans-serif" fill="#65747c">
+    <text x="105" y="135" font-size="11">光谷未来一路</text><text x="1250" y="350" font-size="10">光谷大道</text><text x="116" y="842" font-size="9">高新二路</text><text x="705" y="245" font-size="9">武汉东湖高新区</text><text x="925" y="625" font-size="9">光谷软件园</text><text x="1330" y="735" font-size="9">未来科技城</text><text x="310" y="415" font-size="8">武汉东湖</text><text x="1160" y="180" font-size="8">光谷生物城</text>
+  </g>
+  <g fill="#6a7a82" font-family="Arial,sans-serif" font-size="7"><text x="448" y="600">G107</text><text x="1090" y="438">S7</text><text x="1280" y="260">G4</text></g>
+</svg>

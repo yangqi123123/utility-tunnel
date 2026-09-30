@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>能耗预警记录 - 中建四局智能运营管理系统</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/alarm-center.css">
+  <link rel="stylesheet" href="../../assets/css/energy-warning.css">
+</head>
+<body class="energy-warning-record-page" data-menu-key="energy.warning-record" data-page-section="能源管理" data-page-title="能耗预警记录" data-energy-warning-page="records">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <div id="energyWarningRecordFilters"></div>
+        <section class="card warning-list-card">
+          <div class="card-title-row warning-toolbar"><div class="warning-title-group"><h1 class="card-title">能耗预警记录</h1><span class="warning-total">共 <strong id="energyWarningRecordCount">0</strong> 条</span></div></div>
+          <div class="table-wrap"><table class="table warning-record-table"><thead><tr><th>序号</th><th>预警时间</th><th>规则名称</th><th>能源类型</th><th>计划周期</th><th>监测设备</th><th>统计周期</th><th>计划用量</th><th>实际用量</th><th>超出比例</th><th>预警等级</th><th>处理状态</th><th>操作</th></tr></thead><tbody id="energyWarningRecordBody"></tbody></table></div>
+          <div id="energyWarningRecordPagination"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/data/energy-warning-data.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/energy-warning.js"></script>
+</body>
+</html>

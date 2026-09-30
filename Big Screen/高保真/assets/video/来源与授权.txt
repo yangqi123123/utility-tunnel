@@ -1,0 +1,24 @@
+未来一路综合管廊管理平台 · 大屏原型
+视频监控窗演示素材 — 来源与授权说明
+
+来源：Pexels（www.pexels.com）
+授权：Pexels License —— 允许免费用于商业与非商业用途，无需署名，
+      可修改；禁止原样转售素材本身、禁止将可识别人物用于负面语境。
+      许可原文：https://www.pexels.com/license/
+
+素材清单（均为地下隧道施工现场实拍）：
+  cam1.mp4  Underground Tunnel Construction with Heavy Machinery
+            https://www.pexels.com/video/31752064/
+  cam2.mp4  Heavy Construction Equipment in Underground Tunnel
+            https://www.pexels.com/video/31752065/
+  cam3.mp4  Excavator Operating in Tunnel Construction Site
+            https://www.pexels.com/video/31752063/
+  cam4.mp4  Construction Workers Are Working on a Tunnel
+            https://www.pexels.com/video/16035050/
+
+本地处理（ffmpeg）：统一 640×360 / 25fps、去除音轨、截取 7.5~12 秒、
+  轻度调色（亮度 -5%、饱和度 0.86、对比度 1.05）以适配深色大屏，
+  编码 H.264 main / yuv420p / faststart。未做任何标识移除。
+
+说明：这是原型阶段的演示占位素材。项目实施后应替换为管廊现场
+  摄像机的实时视频流（GB/T 28181 接入），或业主方提供的实拍素材。

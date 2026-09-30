@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>未来一路综合管廊管理平台 · 大屏高保真原型</title>
+<style>
+:root{--cy:#3FE3FF;--tx:#DCEDFF;--tx2:#7FA3C8;--tx3:#4C6A8C;--ln:rgba(64,158,255,.30);--ln2:rgba(64,158,255,.14)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:
+  radial-gradient(1200px 800px at 20% 12%,rgba(21,72,140,.32),transparent 60%),
+  radial-gradient(1200px 800px at 84% 88%,rgba(12,90,120,.24),transparent 62%),
+  linear-gradient(180deg,#04101F,#030912 55%,#02060D);
+  color:var(--tx);font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1560px;margin:0 auto;padding:56px 32px 80px}
+header{display:flex;align-items:center;gap:20px;padding-bottom:22px;border-bottom:1px solid var(--ln);
+  position:relative;margin-bottom:8px}
+header::after{content:"";position:absolute;left:0;bottom:-1px;width:320px;height:2px;
+  background:linear-gradient(90deg,var(--cy),transparent)}
+header .lg{width:58px;height:58px;flex:0 0 auto;border:1px solid rgba(63,227,255,.55);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,rgba(63,227,255,.22),rgba(43,127,255,.1));
+  box-shadow:0 0 20px rgba(63,227,255,.22) inset}
+header .lg svg{width:32px;height:32px}
+header h1{font-size:30px;font-weight:700;letter-spacing:3px;
+  background:linear-gradient(180deg,#fff 30%,#9FD8FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+header .m{margin-left:auto;text-align:right;font-size:14px;color:var(--tx3);line-height:1.7}
+header .m b{color:var(--tx2);font-weight:500}
+.note{margin:26px 0 30px;padding:16px 20px;border:1px solid var(--ln2);border-left:3px solid var(--cy);
+  border-radius:0 4px 4px 0;background:rgba(8,26,58,.5);font-size:14.5px;color:var(--tx2);line-height:1.85}
+.note b{color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(348px,1fr));gap:20px}
+a.card{display:block;text-decoration:none;color:inherit;position:relative;
+  border:1px solid var(--ln);border-radius:4px;background:rgba(8,26,58,.55);padding:20px 22px 22px;
+  transition:border-color .2s,transform .2s,background .2s}
+a.card::before,a.card::after{content:"";position:absolute;width:14px;height:14px}
+a.card::before{left:-1px;top:-1px;border-left:2px solid var(--cy);border-top:2px solid var(--cy)}
+a.card::after{right:-1px;bottom:-1px;border-right:2px solid var(--cy);border-bottom:2px solid var(--cy)}
+a.card:hover{border-color:rgba(63,227,255,.7);background:rgba(14,44,88,.7);transform:translateY(-3px)}
+.card .t{display:flex;align-items:center;gap:12px}
+.card .id{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;font-weight:700;color:#04121F;
+  background:var(--cy);border-radius:3px;padding:2px 8px}
+.card h3{font-size:20px;font-weight:700;letter-spacing:1.5px}
+.card .en{font-size:12px;color:var(--tx3);letter-spacing:.6px;margin-top:7px}
+.card p{font-size:13.5px;color:var(--tx2);line-height:1.75;margin-top:12px;min-height:70px}
+.card .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--ln2)}
+.card .meta span{font-size:12px;color:var(--tx3);border:1px solid var(--ln2);border-radius:3px;padding:3px 9px;
+  background:rgba(6,20,46,.6)}
+.card .meta span.b{color:var(--cy);border-color:rgba(63,227,255,.35)}
+.card.al{border-color:rgba(255,77,94,.4)}
+.card.al::before,.card.al::after{border-color:#FF4D5E}
+.card.al .id{background:#FF4D5E;color:#fff}
+h2{font-size:17px;font-weight:700;letter-spacing:2px;margin:38px 0 16px;padding-left:11px;
+  border-left:4px solid var(--cy)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+th{background:rgba(12,36,72,.7);text-align:left;font-weight:600;color:var(--tx2);padding:10px 12px;
+  border:1px solid var(--ln2);white-space:nowrap}
+td{padding:9px 12px;border:1px solid var(--ln2);color:var(--tx2);vertical-align:top}
+td:first-child{color:var(--tx);white-space:nowrap}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:var(--cy);
+  background:rgba(6,20,46,.7);padding:1px 6px;border-radius:3px}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.si{width:1em;height:1em;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:-.14em}
+.card .ci{width:42px;height:42px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;color:var(--cy);background:linear-gradient(145deg,rgba(63,227,255,.20),rgba(43,127,255,.04));
+  border:1px solid rgba(63,227,255,.40)}
+.card .ci .si{width:26px;height:26px}
+.card.al .ci{color:#FF8A96;border-color:rgba(255,77,94,.45);background:rgba(70,14,24,.5)}
+h2 .si{width:19px;height:19px;color:var(--cy);margin-right:8px}
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--ln2);font-size:13px;color:var(--tx3);line-height:1.9}
+</style>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true"><symbol id="i-home" viewBox="0 0 24 24"><path d="M3.6 11.2 12 4.4l8.4 6.8"/><path d="M5.8 9.6V20h12.4V9.6"/><path d="M9.8 20v-5.6h4.4V20"/></symbol><symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 21.4c-3.6 0-6.4-2.8-6.4-6.3 0-2.4 1.2-4 2.5-5.5C9.6 8 11 6.4 11 4c0-.6-.1-1.2-.3-1.8 4.1 1.1 8.2 5.4 8.2 10.8 0 4.2-2.9 8.4-6.9 8.4z"/><path d="M12 21.4a3.1 3.1 0 0 1-3.1-3.1c0-1.2.6-2 1.2-2.8.6-.7 1.2-1.4 1.2-2.5 2 .9 3.8 2.9 3.8 5.3a3.1 3.1 0 0 1-3.1 3.1z"/></symbol><symbol id="i-hydrant" viewBox="0 0 24 24"><path d="M9 8.6h6v10.4H9z"/><path d="M6.8 19h10.4"/><path d="M12 3.4v5.2"/><path d="M9.4 3.4h5.2"/><path d="M6.2 11.4H9M15 11.4h2.8"/><path d="M9 15.2h6"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.4 2.8 5.6 13.6h5.4l-.9 7.6 7.8-11.2h-5.4z"/></symbol><symbol id="i-elec" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12.9 7 9.6 12.5h2.9l-.5 4.5 3.4-5.5h-3z"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M15.4 6.2a4.4 4.4 0 0 0-5.8 5.4l-5.4 5.4v2.8h2.8l5.4-5.4a4.4 4.4 0 0 0 5.4-5.8l-2.6 2.6-2.4-.4-.4-2.4z"/></symbol><symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9.2v5.6h3.6L13 19V5L7.6 9.2z"/><path d="M16.2 8.8a5 5 0 0 1 0 6.4"/><path d="M18.8 6.4a8.6 8.6 0 0 1 0 11.2"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.8 20.2h16.4"/><path d="M6.6 20.2v-6.6M11 20.2V7.4M15.4 20.2v-4.2M19.8 20.2V10.6"/></symbol><symbol id="i-topo" viewBox="0 0 24 24"><circle cx="12" cy="5.6" r="2.2"/><circle cx="5.6" cy="18.4" r="2.2"/><circle cx="18.4" cy="18.4" r="2.2"/><path d="M12 7.8v3.8"/><path d="M12 11.6H6.6a1 1 0 0 0-1 1v3.6"/><path d="M12 11.6h5.4a1 1 0 0 1 1 1v3.6"/></symbol><symbol id="i-temp" viewBox="0 0 24 24"><path d="M14 13.9V5.2a2 2 0 1 0-4 0v8.7a4 4 0 1 0 4 0z"/><path d="M12 8.6v5.8"/></symbol><symbol id="i-humid" viewBox="0 0 24 24"><path d="M12 3.4s5.4 6.1 5.4 9.7a5.4 5.4 0 0 1-10.8 0C6.6 9.5 12 3.4 12 3.4z"/><path d="M9.6 13.6a2.6 2.6 0 0 0 2.6 2.6"/></symbol><symbol id="i-wind" viewBox="0 0 24 24"><path d="M3.4 8.6h10.2a2.6 2.6 0 1 0-2.6-2.6"/><path d="M3.4 12.4h13.2a2.6 2.6 0 1 1-2.6 2.6"/><path d="M3.4 16.2h7.2"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17 17.2H7a4 4 0 0 1-.6-8 5.6 5.6 0 0 1 10.8-1.4A4.4 4.4 0 0 1 17 17.2z"/></symbol><symbol id="i-water" viewBox="0 0 24 24"><path d="M12 3.4s3.8 4 3.8 6.5a3.8 3.8 0 0 1-7.6 0C8.2 7.4 12 3.4 12 3.4z"/><path d="M3.6 15.4c2.1 0 2.1-1.6 4.2-1.6s2.1 1.6 4.2 1.6 2.1-1.6 4.2-1.6 2.1 1.6 4.2 1.6"/><path d="M3.6 19.4c2.1 0 2.1-1.6 4.2-1.6s2.1 1.6 4.2 1.6 2.1-1.6 4.2-1.6 2.1 1.6 4.2 1.6"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M2.8 8.6h11.2v6.8H2.8z"/><path d="M14 10.8 20.6 7.4v9.2L14 13.2z"/><path d="M5.6 15.4v4.2"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.4 12S6.2 5.8 12 5.8 21.6 12 21.6 12 17.8 18.2 12 18.2 2.4 12 2.4 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-light" viewBox="0 0 24 24"><path d="M9.2 16.2a5.6 5.6 0 1 1 5.6 0v1.9H9.2z"/><path d="M10 20.4h4"/><path d="M12 9.2v3.4"/></symbol><symbol id="i-gas" viewBox="0 0 24 24"><circle cx="8.6" cy="14.2" r="2.8"/><circle cx="14.8" cy="9.2" r="2.8"/><circle cx="16" cy="16.4" r="1.8"/><path d="m10.8 12.4 1.9-1.4M11.2 15.4l3-.5"/></symbol><symbol id="i-board" viewBox="0 0 24 24"><rect x="2.8" y="4.2" width="18.4" height="11.4" rx="1"/><path d="M8 19.8h8M12 15.6v4.2"/><path d="M6.4 8h4.4M6.4 11.8h8.8"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M4 14.8h16v3.4h-2.4v1.6h-2.6v-1.6H9v1.6H6.4v-1.6H4z"/><path d="m5.6 14.8 1.9-5.4h9l1.9 5.4"/><circle cx="7.6" cy="16.5" r=".9"/><circle cx="16.4" cy="16.5" r=".9"/></symbol><symbol id="i-device" viewBox="0 0 24 24"><rect x="3.2" y="4.4" width="17.6" height="15.2" rx="1.4"/><path d="m7.4 9.6 2.8 2.6-2.8 2.6"/><path d="M12.6 15h4.4"/></symbol><symbol id="i-fault" viewBox="0 0 24 24"><rect x="5" y="3.4" width="14" height="17.2" rx="1.2"/><path d="M5 7.4h14"/><path d="M12.6 10.2 9.8 14.4h3.2l-.8 3.6 3-4.6h-3z"/></symbol><symbol id="i-alarmlt" viewBox="0 0 24 24"><path d="M7.4 19.4v-4.8a4.6 4.6 0 0 1 9.2 0v4.8z"/><path d="M5.6 19.4h12.8"/><path d="M12 5.6V3.2M6.6 7.4 5 5.8M17.4 7.4 19 5.8"/></symbol><symbol id="i-pool" viewBox="0 0 24 24"><rect x="3.4" y="7" width="17.2" height="10.4" rx="1"/><path d="M3.4 12.6c2 0 2-1.4 4-1.4s2 1.4 4 1.4 2-1.4 4-1.4 2 1.4 4 1.4"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.8"/><path d="m20 20-4.2-4.2"/></symbol><symbol id="i-edit" viewBox="0 0 24 24"><path d="M4.4 19.6h4.2L19.2 9a2 2 0 0 0-2.8-2.8L5.8 16.8z"/><path d="m14.8 7.8 2.8 2.8"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.8 12a7.8 7.8 0 1 1-2.3-5.5"/><path d="M19.8 4.6v4.6h-4.6"/></symbol><symbol id="i-back" viewBox="0 0 24 24"><path d="M14.4 5.6 8 12l6.4 6.4"/></symbol><symbol id="i-road" viewBox="0 0 24 24"><path d="M6.2 20.4 9.2 3.6M17.8 20.4 14.8 3.6"/><path d="M12 4.6v3.2M12 10.6v3M12 16.6v3.4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.6-4.7-7.6-9.7a4.4 4.4 0 0 1 7.6-3 4.4 4.4 0 0 1 7.6 3c0 5-7.6 9.7-7.6 9.7z"/></symbol><symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.4"/><path d="M12 10.9c0-2.6 1.3-4.2 2.9-3.7 1.5.5 1 2.7-2.9 3.7Z"/><g transform="rotate(120 12 12)"><path d="M12 10.9c0-2.6 1.3-4.2 2.9-3.7 1.5.5 1 2.7-2.9 3.7Z"/></g><g transform="rotate(240 12 12)"><path d="M12 10.9c0-2.6 1.3-4.2 2.9-3.7 1.5.5 1 2.7-2.9 3.7Z"/></g></symbol><symbol id="i-pump" viewBox="0 0 24 24"><circle cx="10.4" cy="13.6" r="5"/><path d="M10.4 8.6V4.8h6.4v5.2"/><path d="M15.4 13.6h5"/><path d="M8.4 13.6a2 2 0 0 1 2-2"/></symbol><symbol id="i-valve" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M3.6 12h5.2M15.2 12h5.2"/><path d="M12 8.8V4.8M9.6 4.8h4.8"/></symbol><symbol id="i-level" viewBox="0 0 24 24"><rect x="6.6" y="3.6" width="10.8" height="16.8" rx="1.2"/><path d="M6.6 13c1.4 0 1.4-1.3 2.7-1.3S10.7 13 12 13s1.4-1.3 2.7-1.3 1.4 1.3 2.7 1.3"/><path d="M3.4 7.4h2M3.4 11h2M3.4 14.6h2"/></symbol><symbol id="i-pipe" viewBox="0 0 24 24"><path d="M3.4 9.2h17.2v5.6H3.4z"/><path d="M6.8 7.8v8.4M17.2 7.8v8.4"/></symbol><symbol id="i-tunnel" viewBox="0 0 24 24"><rect x="3.2" y="6.6" width="17.6" height="13" rx="1"/><path d="M9.2 6.6v13M14.8 6.6v13"/><path d="M3.2 4h17.6"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.4 3.4 7.8 12 12.2l8.6-4.4z"/><path d="m3.4 12.2 8.6 4.4 8.6-4.4"/><path d="m3.4 16.6 8.6 4.4 8.6-4.4"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M12 3.4a5.6 5.6 0 0 0-5.6 5.6c0 4.4 5.6 11.6 5.6 11.6s5.6-7.2 5.6-11.6A5.6 5.6 0 0 0 12 3.4z"/><circle cx="12" cy="9" r="2.2"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.2 19.4 6v6c0 4.7-3.2 7.6-7.4 8.8C7.8 19.6 4.6 16.7 4.6 12V6z"/><path d="m8.8 12 2.4 2.4 4-4.6"/></symbol><symbol id="i-fence" viewBox="0 0 24 24"><path d="M3.4 20.4V8.6L12 3.8l8.6 4.8v11.8"/><path d="M3.4 12.4h17.2M3.4 16.6h17.2"/><path d="M8.4 8.8v11.6M15.6 8.8v11.6"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.8" y="10.2" width="14.4" height="10" rx="1.4"/><path d="M8.2 10.2V7.4a3.8 3.8 0 0 1 7.6 0v2.8"/><circle cx="12" cy="15" r="1.4"/></symbol><symbol id="i-door" viewBox="0 0 24 24"><path d="M5.6 3.6h12.8v16.8H5.6z"/><path d="M9.2 3.6v16.8"/><circle cx="15.4" cy="12" r="1"/></symbol><symbol id="i-manhole" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8.4" ry="5.4"/><path d="M6.2 10.4h11.6M6.2 13.6h11.6"/></symbol><symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7.2" r="3.2"/><path d="M5.4 20.4a6.6 6.6 0 0 1 13.2 0"/></symbol><symbol id="i-helmet" viewBox="0 0 24 24"><path d="M4.4 15.6a7.6 7.6 0 0 1 15.2 0z"/><path d="M3.2 15.6h17.6"/><path d="M9.6 8.8V5.4h4.8v3.4"/></symbol><symbol id="i-team" viewBox="0 0 24 24"><circle cx="9" cy="8.4" r="2.8"/><path d="M3.6 18.8a5.4 5.4 0 0 1 10.8 0"/><circle cx="17" cy="9.6" r="2.2"/><path d="M15.2 14.2a4.4 4.4 0 0 1 5.2 3.4"/></symbol><symbol id="i-clipbrd" viewBox="0 0 24 24"><path d="M8.8 5H6.4a1.2 1.2 0 0 0-1.2 1.2v13.2A1.2 1.2 0 0 0 6.4 20.6h11.2a1.2 1.2 0 0 0 1.2-1.2V6.2A1.2 1.2 0 0 0 17.6 5h-2.4"/><rect x="8.8" y="3.2" width="6.4" height="3.2" rx="1"/><path d="M8.8 11.4h6.4M8.8 15.2h4.4"/></symbol><symbol id="i-order" viewBox="0 0 24 24"><path d="M6 3.6h9l3.8 3.8v13H6z"/><path d="M15 3.6v4h3.8"/><path d="M9 12.4h6M9 16h4"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.4" width="16" height="15" rx="1.2"/><path d="M4 10.2h16M8.8 3.4v4M15.2 3.4v4"/><path d="M8.2 13.6h2.2M8.2 17h2.2M13.6 13.6h2.2M13.6 17h2.2"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 6.8V12l3.6 2.2"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><path d="M4.4 12a7.6 7.6 0 1 0 2.4-5.6"/><path d="M4 5.4v4.2h4.2"/><path d="M12 8.4V12l2.8 1.8"/></symbol><symbol id="i-doc" viewBox="0 0 24 24"><path d="M6.4 3.6h8.2l4 4v12.8H6.4z"/><path d="M14.6 3.6v4h4"/><path d="M9.4 16.4v-3M12 16.4v-5.6M14.6 16.4v-2"/></symbol><symbol id="i-export" viewBox="0 0 24 24"><path d="M12 3.8v10.4"/><path d="m8.4 10.8 3.6 3.4 3.6-3.4"/><path d="M4.6 16.2v3.2a1 1 0 0 0 1 1h12.8a1 1 0 0 0 1-1v-3.2"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10.4 13.6a3.6 3.6 0 0 0 5.4.4l2.4-2.4a3.6 3.6 0 0 0-5.1-5.1l-1.4 1.4"/><path d="M13.6 10.4a3.6 3.6 0 0 0-5.4-.4l-2.4 2.4a3.6 3.6 0 0 0 5.1 5.1l1.4-1.4"/></symbol><symbol id="i-plan" viewBox="0 0 24 24"><path d="M5.6 3.8h9.6l3.2 3.2v13.2H5.6z"/><path d="M15.2 3.8V7h3.2"/><path d="m8.8 13.4 2 2 4.2-4.6"/></symbol><symbol id="i-flowchart" viewBox="0 0 24 24"><rect x="3.4" y="3.8" width="6" height="4.4" rx=".8"/><rect x="14.6" y="3.8" width="6" height="4.4" rx=".8"/><rect x="9" y="15.6" width="6" height="4.4" rx=".8"/><path d="M6.4 8.2v3.6h11.2V8.2M12 11.8v3.8"/></symbol><symbol id="i-ups" viewBox="0 0 24 24"><rect x="3.2" y="7" width="15" height="10" rx="1.4"/><path d="M18.2 10.4h2.6v3.2h-2.6"/><path d="M11.8 9.4 8.8 13.2h3.2l-.8 2.8 3.2-4.2h-3z"/></symbol><symbol id="i-meter" viewBox="0 0 24 24"><rect x="4.2" y="3.6" width="15.6" height="16.8" rx="1.4"/><rect x="7" y="6.6" width="10" height="4.4" rx=".6"/><path d="M7.4 14.8h3M13.6 14.8h3M7.4 17.6h9.2"/></symbol><symbol id="i-trans" viewBox="0 0 24 24"><rect x="4.2" y="8.4" width="5.4" height="7.2" rx=".6"/><rect x="14.4" y="8.4" width="5.4" height="7.2" rx=".6"/><path d="M9.6 10.6h4.8M9.6 13.4h4.8"/><path d="M6.9 8.4V5.2M17.1 8.4V5.2M6.9 15.6v3.2M17.1 15.6v3.2"/></symbol><symbol id="i-cable" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><circle cx="9.4" cy="10.2" r="2"/><circle cx="14.6" cy="10.2" r="2"/><circle cx="12" cy="15.2" r="2"/></symbol><symbol id="i-signal" viewBox="0 0 24 24"><circle cx="12" cy="17.6" r="1.4"/><path d="M8.6 14.4a4.8 4.8 0 0 1 6.8 0"/><path d="M5.8 11.2a8.8 8.8 0 0 1 12.4 0"/><path d="M3.2 8.2a12.4 12.4 0 0 1 17.6 0"/></symbol><symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3.4" width="6" height="11" rx="3"/><path d="M5.6 11.6a6.4 6.4 0 0 0 12.8 0"/><path d="M12 18v2.6M9.2 20.6h5.6"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M5.2 3.8h3.6l1.8 4.4-2.4 1.6a12.6 12.6 0 0 0 5.8 5.8l1.6-2.4 4.4 1.8v3.6a1.4 1.4 0 0 1-1.6 1.4C9.9 19.3 4.7 14.1 3.8 5.4a1.4 1.4 0 0 1 1.4-1.6z"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="4.6" width="18" height="12.4" rx="1.2"/><path d="M8.4 20.4h7.2M12 17v3.4"/><path d="m10.6 8.8 4 2.2-4 2.2z"/></symbol><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.6" y="3.6" width="7.2" height="7.2" rx=".8"/><rect x="13.2" y="3.6" width="7.2" height="7.2" rx=".8"/><rect x="3.6" y="13.2" width="7.2" height="7.2" rx=".8"/><rect x="13.2" y="13.2" width="7.2" height="7.2" rx=".8"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M12 3.2a6.2 6.2 0 0 0-6.2 6.2c0 4.2-2 5.2-2 6.2h16.4c0-1-2-2-2-6.2A6.2 6.2 0 0 0 12 3.2z"/><path d="M10.2 19.4a2 2 0 0 0 3.6 0"/></symbol><symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4.2 20.8 19.6H3.2z"/><path d="M12 10v4.4M12 17.2v.6"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="m8 12.2 2.8 2.8 5.2-6"/></symbol><symbol id="i-offline" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="m9.2 9.2 5.6 5.6M14.8 9.2l-5.6 5.6"/></symbol><symbol id="i-smoke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3"/><path d="M12 3.8v2M12 18.2v2M3.8 12h2M18.2 12h2"/></symbol><symbol id="i-spray" viewBox="0 0 24 24"><path d="M12 3.6v5"/><path d="M6.4 8.6h11.2"/><path d="m8.8 12.6-1.6 3.6M12 12.8v3.8M15.2 12.6l1.6 3.6"/><circle cx="12" cy="10.4" r="1.6"/></symbol><symbol id="i-extg" viewBox="0 0 24 24"><path d="M9 8.6h5.6v11.6H9z"/><path d="M9 8.6a2.8 2.8 0 0 1 5.6 0"/><path d="M14.6 10.8h3.2V7.2"/><path d="M10.8 4.6h2.6v2"/></symbol><symbol id="i-speed" viewBox="0 0 24 24"><path d="M4.2 17.4a8.6 8.6 0 1 1 15.6 0"/><path d="m12 13.6 4-3.8"/><circle cx="12" cy="14.8" r="1.2"/></symbol><symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3.4 12h3.8l2-5.2 3.6 10.4 2.4-5.2h5.4"/></symbol><symbol id="i-server" viewBox="0 0 24 24"><rect x="3.6" y="4.2" width="16.8" height="6" rx="1"/><rect x="3.6" y="13.8" width="16.8" height="6" rx="1"/><path d="M7 7.2h.4M7 16.8h.4"/><path d="M10.6 7.2h6M10.6 16.8h6"/></symbol><symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6.4" rx="7.4" ry="2.8"/><path d="M4.6 6.4v11.2c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8V6.4"/><path d="M4.6 12c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8"/></symbol><symbol id="i-switch" viewBox="0 0 24 24"><rect x="2.8" y="7.6" width="18.4" height="8.8" rx="4.4"/><circle cx="16.8" cy="12" r="2.8"/></symbol><symbol id="i-trend" viewBox="0 0 24 24"><path d="m3.6 16.4 5-5.4 3.6 3.4 7.2-8.2"/><path d="M19.4 6.2h-4.4M19.4 6.2v4.4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 20.4V4.2h11.4l-2.2 3.6 2.2 3.6H6"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.6"/><path d="M12 1.8v3.2M12 19v3.2M1.8 12h3.2M19 12h3.2"/></symbol></svg>
+<div class="wrap">
+
+<header>
+  <div class="lg"><svg class="si"><use href="#i-tunnel"/></svg></div>
+  <div>
+    <h1>未来一路综合管廊管理平台</h1>
+    <div class="en" style="font-size:13px;color:var(--tx3);letter-spacing:2px;margin-top:6px">监控中心大屏 · 高保真原型 V1.0</div>
+  </div>
+  <div class="m"><b>画布</b>　3840 × 2160（单 4K）<br><b>版面基线</b>　参照 原型/参考工程实测值<br><b>日期</b>　2026-09-14</div>
+</header>
+
+<div class="note">
+  点击任一画面进入。原型按 <b>3840×2160</b> 真实画布构建，打开后自动等比缩放适配当前屏幕；<b>全屏（F11）观看效果最佳</b>。
+  画面内顶栏菜单可直接互相跳转。<b>S8 应急指挥打开后会自动弹出居中报警弹框</b>（三级报警自动切入），5 秒后收起；
+  S1 系统首页<b>不自动弹框</b>，需要演示时点左下角「原型演示 · 三级报警弹框」手动触发。
+  <b>GIS 底板可拖动平移、滚轮缩放、双击复位。</b>
+</div>
+
+<div class="grid">
+  <a class="card" href="S1-系统首页.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-home"/></svg></span><span class="id">S1</span><h3>系统首页</h3></div>
+    <div class="en">INDEX SYSTEM　默认常驻画面</div>
+    <p>底板＝GIS 全线一张图。关键指标（含全线最不利环境值）、运行状态总览（机电环形 + 9 类子系统接入）、环境参数矩阵；右栏 C-1 报警/故障、实时报警列表、分级与 24h 趋势、视频监控。</p>
+    <div class="meta"><span class="b">GIS 全线图</span><span>6 面板 + C-1</span><span>弹框手动触发</span></div></a>
+
+  <a class="card" href="S2-环境监控.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-temp"/></svg></span><span class="id">S2</span><h3>环境监控</h3></div>
+    <div class="en">ENVIRONMENT MONITORING</div>
+    <p>底板＝道路横断面 + 地下箱涵剖切示意（含周边直埋管线标注）。六参数实时卡与趋势、分区环境矩阵、集水井水位与泵组；右栏 C-1、设备状态与控制（通风 / 排水 / 照明合并）、指令执行流水、本分区消防状态。</p>
+    <div class="meta"><span class="b">道路横断面 + 箱涵剖切</span><span>6 面板 + C-1</span><span>带设备控制</span></div></a>
+
+  <a class="card al" href="S3-消防监控.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-fire"/></svg></span><span class="id">S3</span><h3>消防监控</h3></div>
+    <div class="en">FIRE MONITORING</div>
+    <p>底板＝GIS 消防点位图。火灾报警统计、防火分区探测器在线率、消防设施台账；右栏 FAS 报警、电气火灾、防火门与消防电源。</p>
+    <div class="meta"><span class="b">消防点位图</span><span>6 面板 + C-1</span><span>只监视不控制</span></div></a>
+
+  <a class="card" href="S4-安防监控.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-shield"/></svg></span><span class="id">S4</span><h3>安防监控</h3></div>
+    <div class="en">SECURITY MONITORING</div>
+    <p>底板＝GIS 安防点位图。视频在线统计与存储余量、门禁出入事件流、入侵防区；右栏视频监控、40 套智能井盖、电子巡查。</p>
+    <div class="meta"><span class="b">安防点位图</span><span>6 面板 + C-1</span><span>GB/T 28181</span></div></a>
+
+  <a class="card" href="S5-通信广播.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-speaker"/></svg></span><span class="id">S5</span><h3>通信广播</h3></div>
+    <div class="en">COMMUNICATION &amp; BROADCASTING</div>
+    <p>底板＝GIS 通信点位图。分机在线统计、呼叫记录（含地址码与舱号）、录音归档；右栏调度台、广播分区控制、LED 信息发布。</p>
+    <div class="meta"><span class="b">通信点位图</span><span>6 面板 + C-1</span><span>SIP 2.0</span></div></a>
+
+  <a class="card" href="S6-电力监控.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-elec"/></svg></span><span class="id">S6</span><h3>电力监控</h3></div>
+    <div class="en">POWER MONITORING</div>
+    <p>底板＝供配电单线图（数值直接标注于回路）。负荷曲线、能耗构成、电能质量；右栏回路状态表、用电异常识别、UPS 与动力环境。</p>
+    <div class="meta"><span class="b">单线图</span><span>6 面板 + C-1</span><span>越限回路脉冲</span></div></a>
+
+  <a class="card" href="S7-巡检维保.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-clipbrd"/></svg></span><span class="id">S7</span><h3>巡检维保</h3></div>
+    <div class="en">PATROL &amp; MAINTENANCE</div>
+    <p>底板＝GIS 巡检点位图 + 人员实时位置与已走轨迹。巡检进度、打卡记录、在廊人员；右栏工单看板、定期检测计划、定期检测计划（含应急物资）、设备健康度。</p>
+    <div class="meta"><span class="b">轨迹动画</span><span>6 面板 + C-1</span><span>可切三画面轨迹</span></div></a>
+
+  <a class="card al" href="S8-应急指挥.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-alarmlt"/></svg></span><span class="id">S8</span><h3>应急指挥</h3></div>
+    <div class="en">EMERGENCY COMMAND　三级报警自动切入</div>
+    <p>底板＝事发分区放大图，自动居中。主事件卡、联动执行进度（含失败重试）、预案处置步骤计时；右栏调度通讯、相邻分区环境、事件队列。</p>
+    <div class="meta"><span class="b">事发分区放大</span><span>6 面板 + C-1</span><span>报警弹框自动</span></div></a>
+
+  <a class="card" href="S9-统计分析.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-chart"/></svg></span><span class="id">S9</span><h3>统计分析</h3></div>
+    <div class="en">STATISTIC ANALYSIS</div>
+    <p>底板＝分析结果落图（报警热点热力）。报警统计、热点 TOP10、环境超标；右栏联动有效性、接口与网络健康、巡检与维保质量。</p>
+    <div class="meta"><span class="b">热力落图</span><span>6 面板 + C-1</span><span>图表与地图联动</span></div></a>
+
+  <a class="card al" href="S10-设备监测.html"><div class="t"><span class="ci"><svg class="si"><use href="#i-device"/></svg></span><span class="id">S10</span><h3>设备监测</h3></div>
+    <div class="en">DEVICE MONITORING</div>
+    <p>底板＝天气图语义的离线地图。设备资产、11 个子系统在线率、传感器实时值、机电联动状态与筛选队列统一落图；点击任一点位查看设备档案与趋势。</p>
+    <div class="meta"><span class="b">一张图 + 多面板</span><span>组合筛选</span><span>点位详情抽屉</span></div></a>
+</div>
+
+<h2><svg class="si"><use href="#i-layers"/></svg>版面基线</h2>
+<table>
+  <tr><th style="width:170px">项目</th><th style="width:200px">取值</th><th>出处 / 说明</th></tr>
+  <tr><td>画布</td><td>3840 × 2160</td><td>单 4K，已确认</td></tr>
+  <tr><td>顶栏</td><td>90 px（4.17%）</td><td><code>nav.vue → .nav-index{height:90px}</code></td></tr>
+  <tr><td>主体内边距</td><td>20px 30px</td><td><code>index.vue → .main</code></td></tr>
+  <tr><td>左 / 右浮栏</td><td>984 px 各（25.6%）</td><td><code>.main-left,.main-right{min-width:984px}</code></td></tr>
+  <tr><td>中心视窗</td><td>1812 × 2030（47.2% × 94%）</td><td>统计面板不得压入，仅允许贴边叠加与弹层</td></tr>
+  <tr><td>面板底色</td><td>41% 不透明 + 背景模糊</td><td><code>common.less → .box-bg-border</code>，底板须透出</td></tr>
+  <tr><td>面板标题栏</td><td>51 px</td><td><code>common.less → .box-title-bg</code></td></tr>
+  <tr><td>菜单项</td><td>200 px / 项 × 9</td><td>参考工程为 250px，本项目收窄（已确认）</td></tr>
+  <tr><td>C-1 报警 / 故障</td><td>200 px，斜切梯形交错</td><td>几何实测自 <code>warning-bg3.png</code>：43.6°、缝宽 2.2%，用 <code>clip-path</code> 实现</td></tr>
+</table>
+
+<h2><svg class="si"><use href="#i-doc"/></svg>目录结构</h2>
+<table>
+  <tr><th style="width:260px">文件</th><th>说明</th></tr>
+  <tr><td><code>index.html</code></td><td>本页 · 画面导航</td></tr>
+  <tr><td><code>S1 ~ S9-*.html</code></td><td>9 个业务画面，各自独立可单开</td></tr>
+  <tr><td><code>assets/common.css</code></td><td>设计令牌、顶栏、面板、C-1 斜切梯形、弹框、通用组件</td></tr>
+  <tr><td><code>assets/common.js</code></td><td>等比适配、时钟、导航、GIS 底板渲染器、图表 helper、弹框交互</td></tr>
+</table>
+
+<footer>
+  结构依据《未来一路综合管廊管理平台 · 监控中心大屏原型结构草图 S0.9》，内容依据《技术架构设计方案 V1.0》。<br>
+  数据为演示用示例值，非真实运行数据。地图为示意绘制，实际接入高德离线瓦片后底图纹理会变化，浮栏透明度与模糊值需按实际底图复调。
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>未来一路综合管廊管理平台 · S5 通信广播</title>
+<link rel="stylesheet" href="assets/common.css">
+</head>
+<body>
+<svg class="sprite" aria-hidden="true"><symbol id="i-home" viewBox="0 0 24 24"><path d="M3.6 11.2 12 4.4l8.4 6.8"/><path d="M5.8 9.6V20h12.4V9.6"/><path d="M9.8 20v-5.6h4.4V20"/></symbol><symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 21.4c-3.6 0-6.4-2.8-6.4-6.3 0-2.4 1.2-4 2.5-5.5C9.6 8 11 6.4 11 4c0-.6-.1-1.2-.3-1.8 4.1 1.1 8.2 5.4 8.2 10.8 0 4.2-2.9 8.4-6.9 8.4z"/><path d="M12 21.4a3.1 3.1 0 0 1-3.1-3.1c0-1.2.6-2 1.2-2.8.6-.7 1.2-1.4 1.2-2.5 2 .9 3.8 2.9 3.8 5.3a3.1 3.1 0 0 1-3.1 3.1z"/></symbol><symbol id="i-hydrant" viewBox="0 0 24 24"><path d="M9 8.6h6v10.4H9z"/><path d="M6.8 19h10.4"/><path d="M12 3.4v5.2"/><path d="M9.4 3.4h5.2"/><path d="M6.2 11.4H9M15 11.4h2.8"/><path d="M9 15.2h6"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.4 2.8 5.6 13.6h5.4l-.9 7.6 7.8-11.2h-5.4z"/></symbol><symbol id="i-elec" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12.9 7 9.6 12.5h2.9l-.5 4.5 3.4-5.5h-3z"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M15.4 6.2a4.4 4.4 0 0 0-5.8 5.4l-5.4 5.4v2.8h2.8l5.4-5.4a4.4 4.4 0 0 0 5.4-5.8l-2.6 2.6-2.4-.4-.4-2.4z"/></symbol><symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9.2v5.6h3.6L13 19V5L7.6 9.2z"/><path d="M16.2 8.8a5 5 0 0 1 0 6.4"/><path d="M18.8 6.4a8.6 8.6 0 0 1 0 11.2"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.8 20.2h16.4"/><path d="M6.6 20.2v-6.6M11 20.2V7.4M15.4 20.2v-4.2M19.8 20.2V10.6"/></symbol><symbol id="i-topo" viewBox="0 0 24 24"><circle cx="12" cy="5.6" r="2.2"/><circle cx="5.6" cy="18.4" r="2.2"/><circle cx="18.4" cy="18.4" r="2.2"/><path d="M12 7.8v3.8"/><path d="M12 11.6H6.6a1 1 0 0 0-1 1v3.6"/><path d="M12 11.6h5.4a1 1 0 0 1 1 1v3.6"/></symbol><symbol id="i-temp" viewBox="0 0 24 24"><path d="M14 13.9V5.2a2 2 0 1 0-4 0v8.7a4 4 0 1 0 4 0z"/><path d="M12 8.6v5.8"/></symbol><symbol id="i-humid" viewBox="0 0 24 24"><path d="M12 3.4s5.4 6.1 5.4 9.7a5.4 5.4 0 0 1-10.8 0C6.6 9.5 12 3.4 12 3.4z"/><path d="M9.6 13.6a2.6 2.6 0 0 0 2.6 2.6"/></symbol><symbol id="i-wind" viewBox="0 0 24 24"><path d="M3.4 8.6h10.2a2.6 2.6 0 1 0-2.6-2.6"/><path d="M3.4 12.4h13.2a2.6 2.6 0 1 1-2.6 2.6"/><path d="M3.4 16.2h7.2"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17 17.2H7a4 4 0 0 1-.6-8 5.6 5.6 0 0 1 10.8-1.4A4.4 4.4 0 0 1 17 17.2z"/></symbol><symbol id="i-water" viewBox="0 0 24 24"><path d="M12 3.4s3.8 4 3.8 6.5a3.8 3.8 0 0 1-7.6 0C8.2 7.4 12 3.4 12 3.4z"/><path d="M3.6 15.4c2.1 0 2.1-1.6 4.2-1.6s2.1 1.6 4.2 1.6 2.1-1.6 4.2-1.6 2.1 1.6 4.2 1.6"/><path d="M3.6 19.4c2.1 0 2.1-1.6 4.2-1.6s2.1 1.6 4.2 1.6 2.1-1.6 4.2-1.6 2.1 1.6 4.2 1.6"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M2.8 8.6h11.2v6.8H2.8z"/><path d="M14 10.8 20.6 7.4v9.2L14 13.2z"/><path d="M5.6 15.4v4.2"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.4 12S6.2 5.8 12 5.8 21.6 12 21.6 12 17.8 18.2 12 18.2 2.4 12 2.4 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-light" viewBox="0 0 24 24"><path d="M9.2 16.2a5.6 5.6 0 1 1 5.6 0v1.9H9.2z"/><path d="M10 20.4h4"/><path d="M12 9.2v3.4"/></symbol><symbol id="i-gas" viewBox="0 0 24 24"><circle cx="8.6" cy="14.2" r="2.8"/><circle cx="14.8" cy="9.2" r="2.8"/><circle cx="16" cy="16.4" r="1.8"/><path d="m10.8 12.4 1.9-1.4M11.2 15.4l3-.5"/></symbol><symbol id="i-board" viewBox="0 0 24 24"><rect x="2.8" y="4.2" width="18.4" height="11.4" rx="1"/><path d="M8 19.8h8M12 15.6v4.2"/><path d="M6.4 8h4.4M6.4 11.8h8.8"/></symbol><symbol id="i-car" viewBox="0 0 24 24"><path d="M4 14.8h16v3.4h-2.4v1.6h-2.6v-1.6H9v1.6H6.4v-1.6H4z"/><path d="m5.6 14.8 1.9-5.4h9l1.9 5.4"/><circle cx="7.6" cy="16.5" r=".9"/><circle cx="16.4" cy="16.5" r=".9"/></symbol><symbol id="i-device" viewBox="0 0 24 24"><rect x="3.2" y="4.4" width="17.6" height="15.2" rx="1.4"/><path d="m7.4 9.6 2.8 2.6-2.8 2.6"/><path d="M12.6 15h4.4"/></symbol><symbol id="i-fault" viewBox="0 0 24 24"><rect x="5" y="3.4" width="14" height="17.2" rx="1.2"/><path d="M5 7.4h14"/><path d="M12.6 10.2 9.8 14.4h3.2l-.8 3.6 3-4.6h-3z"/></symbol><symbol id="i-alarmlt" viewBox="0 0 24 24"><path d="M7.4 19.4v-4.8a4.6 4.6 0 0 1 9.2 0v4.8z"/><path d="M5.6 19.4h12.8"/><path d="M12 5.6V3.2M6.6 7.4 5 5.8M17.4 7.4 19 5.8"/></symbol><symbol id="i-pool" viewBox="0 0 24 24"><rect x="3.4" y="7" width="17.2" height="10.4" rx="1"/><path d="M3.4 12.6c2 0 2-1.4 4-1.4s2 1.4 4 1.4 2-1.4 4-1.4 2 1.4 4 1.4"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.8"/><path d="m20 20-4.2-4.2"/></symbol><symbol id="i-edit" viewBox="0 0 24 24"><path d="M4.4 19.6h4.2L19.2 9a2 2 0 0 0-2.8-2.8L5.8 16.8z"/><path d="m14.8 7.8 2.8 2.8"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.8 12a7.8 7.8 0 1 1-2.3-5.5"/><path d="M19.8 4.6v4.6h-4.6"/></symbol><symbol id="i-back" viewBox="0 0 24 24"><path d="M14.4 5.6 8 12l6.4 6.4"/></symbol><symbol id="i-road" viewBox="0 0 24 24"><path d="M6.2 20.4 9.2 3.6M17.8 20.4 14.8 3.6"/><path d="M12 4.6v3.2M12 10.6v3M12 16.6v3.4"/></symbol><symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.6-4.7-7.6-9.7a4.4 4.4 0 0 1 7.6-3 4.4 4.4 0 0 1 7.6 3c0 5-7.6 9.7-7.6 9.7z"/></symbol><symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.4"/><path d="M12 10.9c0-2.6 1.3-4.2 2.9-3.7 1.5.5 1 2.7-2.9 3.7Z"/><g transform="rotate(120 12 12)"><path d="M12 10.9c0-2.6 1.3-4.2 2.9-3.7 1.5.5 1 2.7-2.9 3.7Z"/></g><g transform="rotate(240 12 12)"><path d="M12 10.9c0-2.6 1.3-4.2 2.9-3.7 1.5.5 1 2.7-2.9 3.7Z"/></g></symbol><symbol id="i-pump" viewBox="0 0 24 24"><circle cx="10.4" cy="13.6" r="5"/><path d="M10.4 8.6V4.8h6.4v5.2"/><path d="M15.4 13.6h5"/><path d="M8.4 13.6a2 2 0 0 1 2-2"/></symbol><symbol id="i-valve" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M3.6 12h5.2M15.2 12h5.2"/><path d="M12 8.8V4.8M9.6 4.8h4.8"/></symbol><symbol id="i-level" viewBox="0 0 24 24"><rect x="6.6" y="3.6" width="10.8" height="16.8" rx="1.2"/><path d="M6.6 13c1.4 0 1.4-1.3 2.7-1.3S10.7 13 12 13s1.4-1.3 2.7-1.3 1.4 1.3 2.7 1.3"/><path d="M3.4 7.4h2M3.4 11h2M3.4 14.6h2"/></symbol><symbol id="i-pipe" viewBox="0 0 24 24"><path d="M3.4 9.2h17.2v5.6H3.4z"/><path d="M6.8 7.8v8.4M17.2 7.8v8.4"/></symbol><symbol id="i-tunnel" viewBox="0 0 24 24"><rect x="3.2" y="6.6" width="17.6" height="13" rx="1"/><path d="M9.2 6.6v13M14.8 6.6v13"/><path d="M3.2 4h17.6"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3.4 3.4 7.8 12 12.2l8.6-4.4z"/><path d="m3.4 12.2 8.6 4.4 8.6-4.4"/><path d="m3.4 16.6 8.6 4.4 8.6-4.4"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M12 3.4a5.6 5.6 0 0 0-5.6 5.6c0 4.4 5.6 11.6 5.6 11.6s5.6-7.2 5.6-11.6A5.6 5.6 0 0 0 12 3.4z"/><circle cx="12" cy="9" r="2.2"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.2 19.4 6v6c0 4.7-3.2 7.6-7.4 8.8C7.8 19.6 4.6 16.7 4.6 12V6z"/><path d="m8.8 12 2.4 2.4 4-4.6"/></symbol><symbol id="i-fence" viewBox="0 0 24 24"><path d="M3.4 20.4V8.6L12 3.8l8.6 4.8v11.8"/><path d="M3.4 12.4h17.2M3.4 16.6h17.2"/><path d="M8.4 8.8v11.6M15.6 8.8v11.6"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.8" y="10.2" width="14.4" height="10" rx="1.4"/><path d="M8.2 10.2V7.4a3.8 3.8 0 0 1 7.6 0v2.8"/><circle cx="12" cy="15" r="1.4"/></symbol><symbol id="i-door" viewBox="0 0 24 24"><path d="M5.6 3.6h12.8v16.8H5.6z"/><path d="M9.2 3.6v16.8"/><circle cx="15.4" cy="12" r="1"/></symbol><symbol id="i-manhole" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8.4" ry="5.4"/><path d="M6.2 10.4h11.6M6.2 13.6h11.6"/></symbol><symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7.2" r="3.2"/><path d="M5.4 20.4a6.6 6.6 0 0 1 13.2 0"/></symbol><symbol id="i-helmet" viewBox="0 0 24 24"><path d="M4.4 15.6a7.6 7.6 0 0 1 15.2 0z"/><path d="M3.2 15.6h17.6"/><path d="M9.6 8.8V5.4h4.8v3.4"/></symbol><symbol id="i-team" viewBox="0 0 24 24"><circle cx="9" cy="8.4" r="2.8"/><path d="M3.6 18.8a5.4 5.4 0 0 1 10.8 0"/><circle cx="17" cy="9.6" r="2.2"/><path d="M15.2 14.2a4.4 4.4 0 0 1 5.2 3.4"/></symbol><symbol id="i-clipbrd" viewBox="0 0 24 24"><path d="M8.8 5H6.4a1.2 1.2 0 0 0-1.2 1.2v13.2A1.2 1.2 0 0 0 6.4 20.6h11.2a1.2 1.2 0 0 0 1.2-1.2V6.2A1.2 1.2 0 0 0 17.6 5h-2.4"/><rect x="8.8" y="3.2" width="6.4" height="3.2" rx="1"/><path d="M8.8 11.4h6.4M8.8 15.2h4.4"/></symbol><symbol id="i-order" viewBox="0 0 24 24"><path d="M6 3.6h9l3.8 3.8v13H6z"/><path d="M15 3.6v4h3.8"/><path d="M9 12.4h6M9 16h4"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.4" width="16" height="15" rx="1.2"/><path d="M4 10.2h16M8.8 3.4v4M15.2 3.4v4"/><path d="M8.2 13.6h2.2M8.2 17h2.2M13.6 13.6h2.2M13.6 17h2.2"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 6.8V12l3.6 2.2"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><path d="M4.4 12a7.6 7.6 0 1 0 2.4-5.6"/><path d="M4 5.4v4.2h4.2"/><path d="M12 8.4V12l2.8 1.8"/></symbol><symbol id="i-doc" viewBox="0 0 24 24"><path d="M6.4 3.6h8.2l4 4v12.8H6.4z"/><path d="M14.6 3.6v4h4"/><path d="M9.4 16.4v-3M12 16.4v-5.6M14.6 16.4v-2"/></symbol><symbol id="i-export" viewBox="0 0 24 24"><path d="M12 3.8v10.4"/><path d="m8.4 10.8 3.6 3.4 3.6-3.4"/><path d="M4.6 16.2v3.2a1 1 0 0 0 1 1h12.8a1 1 0 0 0 1-1v-3.2"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10.4 13.6a3.6 3.6 0 0 0 5.4.4l2.4-2.4a3.6 3.6 0 0 0-5.1-5.1l-1.4 1.4"/><path d="M13.6 10.4a3.6 3.6 0 0 0-5.4-.4l-2.4 2.4a3.6 3.6 0 0 0 5.1 5.1l1.4-1.4"/></symbol><symbol id="i-plan" viewBox="0 0 24 24"><path d="M5.6 3.8h9.6l3.2 3.2v13.2H5.6z"/><path d="M15.2 3.8V7h3.2"/><path d="m8.8 13.4 2 2 4.2-4.6"/></symbol><symbol id="i-flowchart" viewBox="0 0 24 24"><rect x="3.4" y="3.8" width="6" height="4.4" rx=".8"/><rect x="14.6" y="3.8" width="6" height="4.4" rx=".8"/><rect x="9" y="15.6" width="6" height="4.4" rx=".8"/><path d="M6.4 8.2v3.6h11.2V8.2M12 11.8v3.8"/></symbol><symbol id="i-ups" viewBox="0 0 24 24"><rect x="3.2" y="7" width="15" height="10" rx="1.4"/><path d="M18.2 10.4h2.6v3.2h-2.6"/><path d="M11.8 9.4 8.8 13.2h3.2l-.8 2.8 3.2-4.2h-3z"/></symbol><symbol id="i-meter" viewBox="0 0 24 24"><rect x="4.2" y="3.6" width="15.6" height="16.8" rx="1.4"/><rect x="7" y="6.6" width="10" height="4.4" rx=".6"/><path d="M7.4 14.8h3M13.6 14.8h3M7.4 17.6h9.2"/></symbol><symbol id="i-trans" viewBox="0 0 24 24"><rect x="4.2" y="8.4" width="5.4" height="7.2" rx=".6"/><rect x="14.4" y="8.4" width="5.4" height="7.2" rx=".6"/><path d="M9.6 10.6h4.8M9.6 13.4h4.8"/><path d="M6.9 8.4V5.2M17.1 8.4V5.2M6.9 15.6v3.2M17.1 15.6v3.2"/></symbol><symbol id="i-cable" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><circle cx="9.4" cy="10.2" r="2"/><circle cx="14.6" cy="10.2" r="2"/><circle cx="12" cy="15.2" r="2"/></symbol><symbol id="i-signal" viewBox="0 0 24 24"><circle cx="12" cy="17.6" r="1.4"/><path d="M8.6 14.4a4.8 4.8 0 0 1 6.8 0"/><path d="M5.8 11.2a8.8 8.8 0 0 1 12.4 0"/><path d="M3.2 8.2a12.4 12.4 0 0 1 17.6 0"/></symbol><symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3.4" width="6" height="11" rx="3"/><path d="M5.6 11.6a6.4 6.4 0 0 0 12.8 0"/><path d="M12 18v2.6M9.2 20.6h5.6"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M5.2 3.8h3.6l1.8 4.4-2.4 1.6a12.6 12.6 0 0 0 5.8 5.8l1.6-2.4 4.4 1.8v3.6a1.4 1.4 0 0 1-1.6 1.4C9.9 19.3 4.7 14.1 3.8 5.4a1.4 1.4 0 0 1 1.4-1.6z"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="4.6" width="18" height="12.4" rx="1.2"/><path d="M8.4 20.4h7.2M12 17v3.4"/><path d="m10.6 8.8 4 2.2-4 2.2z"/></symbol><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.6" y="3.6" width="7.2" height="7.2" rx=".8"/><rect x="13.2" y="3.6" width="7.2" height="7.2" rx=".8"/><rect x="3.6" y="13.2" width="7.2" height="7.2" rx=".8"/><rect x="13.2" y="13.2" width="7.2" height="7.2" rx=".8"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M12 3.2a6.2 6.2 0 0 0-6.2 6.2c0 4.2-2 5.2-2 6.2h16.4c0-1-2-2-2-6.2A6.2 6.2 0 0 0 12 3.2z"/><path d="M10.2 19.4a2 2 0 0 0 3.6 0"/></symbol><symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4.2 20.8 19.6H3.2z"/><path d="M12 10v4.4M12 17.2v.6"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="m8 12.2 2.8 2.8 5.2-6"/></symbol><symbol id="i-offline" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="m9.2 9.2 5.6 5.6M14.8 9.2l-5.6 5.6"/></symbol><symbol id="i-smoke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3"/><path d="M12 3.8v2M12 18.2v2M3.8 12h2M18.2 12h2"/></symbol><symbol id="i-spray" viewBox="0 0 24 24"><path d="M12 3.6v5"/><path d="M6.4 8.6h11.2"/><path d="m8.8 12.6-1.6 3.6M12 12.8v3.8M15.2 12.6l1.6 3.6"/><circle cx="12" cy="10.4" r="1.6"/></symbol><symbol id="i-extg" viewBox="0 0 24 24"><path d="M9 8.6h5.6v11.6H9z"/><path d="M9 8.6a2.8 2.8 0 0 1 5.6 0"/><path d="M14.6 10.8h3.2V7.2"/><path d="M10.8 4.6h2.6v2"/></symbol><symbol id="i-speed" viewBox="0 0 24 24"><path d="M4.2 17.4a8.6 8.6 0 1 1 15.6 0"/><path d="m12 13.6 4-3.8"/><circle cx="12" cy="14.8" r="1.2"/></symbol><symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3.4 12h3.8l2-5.2 3.6 10.4 2.4-5.2h5.4"/></symbol><symbol id="i-server" viewBox="0 0 24 24"><rect x="3.6" y="4.2" width="16.8" height="6" rx="1"/><rect x="3.6" y="13.8" width="16.8" height="6" rx="1"/><path d="M7 7.2h.4M7 16.8h.4"/><path d="M10.6 7.2h6M10.6 16.8h6"/></symbol><symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6.4" rx="7.4" ry="2.8"/><path d="M4.6 6.4v11.2c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8V6.4"/><path d="M4.6 12c0 1.5 3.3 2.8 7.4 2.8s7.4-1.3 7.4-2.8"/></symbol><symbol id="i-switch" viewBox="0 0 24 24"><rect x="2.8" y="7.6" width="18.4" height="8.8" rx="4.4"/><circle cx="16.8" cy="12" r="2.8"/></symbol><symbol id="i-trend" viewBox="0 0 24 24"><path d="m3.6 16.4 5-5.4 3.6 3.4 7.2-8.2"/><path d="M19.4 6.2h-4.4M19.4 6.2v4.4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 20.4V4.2h11.4l-2.2 3.6 2.2 3.6H6"/></symbol><symbol id="i-expand" viewBox="0 0 24 24"><path d="M9.4 3.6H4.6a1 1 0 0 0-1 1v4.8"/><path d="M14.6 3.6h4.8a1 1 0 0 1 1 1v4.8"/><path d="M20.4 14.6v4.8a1 1 0 0 1-1 1h-4.8"/><path d="M3.6 14.6v4.8a1 1 0 0 0 1 1h4.8"/></symbol><symbol id="i-shrink" viewBox="0 0 24 24"><path d="M3.8 9.2h4.4a1 1 0 0 0 1-1V3.8"/><path d="M20.2 9.2h-4.4a1 1 0 0 1-1-1V3.8"/><path d="M20.2 14.8h-4.4a1 1 0 0 0-1 1v4.4"/><path d="M3.8 14.8h4.4a1 1 0 0 1 1 1v4.4"/></symbol><symbol id="i-snap" viewBox="0 0 24 24"><path d="M3.6 7.8h3.8L9 5.2h6l1.6 2.6h3.8v11.4H3.6z"/><circle cx="12" cy="13.2" r="3.4"/></symbol><symbol id="i-ptz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.6 13.8 6h-3.6zM12 21.4 10.2 18h3.6zM2.6 12 6 10.2v3.6zM21.4 12 18 13.8v-3.6z"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.6"/><path d="M12 1.8v3.2M12 19v3.2M1.8 12h3.2M19 12h3.2"/></symbol></svg>
+<div id="fit"><div id="stage">
+
+  <div class="nav">
+    <div class="brand">
+      <div class="lg"><svg class="si"><use href="#i-tunnel"/></svg></div>
+      <h1>未来一路综合管廊管理平台</h1>
+    </div>
+    <div class="menu" id="menu"></div>
+    <div class="navr">
+      <div class="wx">
+        <div class="w"><svg class="si"><use href="#i-cloud"/></svg><b>多云 22℃</b></div>
+        <div class="w rain"><svg class="si"><use href="#i-water"/></svg><em>1h 降雨</em><b>2.4mm</b></div>
+      </div>
+      <div class="clock"><div class="t" id="clk">14:26:08</div><div class="d" id="dat">2026-09-14 星期日</div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="base" id="base"></div>
+
+    <div class="rail">
+      <div class="pnl " style="flex:580 1 0">
+        <div class="ph"><span class="pi"><svg class="si"><use href="#i-signal"/></svg></span><h3>分机在线统计</h3><span class="sub">/ SIP 2.0 接入</span><span class="rt"><span class="tag">巡检通过</span></span></div>
+        <div class="pb"><div class="kpi" style="grid-template-columns:repeat(2,1fr)">
+            <div class="k"><span class="ki"><svg class="si"><use href="#i-phone"/></svg></span><span class="kt"><span class="l">应急电话分机</span><span class="v">48</span></span></div>
+            <div class="k"><span class="ki"><svg class="si"><use href="#i-check"/></svg></span><span class="kt"><span class="l">在线</span><span class="v">47</span></span></div>
+            <div class="k warn"><span class="ki"><svg class="si"><use href="#i-offline"/></svg></span><span class="kt"><span class="l">离线</span><span class="v">1</span></span></div>
+            <div class="k"><span class="ki"><svg class="si"><use href="#i-speaker"/></svg></span><span class="kt"><span class="l">广播分区</span><span class="v">12</span></span></div></div>
+          <div class="barlist" id="cap" style="flex:0 0 auto"></div>
+          <div class="hint"><b>IP 核心调度</b>· 500 用户 · 最大 50 路并发 · 4 路外线出局</div></div>
+      </div>
+      <div class="pnl " style="flex:600 1 0">
+        <div class="ph"><span class="pi"><svg class="si"><use href="#i-phone"/></svg></span><h3>呼叫记录</h3><span class="sub">/ 含分机地址码与舱号</span><span class="rt"><span class="tag">今日 14</span></span></div>
+        <div class="pb"><div class="tb" id="call"></div></div>
+      </div>
+      <div class="pnl " style="flex:460 1 0">
+        <div class="ph"><span class="pi"><svg class="si"><use href="#i-mic"/></svg></span><h3>录音记录</h3><span class="sub">/ 按通话关联归档</span><span class="rt"><span class="tag">3.1 万小时</span></span></div>
+        <div class="pb"><div class="flow" id="rec"></div></div>
+      </div>
+    </div>
+
+    <div class="center">
+      <div class="ctop">
+        <div class="srch"><svg class="si"><use href="#i-search"/></svg><span>搜索分机 / 舱号 / 地址码</span></div>
+        <div class="seg"><b class="on">全部</b><b class="">应急电话</b><b class="">广播</b><b class="">LED</b></div>
+        <div class="spacer"></div>
+        <div class="noc">中心视窗 1812 × 2030 · 禁止遮挡</div>
+      </div>
+      <div class="cmid">
+        <div class="layers"><div class="lt"><svg class="si"><use href="#i-layers"/></svg>通信图层</div><label class="on" data-k="tel"><i></i>应急电话分机 48</label><label class="on" data-k="bcast"><i></i>广播分区 12</label><label class="on" data-k="led"><i></i>LED 屏 4</label><label class="on" data-k="gate"><i></i>语音网关</label><label class="" data-k="pipe"><i></i>出入口</label><div class="tip">拖动平移 · 滚轮缩放 · 双击复位<b id="mapReset">复位视图</b></div></div>
+      </div>
+      <div class="band">
+        <div class="bh"><span class="dm"></span><h4>广播分区状态带</h4>
+          <div class="lg"><s>正常</s><s class="w">预警</s><s class="a">报警</s><s class="o">离线</s></div></div>
+        <div class="segs" id="segs"></div>
+        <div class="ticks" id="ticks"></div>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="c1" style="flex:0 0 200px">
+        <div class="bgA"></div><div class="bgB"></div>
+        <svg class="seam" viewBox="0 0 984 200" preserveAspectRatio="none">
+          <line x1="579.5" y1="0" x2="383.8" y2="200" stroke="rgba(63,227,255,.55)" stroke-width="2"/>
+          <line x1="601.2" y1="0" x2="405.4" y2="200" stroke="rgba(63,227,255,.55)" stroke-width="2"/></svg>
+        <div class="cols">
+          <div class="col a on">
+            <div class="ico"><svg class="si"><use href="#i-alarmlt"/></svg></div>
+            <div class="tx"><b>分机呼入未接</b><span>电力舱 · F0104 · 已重呼 2 次</span>
+              <em><svg class="si"><use href="#i-history"/></svg>查看历史</em></div>
+            <div class="cnt"><b>1</b><span>待处理</span></div></div>
+          <div class="col b on">
+            <div class="ico"><svg class="si"><use href="#i-wrench"/></svg></div>
+            <div class="tx"><b>LED-03 屏体离线</b><span>3# 出入口</span>
+              <em><svg class="si"><use href="#i-history"/></svg>查看历史</em></div>
+            <div class="cnt"><b>1</b><span>待处理</span></div></div>
+        </div>
+      </div>
+      <div class="pnl pem" style="flex:558 1 0">
+        <div class="ph"><span class="pi"><svg class="si"><use href="#i-device"/></svg></span><h3>调度台</h3><span class="sub">/ 通讯录 + 呼叫控制</span></div>
+        <div class="pb"><div class="dial">
+            <b><svg class="si"><use href="#i-phone"/></svg>一键组呼</b>
+            <b><svg class="si"><use href="#i-speaker"/></svg>全线广播</b>
+            <b><svg class="si"><use href="#i-signal"/></svg>外线出局</b>
+            <b class="rec"><svg class="si"><use href="#i-mic"/></svg>录音中</b>
+          </div>
+          <div class="cts" id="cts" style="margin-top:14px"></div></div>
+      </div>
+      <div class="pnl pem" style="flex:622 1 0">
+        <div class="ph"><span class="pi"><svg class="si"><use href="#i-speaker"/></svg></span><h3>广播分区控制</h3><span class="sub">/ 分区 / 舱室 / 全线三级</span></div>
+        <div class="pb"><div class="ctl" id="bc"></div><div class="grpctl"><b>全线广播</b><b>预置语音</b><b>停止</b></div></div>
+      </div>
+      <div class="pnl " style="flex:480 1 0">
+        <div class="ph"><span class="pi"><svg class="si"><use href="#i-board"/></svg></span><h3>LED 信息发布</h3><span class="sub">/ 应急插播优先级最高</span><span class="rt"><span class="tag">4 屏</span></span></div>
+        <div class="pb"><div class="tb" id="led"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+<script src="assets/common.js"></script>
+<script>
+UI.fit(); UI.clock(); UI.nav(4); UI.railToggle(); UI.pan();
+
+UI.corridorMap(UI.$('base'), {
+  zones:{4:'w'},
+  legendTitle:'通信点位',
+  legend:[['#3FE3FF','应急电话分机 48 · 在线 47'],['#FFD85E','广播分区 12'],['#A77BFF','LED 信息屏 4']],
+  points:[[.04,'led','1# LED'],[.08,'tel',''],[.14,'bcast',''],[.18,'tel',''],[.24,'tel',''],
+    [.28,'bcast','广播分区'],[.32,'tel',''],[.38,'led','2# LED'],[.42,'tel',''],[.46,'bcast',''],
+    [.52,'tel',''],[.56,'bcast','广播分区'],[.60,'tel',''],[.66,'led','3# LED'],[.70,'tel',''],
+    [.74,'bcast',''],[.80,'tel',''],[.84,'bcast','广播分区'],[.88,'tel',''],[.94,'led','4# LED'],[.97,'tel','']],
+  alarms:[[4.5/21,'分机呼入未接','#FFA63D']],
+  title:'通信广播 · 应急电话 / IP 广播 / LED 信息发布',
+  sub:'分机 48 台（按舱号编址）　·　广播分区 12 个　·　SIP 2.0 接入　·　通话全程录音'
+});
+UI.band(UI.$('segs'), UI.$('ticks'), {4:'w'});
+UI.barlist(UI.$('cap'), [['当前并发通话',3,'#3FE3FF'],['今日峰值并发',11,'#FFD85E'],['授权上限',50,'#20E08C']]);
+(function(){
+  const R=[['14:22:41','K2+400','电力舱 F0104','02:14','报警','转接','w'],
+    ['13:58:06','K1+120','综合舱 F0101','01:02','正常','本地','ok'],
+    ['13:20:33','K3+560','燃气舱 F0202','03:41','报警','转接','w'],
+    ['12:44:18','K0+800','综合舱 F0101','00:48','正常','本地','ok'],
+    ['11:52:09','K4+200','水信舱 F0301','05:12','报警','转接','w'],
+    ['10:31:55','K2+060','电力舱 F0103','01:33','正常','本地','ok']];
+  UI.$('call').innerHTML='<table><tr><th>时间</th><th>地址码</th><th>舱号 / 分区</th><th>时长</th><th>性质</th><th>处理</th></tr>'+
+    R.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="${r[6]}">${r[4]}</td><td>${r[5]}</td></tr>`).join('')+'</table>';
+})();
+UI.$('rec').innerHTML=[['14:22:41','REC-20260914-0142.wav','02:14 · 电力舱 F0104 · 报警通话',0],
+  ['13:58:06','REC-20260914-0141.wav','01:02 · 综合舱 F0101',0],
+  ['13:20:33','REC-20260914-0140.wav','03:41 · 燃气舱 F0202 · 报警通话',0],
+  ['12:44:18','REC-20260914-0139.wav','00:48 · 综合舱 F0101',0]].map(([t,m,e,no])=>
+  `<div class="fw">${UI.SI('mic')}<span class="tm">${t}</span><span class="m">${m}<em>${e}</em></span></div>`).join('');
+UI.$('cts').innerHTML=[['值','中心值班室','张值班 · 当班','8001'],['运','管廊运维班','班组长 李工','8012'],
+  ['电','中电管线单位','值班电话 / 24h 抢修','13800138001']].map(([a,n,r,t])=>
+  `<div class="ct"><div class="av">${a}</div><div class="i"><b>${n}</b><span>${r}</span></div>
+    <div class="tel">${UI.SI('phone')}${t}</div></div>`).join('');
+UI.$('bc').innerHTML=[['综合舱 F0101-F0102','空闲','on'],['电力舱 F0103-F0104','广播中',''],['燃气舱 F0201-F0202','空闲','on'],['水信舱 F0301','空闲','on']].map(([n,s,c])=>
+  `<div class="row ${c?'':'off'}"><span class="dv">${UI.SI('speaker')}</span>
+    <span class="nm"><b>${n}</b><span>分区广播</span></span>
+    <span class="stt"><span class="pill ${c?'grn':'org'}">${s}</span></span>
+    <span class="sw"><b class="${c?'':'on'}">播</b><b>停</b></span></div>`).join('');
+(function(){
+  const R=[['1# LED 出入口','在线','应急插播','距起飞 12h 预警','w'],['2# LED 出入口','在线','常规','管廊安全须知','ok'],
+    ['3# LED 出入口','离线','—','屏体离线 00:22','bad'],['4# LED 出入口','在线','常规','管廊安全须知','ok']];
+  UI.$('led').innerHTML='<table><tr><th>屏体</th><th>状态</th><th>模式</th><th>当前内容</th></tr>'+
+    R.map(r=>`<tr><td>${r[0]}</td><td class="${r[4]}">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')+'</table>';
+})();
+UI.popup(0);
+
+</script>
+</body>
+</html>

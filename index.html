@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>中建四局智能运营管理系统 - 登录</title>
+  <title>科学岛管廊监控中心 - 登录</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="web/assets/css/tob-ui.css">
@@ -68,18 +68,19 @@
 
     .brand-logo {
       width: 52px;
-      height: 46px;
+      height: 52px;
       flex: 0 0 52px;
       object-fit: contain;
     }
 
     .brand-area .brand-name {
-      max-width: 280px;
+      display: block;
+      max-width: none;
       color: #1F2D3D;
       font-size: 18px;
       line-height: 1.35;
       font-weight: 700;
-      white-space: normal;
+      white-space: nowrap;
       overflow: visible;
     }
 
@@ -111,60 +112,12 @@
       z-index: 3;
       width: 376px;
       min-height: 454px;
-      padding: 0 44px 34px;
+      padding: 28px 44px 34px;
       border-radius: 14px;
       background: rgba(244, 248, 255, 0.92);
       border: 1px solid rgba(255, 255, 255, 0.84);
       box-shadow: 0 22px 42px rgba(35, 76, 135, 0.18);
       overflow: hidden;
-    }
-
-    .login-product-tabs {
-      margin: 0 -44px 26px;
-      padding: 0 28px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      border-bottom: 1px solid #DFE7F2;
-    }
-
-    .login-product-tab {
-      position: relative;
-      min-width: 0;
-      height: 54px;
-      padding: 0 10px;
-      border: 0;
-      color: #66788B;
-      background: transparent;
-      font-size: 14px;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .login-product-tab::after {
-      content: "";
-      position: absolute;
-      right: 10px;
-      bottom: -1px;
-      left: 10px;
-      height: 2px;
-      background: transparent;
-    }
-
-    .login-product-tab:hover,
-    .login-product-tab:focus-visible {
-      color: var(--primary);
-      outline: none;
-      background: rgba(19, 90, 250, 0.04);
-    }
-
-    .login-product-tab.active {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .login-product-tab.active::after {
-      background: var(--primary);
     }
 
     .login-title {
@@ -331,23 +284,21 @@
         padding-right: 32px;
         padding-left: 32px;
       }
-      .login-product-tabs { margin: 0 -32px 24px; padding: 0 16px; }
     }
 
     @media (max-width: 480px) {
       .login-page { padding: 24px 20px 32px; }
       .brand-area { align-items: flex-start; }
-      .brand-logo { width: 46px; height: 40px; flex-basis: 46px; }
+      .brand-logo { width: 46px; height: 46px; flex-basis: 46px; }
       .brand-area .brand-name { font-size: 16px; }
-      .login-product-tab { padding: 0 6px; font-size: 13px; }
     }
   </style>
 </head>
 <body>
   <main class="login-page">
-    <section class="brand-area" aria-label="中建四局智能运营管理系统">
-      <img class="brand-logo" src="web/assets/images/cscec-logo.png" alt="中建四局">
-      <span class="brand-name">中建四局智能运营管理系统</span>
+    <section class="brand-area" aria-label="科学岛管廊监控中心">
+      <img class="brand-logo" src="web/assets/images/science-island-icon.png" alt="">
+      <span class="brand-name">科学岛管廊监控中心</span>
     </section>
 
     <section class="guide-area" aria-label="智能运营管理平台引导图">
@@ -355,10 +306,6 @@
     </section>
 
     <section class="login-card" aria-label="Web 后台登录表单">
-      <div class="login-product-tabs" role="tablist" aria-label="选择登录系统">
-        <button class="login-product-tab" type="button" role="tab" aria-selected="false" data-login-target="screen">可视化大屏</button>
-        <button class="login-product-tab active" type="button" role="tab" aria-selected="true" data-login-target="admin">智能运营管理系统</button>
-      </div>
       <h2 class="login-title"><span>🥳</span>欢迎登录</h2>
       <label class="login-field">
         <span class="field-icon">♙</span>
@@ -393,14 +340,9 @@
     const passwordToggle = document.getElementById("passwordToggle");
     const loginButton = document.getElementById("loginButton");
     const loginError = document.getElementById("loginError");
-    const loginTabs = [...document.querySelectorAll("[data-login-target]")];
     const demoCredentials = {
       username: "admin",
       password: "zjsj@2026",
-    };
-    const loginTargets = {
-      screen: "Big Screen/overview.html",
-      admin: "web/pages/home/home.html",
     };
 
     passwordToggle.addEventListener("click", () => {
@@ -408,17 +350,6 @@
       passwordInput.type = visible ? "password" : "text";
       passwordToggle.classList.toggle("is-visible", !visible);
       passwordToggle.setAttribute("aria-label", visible ? "显示密码" : "隐藏密码");
-    });
-
-    loginTabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        loginTabs.forEach((item) => {
-          const selected = item === tab;
-          item.classList.toggle("active", selected);
-          item.setAttribute("aria-selected", String(selected));
-        });
-        loginButton.href = loginTargets[tab.dataset.loginTarget];
-      });
     });
 
     const hideLoginError = () => {
