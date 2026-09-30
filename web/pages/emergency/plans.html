@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应急预案 - 中建四局智能运营管理系统</title>
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/emergency.css">
+</head>
+<body class="emergency-page" data-menu-key="emergency.plans" data-page-section="应急管理" data-page-title="应急预案">
+  <div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header><main class="main"><div class="screen-frame stack">
+    <section class="page-head"><div><h1 class="page-title">应急预案</h1><p class="page-desc">维护标准化处置流程，支撑事件自动匹配与指挥调度。</p></div><button class="btn btn-primary" type="button" data-plan-action="create"><i class="fa-solid fa-plus"></i> 新增预案</button></section>
+    <section class="emergency-metric-grid" id="planMetrics"></section>
+    <section class="card filters emergency-filters"><div class="emergency-filter-grid" id="planFilters">
+      <label class="form-field"><span class="form-label">预案名称</span><input class="form-control" data-plan-filter="keyword" placeholder="请输入预案名称或编码"></label>
+      <label class="form-field"><span class="form-label">事件类型</span><select class="form-control" data-plan-filter="eventType"><option value="">全部类型</option></select></label>
+      <label class="form-field"><span class="form-label">响应等级</span><select class="form-control" data-plan-filter="level"><option value="">全部等级</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label>
+      <label class="form-field"><span class="form-label">状态</span><select class="form-control" data-plan-filter="status"><option value="">全部状态</option><option>草稿</option><option>已发布</option><option>已停用</option></select></label>
+      <div class="filter-actions"><button class="btn btn-secondary" type="button" data-plan-action="reset">重置</button><button class="btn btn-primary" type="button" data-plan-action="search">查询</button></div>
+    </div></section>
+    <section class="card"><div class="card-title-row"><div><h2 class="card-title">预案列表</h2><span class="panel-helper">共 <strong id="planCount">0</strong> 条记录</span></div></div><div class="table-wrap"><table class="table emergency-table"><thead><tr><th>预案名称</th><th>事件类型</th><th>响应等级</th><th>适用区域</th><th>步骤数</th><th>版本</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="planBody"></tbody></table></div><div class="pagination" id="planPagination"></div></section>
+  </div></main></div>
+  <script src="../../../app/config/menu.js"></script><script src="../../../app/data/emergency-data.js"></script><script src="../../../app/components/sidebar.js"></script><script src="../../../app/components/header.js"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/emergency-common.js"></script><script src="../../../app/components/emergency-plans.js"></script>
+</body></html>

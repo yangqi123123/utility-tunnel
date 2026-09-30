@@ -41,6 +41,7 @@
   <script src="../../../app/components/header.js"></script>
   <script src="../../../app/components/drawer.js"></script>
   <script src="../../../app/components/requirement.js"></script>
+  <script src="../../../app/data/emergency-data.js"></script>
   <script>
     const alarmInfo = [
       { id: 1, device: "配电室网关-01", type: "设备离线", message: "设备离线持续超过 60 秒", level: "告警", time: "2026-09-07 09:42:16", status: "未处理", history: [{ time: "2026-09-07 09:42:16", operator: "系统", action: "创建报警" }] },
@@ -59,13 +60,26 @@
     function transferStatus(item) { return item.transferStatus || (item.process ? "已转单" : "未转单"); }
     function workOrderNo(item) { return item.workOrderNo || item.transfer?.workOrderNo || item.process?.workOrderNo || "-"; }
     function transferTime(item) { return item.transferTime || item.transfer?.transferTime || (item.process ? item.time : "-"); }
-    function actionMarkup(item) { return item.status === "未处理" ? `<button class="table-action" type="button" data-alarm-action="detail" data-alarm-id="${item.id}">详情</button><button class="table-action" type="button" data-alarm-action="false" data-alarm-id="${item.id}">误报</button><button class="table-action" type="button" data-alarm-action="process" data-alarm-id="${item.id}">处理</button><button class="table-action" type="button" data-alarm-action="transfer" data-alarm-id="${item.id}">转工单</button>` : `<button class="table-action" type="button" data-alarm-action="detail" data-alarm-id="${item.id}">详情</button>`; }
+    function actionMarkup(item) { return item.status === "未处理" ? `<button class="table-action" type="button" data-alarm-action="detail" data-alarm-id="${item.id}">详情</button><button class="table-action" type="button" data-alarm-action="emergency" data-alarm-id="${item.id}">转应急事件</button><button class="table-action" type="button" data-alarm-action="false" data-alarm-id="${item.id}">误报</button><button class="table-action" type="button" data-alarm-action="process" data-alarm-id="${item.id}">处理</button><button class="table-action" type="button" data-alarm-action="transfer" data-alarm-id="${item.id}">转工单</button>` : `<button class="table-action" type="button" data-alarm-action="detail" data-alarm-id="${item.id}">${item.emergencyEventId ? "查看应急事件" : "详情"}</button>`; }
     function renderAlarmInfo(list = alarmInfo) {
       alarmInfoBody.innerHTML = list.map((item, index) => `<tr data-alarm-id="${item.id}"><td class="alarm-select-col"><input class="alarm-row-check" type="checkbox" data-alarm-select="${item.id}" ${item.status === "未处理" ? "" : "disabled"} aria-label="选择${item.device}"></td><td>${index + 1}</td><td>${item.device}</td><td>${deviceCode(item)}</td><td>${item.type}</td><td class="alarm-message" title="${item.message}">${item.message}</td><td><span class="alarm-level ${levelClass(item.level)}">${item.level}</span></td><td>${item.time}</td><td><span class="alarm-state ${statusClass(item.status)}">${item.status}</span></td><td><span class="alarm-transfer-state ${transferStatus(item) === "已转单" ? "is-transferred" : "is-pending"}">${transferStatus(item)}</span></td><td>${workOrderNo(item)}</td><td>${actionMarkup(item)}</td></tr>`).join("");
       document.getElementById("alarmInfoCount").textContent = list.length;
       syncBatchActions();
     }
     function alarmInfoById(id) { return alarmInfo.find((item) => String(item.id) === String(id)) || alarmInfo[0]; }
+    function convertAlarmToEmergency(item) {
+      const emergencyStore = window.EMERGENCY_STORE;
+      if (!emergencyStore || typeof emergencyStore.saveEvent !== "function") { window.alert("应急事件模块尚未加载"); return; }
+      const sourceAlarmId = String(item.id);
+      const existing = typeof emergencyStore.listEvents === "function" ? emergencyStore.listEvents().find((event) => String(event.sourceAlarmId) === sourceAlarmId) : null;
+      if (existing) { item.emergencyEventId = existing.eventId; window.location.href = `../emergency/events.html?eventId=${encodeURIComponent(existing.eventId)}`; return; }
+      const levelMap = { "告警": "P1", "预警": "P2", "提醒": "P3" };
+      const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+      const event = window.EMERGENCY_STORE.saveEvent({ eventId: `EVT-ALARM-${sourceAlarmId}-${Date.now()}`, sourceAlarmId, title: `${item.device} ${item.type}`, eventType: item.type === "设备离线" ? "设备离线" : "设备异常", level: levelMap[item.level] || "P2", source: "报警中心", location: item.location || item.property || "待定位", occurrenceTime: item.time, discoveredAt: now, description: item.message, status: "待确认", timeline: [{ time: now, operator: "报警中心", action: `由报警 ${deviceCode(item)} 转入应急事件` }] });
+      item.emergencyEventId = event.eventId;
+      item.history = [...(item.history || []), { time: now, operator: "当前用户", action: `已转应急事件 ${event.eventId}` }];
+      window.location.href = `../emergency/events.html?eventId=${encodeURIComponent(event.eventId)}`;
+    }
     function historyMarkup(item) { return item.history?.length ? `<section class="detail-section"><h3 class="detail-title">处理记录</h3><div class="alarm-history">${item.history.map((entry) => `<div class="alarm-history-item"><span class="alarm-history-time">${entry.time}</span><strong>${entry.operator}</strong><span>${entry.action}</span></div>`).join("")}</div></section>` : ""; }
     function transferMarkup(item) { const transfer = item.transfer; return transfer ? `<section class="detail-section"><h3 class="detail-title">转工单信息</h3><div class="detail-grid alarm-detail-grid"><div class="info-item"><span class="info-label">联系人</span><span class="info-value">${transfer.contact || "-"}</span></div><div class="info-item"><span class="info-label">联系电话</span><span class="info-value">${transfer.phone || "-"}</span></div><div class="info-item"><span class="info-label">工单类型</span><span class="info-value">${transfer.workOrderType || "-"}</span></div><div class="info-item"><span class="info-label">工单分类</span><span class="info-value">${transfer.workOrderCategory || "-"}</span></div><div class="info-item"><span class="info-label">报修内容</span><span class="info-value">${transfer.reportContent || "-"}</span></div><div class="info-item"><span class="info-label">上传照片</span><span class="info-value">${transfer.photo || "未上传"}</span></div></div></section>` : ""; }
     function closeMarkup(item) {
@@ -120,6 +134,7 @@
       const detail = event.target.closest('[data-alarm-action="detail"]');
       if (detail) { openAlarmInfoDetail(alarmInfoById(detail.dataset.alarmId)); }
       const alarmAction = event.target.closest("[data-alarm-action]");
+      if (alarmAction?.dataset.alarmAction === "emergency") convertAlarmToEmergency(alarmInfoById(alarmAction.dataset.alarmId));
       if (alarmAction?.dataset.alarmAction === "false") openFalseAlarmPanel([alarmAction.dataset.alarmId]);
       if (alarmAction?.dataset.alarmAction === "process") openProcessPanel([alarmAction.dataset.alarmId]);
       if (alarmAction?.dataset.alarmAction === "transfer") openTransferPanel(alarmInfoById(alarmAction.dataset.alarmId));

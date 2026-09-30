@@ -39,6 +39,19 @@
       ],
     },
     {
+      key: "emergency",
+      label: "应急管理",
+      icon: "fa-solid fa-truck-medical",
+      children: [
+        { key: "emergency.dispatch", label: "应急调度台", href: "../emergency/dispatch.html" },
+        { key: "emergency.events", label: "应急事件", href: "../emergency/events.html" },
+        { key: "emergency.plans", label: "应急预案", href: "../emergency/plans.html" },
+        { key: "emergency.resources", label: "应急物资", href: "../emergency/resources.html" },
+        { key: "emergency.personnel", label: "应急人员", href: "../emergency/personnel.html" },
+        { key: "emergency.calls", label: "通话记录", href: "../emergency/calls.html" },
+      ],
+    },
+    {
       key: "alarm-center",
       label: "报警中心",
       icon: "fa-solid fa-bell",

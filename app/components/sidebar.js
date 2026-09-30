@@ -9,6 +9,7 @@
     lot: '<path d="M4 7h16M4 17h16M7 4v16M17 4v16"></path><circle cx="7" cy="7" r="2"></circle><circle cx="17" cy="17" r="2"></circle>',
     energy: '<path d="m13 2-9 12h6l-1 8 9-12h-6l1-8Z"></path>',
     "alarm-center": '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
+    emergency: '<path d="M3 21h18"></path><path d="M5 21v-7l7-4 7 4v7"></path><path d="M12 4v6"></path><path d="M9 7h6"></path><path d="M9 17h6"></path>',
     "service-center": '<rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 9h4M7 13h7M15 9h2"></path>',
   };
 
