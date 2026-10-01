@@ -66,7 +66,10 @@
       key: "service-center",
       label: "网络管理平台",
       icon: "fa-solid fa-server",
-      href: "../service-center/service-center.html",
+      children: [
+        { key: "service-center.overview", label: "网络管理平台", href: "../service-center/service-center.html" },
+        { key: "service-center.configuration", label: "组态系统", href: "../network/configuration.html" },
+      ],
     },
     {
       key: "system",
