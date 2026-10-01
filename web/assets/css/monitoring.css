@@ -15,7 +15,8 @@
 .monitoring-page .drawer:has(.photo-preview) { width: min(640px, 90vw); }
 .video-workspace { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; height: calc(100vh - var(--header-total-height) - 32px); min-height: 0; }
 .video-sidebar, .video-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
-.video-sidebar, .video-panel, .video-content { min-height: 0; }
+.video-sidebar { position: relative; z-index: 10; overflow: visible; }
+.video-panel, .video-content { min-height: 0; }
 .video-panel { display: flex; flex-direction: column; }
 .video-sidebar-head, .video-panel-head { min-height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--divider); color: var(--text-title); font-weight: 600; }
 .video-sidebar-head { gap: 8px; }
