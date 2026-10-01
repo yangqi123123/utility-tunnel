@@ -22,6 +22,9 @@
 .video-floor-filter { width: 100%; padding: 12px 12px 4px; }
 .video-floor-filter .form-label { margin-bottom: 6px; }
 .video-floor-filter .form-control { height: 32px; }
+.space-filter .form-label { display: block; margin-bottom: 6px; }
+.space-cascade { display: grid; gap: 6px; }
+.space-cascade .form-control { width: 100%; height: 32px; }
 .video-list { max-height: 560px; overflow-y: auto; padding: 8px; }
 .video-list-item { width: 100%; min-height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 10px; color: var(--text-primary); background: transparent; border-radius: var(--radius-sm); text-align: left; cursor: pointer; }
 .video-list-item:hover, .video-list-item.active { color: var(--primary); background: var(--primary-light); }
