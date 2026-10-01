@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>通信系统 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/communication.css">
+</head>
+<body class="monitoring-page communication-page" data-menu-key="communication-system" data-page-section="通信系统" data-page-title="通信系统">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack communication-shell">
+        <section class="communication-statusbar" aria-label="通信数据源状态">
+          <div class="communication-status-copy">
+            <span class="communication-status-icon"><i class="fa-solid fa-tower-broadcast"></i></span>
+            <div><strong>第三方通信平台</strong><small>仅展示呼叫数据，位置与通话记录同步入库</small></div>
+          </div>
+          <div class="communication-status-actions">
+            <span class="communication-status-badge" id="integrationStatus">已连接</span>
+            <span class="communication-status-copy"><small>最近同步 <b id="lastSyncAt">2026-10-01 10:24:18</b></small></span>
+            <button class="btn btn-secondary" id="syncButton" type="button"><i class="fa-solid fa-rotate"></i> 刷新数据</button>
+          </div>
+        </section>
+
+        <section class="communication-stats" aria-label="通信统计">
+          <article class="communication-stat"><span class="communication-stat-icon"><i class="fa-solid fa-phone"></i></span><div><span class="communication-stat-label">呼叫总数</span><strong class="communication-stat-value" id="statTotal">0</strong></div></article>
+          <article class="communication-stat"><span class="communication-stat-icon"><i class="fa-solid fa-bell"></i></span><div><span class="communication-stat-label">待处理</span><strong class="communication-stat-value" id="statPending">0</strong></div></article>
+          <article class="communication-stat"><span class="communication-stat-icon"><i class="fa-solid fa-headset"></i></span><div><span class="communication-stat-label">通话中</span><strong class="communication-stat-value" id="statActive">0</strong></div></article>
+          <article class="communication-stat"><span class="communication-stat-icon"><i class="fa-solid fa-circle-check"></i></span><div><span class="communication-stat-label">今日已完成</span><strong class="communication-stat-value" id="statDone">0</strong></div></article>
+        </section>
+
+        <section class="communication-call-grid">
+          <section class="communication-card" aria-labelledby="callsTitle">
+            <div class="communication-card-head"><h2 id="callsTitle">呼叫信息</h2><small id="callResultCount">共 0 条</small></div>
+            <div class="communication-filter">
+              <label class="form-field"><span class="form-label">关键字</span><input class="form-control" id="callKeyword" placeholder="呼叫编号 / 终端名称"></label>
+              <label class="form-field"><span class="form-label">呼叫状态</span><select class="form-control" id="callStatus"><option value="all">全部状态</option><option value="pending">待处理</option><option value="active">通话中</option><option value="done">已完成</option></select></label>
+              <label class="form-field"><span class="form-label">开始日期</span><input class="form-control" id="callDate" type="date" value="2026-10-01"></label>
+              <div class="communication-filter-actions"><button class="btn btn-primary" id="callSearch" type="button"><i class="fa-solid fa-magnifying-glass"></i> 查询</button><button class="btn btn-plain" id="callReset" type="button" title="重置筛选"><i class="fa-solid fa-rotate-left"></i></button></div>
+            </div>
+            <div class="communication-call-list" id="callList"></div>
+          </section>
+
+          <section class="communication-card communication-location" aria-labelledby="locationTitle">
+            <div class="communication-card-head"><h2 id="locationTitle">位置关联</h2><small id="locationStatus">跟随呼叫记录更新</small></div>
+            <div class="communication-location-body">
+              <div class="communication-map" aria-label="管廊位置示意图">
+                <div class="communication-map-grid"></div><div class="communication-corridor-line"></div>
+                <span class="communication-zone-label zone-a">1号管廊 · 北段</span><span class="communication-zone-label zone-b">综合舱 · B2 区段</span><span class="communication-zone-label zone-c">2号管廊 · 东段</span>
+                <span class="communication-map-pin" id="locationPin"><i class="fa-solid fa-phone"></i></span>
+              </div>
+              <div class="communication-location-meta"><div><span>终端名称</span><strong id="locationTerminal">-</strong></div><div><span>管廊 / 舱室</span><strong id="locationCorridor">-</strong></div><div><span>区段坐标</span><strong id="locationCoordinate">-</strong></div></div>
+              <div class="communication-location-actions"><span class="communication-location-source"><i class="fa-solid fa-location-dot"></i> 位置来源：第三方定位服务</span><button class="btn btn-secondary" id="locationDetail" type="button"><i class="fa-solid fa-arrow-up-right-from-square"></i> 查看位置详情</button></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="communication-card communication-record-card" aria-labelledby="recordsTitle">
+          <div class="communication-card-head"><h2 id="recordsTitle">通话记录</h2><small id="recordResultCount">共 0 条</small></div>
+          <div class="communication-record-toolbar">
+            <label class="form-field"><span class="form-label">终端名称</span><input class="form-control" id="recordTerminal" placeholder="请输入终端名称"></label>
+            <label class="form-field"><span class="form-label">通话类型</span><select class="form-control" id="recordType"><option value="all">全部类型</option><option>紧急呼叫</option><option>日常调度</option><option>广播通知</option></select></label>
+            <label class="form-field"><span class="form-label">通话日期</span><input class="form-control" id="recordDate" type="date"></label>
+            <button class="btn btn-primary" id="recordSearch" type="button"><i class="fa-solid fa-magnifying-glass"></i> 查询记录</button>
+            <button class="btn btn-secondary" id="recordExport" type="button"><i class="fa-solid fa-download"></i> 导出</button>
+          </div>
+          <div class="communication-table-wrap"><table class="table communication-table"><thead><tr><th>记录编号</th><th>呼叫编号</th><th>终端名称</th><th>通话类型</th><th>位置</th><th>开始时间</th><th>结束时间</th><th>时长</th><th>处理结果</th><th>操作</th></tr></thead><tbody id="recordBody"></tbody></table></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js"></script>
+  <script src="../../../app/components/sidebar.js"></script>
+  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/requirement.js"></script>
+  <script>
+    const integration = { status: "connected", lastSyncAt: "2026-10-01 10:24:18", source: "第三方定位服务", latency: "86 ms" };
+    const calls = [
+      { id: "CALL-1024", terminal: "综合舱 SOS 终端-03", type: "紧急呼叫", location: "1号管廊 / 综合舱", corridor: "1号管廊", cabin: "综合舱", section: "B2 区段", coordinate: "X: 58 · Y: 46", startedAt: "2026-10-01 10:18:42", duration: "02:16", status: "pending", priority: "高", position: { left: 58, top: 46 } },
+      { id: "CALL-1023", terminal: "巡检手台-17", type: "日常调度", location: "2号管廊 / 东段", corridor: "2号管廊", cabin: "电力舱", section: "E4 区段", coordinate: "X: 74 · Y: 31", startedAt: "2026-10-01 10:06:19", duration: "05:48", status: "active", priority: "中", position: { left: 74, top: 31 } },
+      { id: "CALL-1022", terminal: "消防值守台-01", type: "广播通知", location: "中控室 / 调度台", corridor: "中控中心", cabin: "调度大厅", section: "A1 区段", coordinate: "X: 35 · Y: 62", startedAt: "2026-10-01 09:54:07", duration: "01:32", status: "done", priority: "低", position: { left: 35, top: 62 } },
+      { id: "CALL-1021", terminal: "综合舱 SOS 终端-01", type: "紧急呼叫", location: "3号管廊 / 西段", corridor: "3号管廊", cabin: "综合舱", section: "W1 区段", coordinate: "X: 22 · Y: 39", startedAt: "2026-10-01 09:42:55", duration: "08:12", status: "done", priority: "高", position: { left: 22, top: 39 } },
+      { id: "CALL-1020", terminal: "巡检手台-08", type: "日常调度", location: "5号管廊 / 南段", corridor: "5号管廊", cabin: "通风舱", section: "S3 区段", coordinate: "X: 82 · Y: 72", startedAt: "2026-09-30 18:12:30", duration: "03:26", status: "done", priority: "中", position: { left: 82, top: 72 } }
+    ];
+    const records = [
+      { id: "REC-88024", callId: "CALL-1024", terminal: "综合舱 SOS 终端-03", type: "紧急呼叫", location: "1号管廊 / 综合舱", startedAt: "2026-10-01 10:18:42", endedAt: "2026-10-01 10:20:58", duration: "02:16", result: "待处理", resultClass: "pending", operator: "值守中心" },
+      { id: "REC-88023", callId: "CALL-1023", terminal: "巡检手台-17", type: "日常调度", location: "2号管廊 / 东段", startedAt: "2026-10-01 10:06:19", endedAt: "2026-10-01 10:12:07", duration: "05:48", result: "通话中", resultClass: "pending", operator: "二号班组" },
+      { id: "REC-88022", callId: "CALL-1022", terminal: "消防值守台-01", type: "广播通知", location: "中控室 / 调度台", startedAt: "2026-10-01 09:54:07", endedAt: "2026-10-01 09:55:39", duration: "01:32", result: "已完成", resultClass: "", operator: "值守中心" },
+      { id: "REC-88021", callId: "CALL-1021", terminal: "综合舱 SOS 终端-01", type: "紧急呼叫", location: "3号管廊 / 西段", startedAt: "2026-10-01 09:42:55", endedAt: "2026-10-01 09:51:07", duration: "08:12", result: "已完成", resultClass: "", operator: "一号班组" },
+      { id: "REC-88020", callId: "CALL-1020", terminal: "巡检手台-08", type: "日常调度", location: "5号管廊 / 南段", startedAt: "2026-09-30 18:12:30", endedAt: "2026-09-30 18:15:56", duration: "03:26", result: "未接通", resultClass: "missed", operator: "值守中心" }
+    ];
+    const statusLabels = { pending: "待处理", active: "通话中", done: "已完成" };
+    let selectedCallId = calls[0].id;
+    let filteredCalls = [...calls];
+    const $ = (id) => document.getElementById(id);
+    const showToast = (message) => window.showToast ? window.showToast(message) : alert(message);
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+    function renderStats() { $("statTotal").textContent = calls.length; $("statPending").textContent = calls.filter((call) => call.status === "pending").length; $("statActive").textContent = calls.filter((call) => call.status === "active").length; $("statDone").textContent = calls.filter((call) => call.status === "done" && call.startedAt.startsWith("2026-10-01")).length; }
+    function callMatches(call) { const keyword = $("callKeyword").value.trim().toLowerCase(); const status = $("callStatus").value; const date = $("callDate").value; return (!keyword || `${call.id} ${call.terminal}`.toLowerCase().includes(keyword)) && (status === "all" || call.status === status) && (!date || call.startedAt.startsWith(date)); }
+    function renderCalls() { filteredCalls = calls.filter(callMatches); $("callResultCount").textContent = `共 ${filteredCalls.length} 条`; $("callList").innerHTML = filteredCalls.length ? filteredCalls.map((call) => `<button class="communication-call-row ${call.id === selectedCallId ? "active" : ""}" type="button" data-call-id="${call.id}"><span class="communication-call-main"><strong>${escapeHtml(call.id)}</strong><small>${escapeHtml(call.terminal)}</small></span><span class="communication-call-cell"><span>${escapeHtml(call.type)}</span><small>${escapeHtml(call.priority)}优先级</small></span><span class="communication-call-cell"><span class="location">${escapeHtml(call.location)}</span><small>${escapeHtml(call.section)}</small></span><span class="communication-call-duration">${call.startedAt.slice(11)}</span><span class="status-badge ${call.status}">${statusLabels[call.status]}</span><i class="fa-solid fa-chevron-right communication-call-arrow"></i></button>`).join("") : `<div class="communication-empty"><i class="fa-regular fa-folder-open"></i> 暂无匹配的呼叫信息</div>`; }
+    function selectCall(callId) { const call = calls.find((item) => item.id === callId); if (!call) return; selectedCallId = call.id; $("locationTerminal").textContent = call.terminal; $("locationCorridor").textContent = `${call.corridor} / ${call.cabin}`; $("locationCoordinate").textContent = `${call.section} · ${call.coordinate}`; $("locationStatus").textContent = `${call.id} · ${call.startedAt.slice(11)}`; $("locationPin").style.left = `${call.position.left}%`; $("locationPin").style.top = `${call.position.top}%`; renderCalls(); renderRecords(); }
+    function recordMatches(record) { const terminal = $("recordTerminal").value.trim(); const type = $("recordType").value; const date = $("recordDate").value; return (!terminal || record.terminal.includes(terminal)) && (type === "all" || record.type === type) && (!date || record.startedAt.startsWith(date)) && (!selectedCallId || record.callId === selectedCallId); }
+    function renderRecords() { const list = records.filter(recordMatches); $("recordResultCount").textContent = `共 ${list.length} 条`; $("recordBody").innerHTML = list.length ? list.map((record) => `<tr data-record-id="${record.id}"><td>${record.id}</td><td>${record.callId}</td><td>${escapeHtml(record.terminal)}</td><td>${record.type}</td><td>${escapeHtml(record.location)}</td><td>${record.startedAt}</td><td>${record.endedAt}</td><td>${record.duration}</td><td><span class="communication-result ${record.resultClass}">${record.result}</span></td><td><button class="btn btn-link record-action" type="button" data-record-detail="${record.id}">详情</button></td></tr>`).join("") : `<tr><td colspan="10"><div class="communication-empty">暂无通话记录</div></td></tr>`; }
+    function openCallDrawer(call) { const body = `<div class="drawer-detail-grid"><div><span>呼叫编号</span><strong>${call.id}</strong></div><div><span>终端名称</span><strong>${escapeHtml(call.terminal)}</strong></div><div><span>呼叫类型</span><strong>${call.type}</strong></div><div><span>呼叫状态</span><strong>${statusLabels[call.status]}</strong></div><div><span>关联位置</span><strong>${escapeHtml(call.location)}</strong></div><div><span>定位坐标</span><strong>${call.coordinate}</strong></div><div><span>开始时间</span><strong>${call.startedAt}</strong></div><div><span>通话时长</span><strong>${call.duration}</strong></div></div>`; window.openAppDrawer?.({ title: "位置详情", subtitle: "通信系统 · 位置关联", body, footer: '<button class="btn btn-secondary" data-drawer-close>关闭</button>' }); }
+    function openRecordDrawer(record) { const body = `<div class="drawer-detail-grid"><div><span>记录编号</span><strong>${record.id}</strong></div><div><span>呼叫编号</span><strong>${record.callId}</strong></div><div><span>终端名称</span><strong>${escapeHtml(record.terminal)}</strong></div><div><span>通话类型</span><strong>${record.type}</strong></div><div><span>通话位置</span><strong>${escapeHtml(record.location)}</strong></div><div><span>处理结果</span><strong>${record.result}</strong></div><div><span>开始时间</span><strong>${record.startedAt}</strong></div><div><span>结束时间</span><strong>${record.endedAt}</strong></div><div><span>处理人员</span><strong>${record.operator}</strong></div></div>`; window.openAppDrawer?.({ title: "通话记录详情", subtitle: "通信系统 · 记录查询", body, footer: '<button class="btn btn-secondary" data-drawer-close>关闭</button>' }); }
+    function syncData() { const button = $("syncButton"); const badge = $("integrationStatus"); button.disabled = true; badge.className = "communication-status-badge syncing"; badge.textContent = "同步中"; setTimeout(() => { integration.lastSyncAt = new Date().toLocaleString("zh-CN", { hour12: false }).replaceAll("/", "-"); $("lastSyncAt").textContent = integration.lastSyncAt; badge.className = "communication-status-badge"; badge.textContent = "已连接"; button.disabled = false; showToast("通信数据已完成同步"); }, 650); }
+    ["callKeyword", "callStatus", "callDate"].forEach((id) => $(id).addEventListener("change", renderCalls));
+    $("callSearch").addEventListener("click", renderCalls); $("callReset").addEventListener("click", () => { $("callKeyword").value = ""; $("callStatus").value = "all"; $("callDate").value = "2026-10-01"; renderCalls(); });
+    ["recordTerminal", "recordType", "recordDate"].forEach((id) => $(id).addEventListener("change", renderRecords)); $("recordSearch").addEventListener("click", () => { renderRecords(); showToast("已完成通话记录查询"); }); $("recordExport").addEventListener("click", () => showToast("已生成当前条件下的通话记录导出文件")); $("syncButton").addEventListener("click", syncData);
+    document.addEventListener("click", (event) => { const callRow = event.target.closest("[data-call-id]"); if (callRow) selectCall(callRow.dataset.callId); const recordButton = event.target.closest("[data-record-detail]"); if (recordButton) { const record = records.find((item) => item.id === recordButton.dataset.recordDetail); if (record) openRecordDrawer(record); } });
+    $("locationDetail").addEventListener("click", () => { const call = calls.find((item) => item.id === selectedCallId); if (call) openCallDrawer(call); });
+    renderStats(); renderCalls(); selectCall(selectedCallId);
+  </script>
+</body>
+</html>
