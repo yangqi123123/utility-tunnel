@@ -35,9 +35,16 @@
       children: [
         { key: "smart-monitoring.parking", label: "停车记录", href: "../monitoring/parking-record.html", hidden: true },
         { key: "smart-monitoring.pedestrian", label: "人行通行记录", href: "../monitoring/pedestrian-record.html", hidden: true },
-        { key: "smart-monitoring.video", label: "视频监控", href: "../monitoring/video-monitor.html" },
-        { key: "smart-monitoring.video-replay", label: "录像回放", href: "../monitoring/video-replay.html" },
         { key: "smart-monitoring.device", label: "设备监测", href: "../monitoring/device-monitor.html" },
+      ],
+    },
+    {
+      key: "video-monitoring",
+      label: "视频监控",
+      icon: "fa-solid fa-video",
+      children: [
+        { key: "video-monitoring.live", label: "视频监控", href: "../monitoring/video-monitor.html" },
+        { key: "video-monitoring.replay", label: "录像回放", href: "../monitoring/video-replay.html" },
       ],
     },
     {
