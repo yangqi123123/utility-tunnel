@@ -36,6 +36,7 @@
         { key: "smart-monitoring.parking", label: "停车记录", href: "../monitoring/parking-record.html", hidden: true },
         { key: "smart-monitoring.pedestrian", label: "人行通行记录", href: "../monitoring/pedestrian-record.html", hidden: true },
         { key: "smart-monitoring.video", label: "视频监控", href: "../monitoring/video-monitor.html" },
+        { key: "smart-monitoring.video-replay", label: "录像回放", href: "../monitoring/video-replay.html" },
         { key: "smart-monitoring.device", label: "设备监测", href: "../monitoring/device-monitor.html" },
       ],
     },
@@ -62,6 +63,12 @@
       ],
     },
     {
+      key: "service-center",
+      label: "网络管理平台",
+      icon: "fa-solid fa-server",
+      href: "../service-center/service-center.html",
+    },
+    {
       key: "system",
       label: "系统管理",
       icon: "fa-solid fa-gear",
@@ -74,12 +81,6 @@
         { key: "system.dictionary", label: "字典管理", href: "../system/dictionary.html" },
         { key: "system.parameter", label: "参数设置", href: "../system/parameter.html" },
         { key: "system.notice", label: "通知公告", href: "../system/notice.html" },
-        {
-          key: "service-center",
-          label: "服务中心",
-          icon: "fa-solid fa-server",
-          href: "../service-center/service-center.html",
-        },
         {
           key: "system.logs",
           label: "日志管理",
