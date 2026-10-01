@@ -6,7 +6,7 @@ const menu = fs.readFileSync('app/config/menu.js', 'utf8');
 const page = fs.readFileSync('web/pages/network/configuration.html', 'utf8');
 
 test('网络管理平台包含组态系统菜单路由', () => {
-  assert.match(menu, /service-center\.configuration/);
+  assert.match(menu, /key: "configuration"/);
   assert.match(menu, /\.\.\/network\/configuration\.html/);
 });
 
