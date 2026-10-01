@@ -43,7 +43,7 @@
       label: "视频监控",
       icon: "fa-solid fa-video",
       children: [
-        { key: "video-monitoring.live", label: "视频监控", href: "../monitoring/video-monitor.html" },
+        { key: "video-monitoring.live", label: "实时视频", href: "../monitoring/video-monitor.html" },
         { key: "video-monitoring.replay", label: "录像回放", href: "../monitoring/video-replay.html" },
       ],
     },
