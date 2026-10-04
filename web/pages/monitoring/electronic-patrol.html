@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>电子巡更 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/monitoring.css?electronic-patrol-v2">
+</head>
+<body class="monitoring-page electronic-patrol-page" data-menu-key="electronic-patrol" data-page-section="子系统" data-page-title="电子巡更">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="card monitoring-filter-card electronic-patrol-filter-card">
+          <div class="filter-actions">
+            <label class="form-field"><span class="form-label">巡更时间</span><input class="form-control" type="date" data-filter="date"></label>
+            <label class="form-field"><span class="form-label">巡更人员</span><input class="form-control" type="search" placeholder="请输入人员姓名" data-filter="person"></label>
+            <label class="form-field"><span class="form-label">巡更点位</span><input class="form-control" type="search" placeholder="请输入点位名称" data-filter="point"></label>
+            <label class="form-field"><span class="form-label">巡更结果</span><select class="form-control" data-filter="result"><option value="">全部</option><option value="正常">正常</option><option value="异常">异常</option></select></label>
+            <button class="btn btn-secondary" type="button" data-action="reset">重置</button>
+            <button class="btn btn-primary" type="button" data-action="search"><i class="fa-solid fa-magnifying-glass"></i> 搜索</button>
+          </div>
+        </section>
+        <section class="card monitoring-list-card">
+          <div class="card-title-row monitoring-toolbar">
+            <h1 class="card-title">电子巡更记录</h1>
+            <button class="btn btn-secondary" type="button" data-action="export"><i class="fa-solid fa-download"></i> 导出</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table monitoring-table electronic-patrol-table">
+              <thead><tr><th>序号</th><th>巡更人员</th><th>巡更路线</th><th>巡更点位</th><th>巡更时间</th><th>巡更方式</th><th>巡更结果</th><th>异常说明</th><th>操作</th></tr></thead>
+              <tbody id="recordBody"></tbody>
+            </table>
+          </div>
+          <div class="pagination"><span>共 <strong id="recordCount">0</strong> 条，每页 10 条</span><span class="page-item active">1</span></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/data/electronic-patrol.js"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/requirement.js"></script>
+  <script src="../../../app/components/electronic-patrol.js"></script>
+</body>
+</html>

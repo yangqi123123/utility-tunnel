@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>应急事件 - 中建四局智能运营管理系统</title>
+  <title>应急事件 - 科学岛管廊监控中心</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css"><link rel="stylesheet" href="../../assets/css/emergency.css">
 </head>
@@ -13,5 +13,6 @@
     <section class="card filters emergency-filters"><div class="emergency-filter-grid"><label class="form-field"><span class="form-label">事件编号 / 标题</span><input class="form-control" data-event-filter="keyword" placeholder="请输入关键词"></label><label class="form-field"><span class="form-label">事件类型</span><select class="form-control" data-event-filter="eventType"><option value="">全部类型</option></select></label><label class="form-field"><span class="form-label">事件等级</span><select class="form-control" data-event-filter="level"><option value="">全部等级</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label><label class="form-field"><span class="form-label">事件状态</span><select class="form-control" data-event-filter="status"><option value="">全部状态</option><option>待确认</option><option>已确认</option><option>处理中</option><option>待复核</option><option>已升级</option><option>处置失败</option><option>已关闭</option><option>误报关闭</option></select></label><div class="filter-actions"><button class="btn btn-secondary" type="button" data-event-action="reset">重置</button><button class="btn btn-primary" type="button" data-event-action="search">查询</button></div></div></section>
     <section class="card"><div class="card-title-row"><div><h2 class="card-title">事件列表</h2><span class="panel-helper">共 <strong id="eventCount">0</strong> 条记录</span></div></div><div class="table-wrap"><table class="table emergency-table"><thead><tr><th>事件编号</th><th>事件标题</th><th>事件类型</th><th>等级</th><th>发生位置</th><th>来源</th><th>状态</th><th>负责人</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="eventBody"></tbody></table></div><div class="pagination" id="eventPagination"></div></section>
   </div></main></div>
-  <script src="../../../app/config/menu.js"></script><script src="../../../app/data/emergency-data.js"></script><script src="../../../app/components/sidebar.js"></script><script src="../../../app/components/header.js"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/emergency-common.js"></script><script src="../../../app/components/emergency-events.js"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script><script src="../../../app/data/emergency-data.js"></script><script src="../../../app/components/sidebar.js?v=nav-home-1"></script><script src="../../../app/components/header.js?v=nav-home-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/emergency-common.js"></script><script src="../../../app/components/emergency-events.js"></script>
 </body></html>
+

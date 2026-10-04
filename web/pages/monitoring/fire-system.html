@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>消防系统 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/fire-system.css">
+</head>
+<body class="fire-system-page" data-menu-key="fire-system" data-page-section="子系统" data-page-title="消防系统">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="fire-summary-grid" aria-label="消防系统概览">
+          <article class="fire-summary fire-summary-connection"><span class="fire-summary-label">接入状态</span><strong id="summaryConnection">正常</strong><small id="summarySync">第三方接口 · 刚刚同步</small><i class="fa-solid fa-plug-circle-check" aria-hidden="true"></i></article>
+          <article class="fire-summary fire-summary-blue"><span class="fire-summary-label">消防设备</span><strong id="summaryDevices">0</strong><small>六类系统合计</small><i class="fa-solid fa-layer-group" aria-hidden="true"></i></article>
+          <article class="fire-summary fire-summary-red"><span class="fire-summary-label">当前报警</span><strong id="summaryAlarms">0</strong><small>未恢复火警、故障、监管</small><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></article>
+          <article class="fire-summary fire-summary-teal"><span class="fire-summary-label">在线率</span><strong id="summaryOnlineRate">0%</strong><small id="summaryOnlineNote">0 / 0 台在线</small><i class="fa-solid fa-signal" aria-hidden="true"></i></article>
+        </section>
+
+        <section class="card fire-filter-card">
+          <div class="card-title-row fire-card-title-row">
+            <div><h2 class="card-title">消防设备监测</h2></div>
+            <span class="read-only-tag"><i class="fa-solid fa-eye"></i>只读</span>
+          </div>
+          <div class="fire-filter-grid">
+            <label class="form-field"><span class="form-label">系统类型</span><select class="form-control" id="systemFilter"><option value="all">全部子系统</option></select></label>
+            <label class="form-field"><span class="form-label">设备状态</span><select class="form-control" id="deviceStatus"><option value="all">全部状态</option><option value="online">在线 / 正常</option><option value="warn">预警</option><option value="fault">故障</option><option value="offline">离线</option></select></label>
+            <label class="form-field"><span class="form-label">报警等级</span><select class="form-control" id="alarmLevel"><option value="all">全部等级</option><option value="紧急">紧急</option><option value="重要">重要</option><option value="一般">一般</option></select></label>
+            <label class="form-field"><span class="form-label">防火分区</span><select class="form-control" id="zoneFilter"><option value="all">全部分区</option></select></label>
+            <label class="form-field fire-search-field"><span class="form-label">设备搜索</span><span class="fire-search-control"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input class="form-control" id="deviceSearch" type="search" placeholder="名称、编码、位置或报警描述"></span></label>
+            <div class="fire-filter-actions"><button class="btn btn-secondary" type="button" data-action="reset">重置</button><button class="btn btn-primary" type="button" data-action="search"><i class="fa-solid fa-magnifying-glass"></i>搜索</button></div>
+          </div>
+        </section>
+
+        <section class="card fire-table-card">
+          <div class="card-title-row fire-card-title-row"><h2 class="card-title">设备状态列表</h2></div>
+          <div class="fire-table-wrap">
+            <table class="table fire-table">
+              <thead><tr><th>系统类型</th><th>设备名称 / 编码</th><th>精确位置</th><th>当前状态</th><th>运行参数</th><th>最近报警</th><th>更新时间</th><th>操作</th></tr></thead>
+              <tbody id="deviceTableBody"></tbody>
+            </table>
+          </div>
+          <div class="fire-table-foot"><span id="resultCount">共 0 条</span><span>实时同步 · 只读数据</span></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script>
+    const devices = [
+      { id: "FAS-F0101-014", name: "点型感烟火灾探测器 014", system: "火灾报警系统", systemCode: "FAS", deviceType: "感烟探测器", zone: "一号舱 · 东段", location: "F0101+042 · 电力舱", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "烟雾浓度", value: "0.12", unit: "%/m" }], latestAlarm: null, updatedAt: "10:30:08", source: "第三方消防平台" },
+      { id: "FAS-F0104-028", name: "手动报警按钮 028", system: "火灾报警系统", systemCode: "FAS", deviceType: "手动报警按钮", zone: "一号舱 · 西段", location: "F0104+118 · 逃生通道", status: "warn", statusLabel: "预警", parameters: [{ label: "回路电压", value: "23.8", unit: "V" }], latestAlarm: { type: "监管", level: "一般", message: "按钮防护罩开启", time: "10:18:52", restored: false }, updatedAt: "10:29:54", source: "第三方消防平台" },
+      { id: "FAS-F0112-006", name: "线型感温火灾探测器 006", system: "火灾报警系统", systemCode: "FAS", deviceType: "感温探测器", zone: "二号舱 · 东段", location: "F0112+063 · 电缆夹层", status: "fault", statusLabel: "故障", parameters: [{ label: "回路状态", value: "通信异常", unit: "" }], latestAlarm: { type: "故障", level: "重要", message: "区域回路通信中断", time: "09:56:07", restored: false }, updatedAt: "10:24:11", source: "第三方消防平台" },
+      { id: "FDM-F0102-003", name: "防火门监控模块 003", system: "防火门监控系统", systemCode: "FDM", deviceType: "门磁模块", zone: "一号舱 · 东段", location: "F0102+018 · 防火分区 01", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "门状态", value: "闭合", unit: "" }, { label: "闭门器", value: "投入", unit: "" }], latestAlarm: null, updatedAt: "10:30:02", source: "第三方消防平台" },
+      { id: "FDM-F0116-012", name: "常开防火门监控点 012", system: "防火门监控系统", systemCode: "FDM", deviceType: "防火门监控点", zone: "二号舱 · 西段", location: "F0116+097 · 疏散出口", status: "warn", statusLabel: "预警", parameters: [{ label: "门状态", value: "开启 86s", unit: "" }, { label: "联动状态", value: "待复位", unit: "" }], latestAlarm: { type: "监管", level: "重要", message: "防火门超时未关闭", time: "10:27:14", restored: false }, updatedAt: "10:29:58", source: "第三方消防平台" },
+      { id: "FPM-F0103-001", name: "消防水泵控制柜电源 01", system: "消防电源监控系统", systemCode: "FPM", deviceType: "电源监控模块", zone: "一号舱 · 东段", location: "F0103+006 · 消防泵房", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "主电压", value: "381", unit: "V" }, { label: "备用电压", value: "379", unit: "V" }], latestAlarm: null, updatedAt: "10:30:04", source: "第三方消防平台" },
+      { id: "FPM-F0108-002", name: "排烟风机控制柜电源 02", system: "消防电源监控系统", systemCode: "FPM", deviceType: "电源监控模块", zone: "一号舱 · 西段", location: "F0108+034 · 风机房", status: "offline", statusLabel: "离线", parameters: [], latestAlarm: { type: "故障", level: "紧急", message: "消防设备电源监控模块离线", time: "10:21:36", restored: false }, updatedAt: "10:22:02", source: "第三方消防平台" },
+      { id: "EAM-F0110-044", name: "电气火灾监控探测器 044", system: "电气火灾监控系统", systemCode: "EAM", deviceType: "剩余电流探测器", zone: "二号舱 · 东段", location: "F0110+055 · 低压配电柜", status: "warn", statusLabel: "预警", parameters: [{ label: "剩余电流", value: "286", unit: "mA" }, { label: "线缆温度", value: "44.8", unit: "℃" }], latestAlarm: { type: "火警", level: "重要", message: "剩余电流超过预警阈值", time: "10:26:45", restored: false }, updatedAt: "10:30:01", source: "第三方消防平台" },
+      { id: "EAM-F0114-018", name: "电缆接头温度探测器 018", system: "电气火灾监控系统", systemCode: "EAM", deviceType: "温度探测器", zone: "二号舱 · 西段", location: "F0114+072 · 动力电缆桥架", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "线缆温度", value: "31.6", unit: "℃" }, { label: "温升", value: "2.1", unit: "℃" }], latestAlarm: null, updatedAt: "10:29:46", source: "第三方消防平台" },
+      { id: "ELG-F0107-021", name: "集中控制型应急照明 021", system: "应急照明与疏散指示系统", systemCode: "ELG", deviceType: "应急照明灯具", zone: "一号舱 · 西段", location: "F0107+103 · 疏散通道", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "充电状态", value: "100", unit: "%" }, { label: "照明模式", value: "待机", unit: "" }], latestAlarm: null, updatedAt: "10:29:51", source: "第三方消防平台" },
+      { id: "ELG-F0119-008", name: "疏散指示灯具 008", system: "应急照明与疏散指示系统", systemCode: "ELG", deviceType: "疏散指示灯", zone: "二号舱 · 西段", location: "F0119+012 · 西侧出口", status: "fault", statusLabel: "故障", parameters: [{ label: "电池电压", value: "18.2", unit: "V" }, { label: "灯具状态", value: "异常", unit: "" }], latestAlarm: { type: "故障", level: "重要", message: "灯具电池容量不足", time: "10:11:20", restored: false }, updatedAt: "10:27:36", source: "第三方消防平台" },
+      { id: "LFO-F0105-001", name: "电力电缆感温光纤 01", system: "感温光纤系统", systemCode: "LFO", deviceType: "感温光纤主机", zone: "一号舱 · 东段", location: "F0105+000 ~ F0110+000 · 电缆夹层", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "最高温度", value: "38.4", unit: "℃" }, { label: "温升速率", value: "0.3", unit: "℃/min" }], latestAlarm: null, updatedAt: "10:30:06", source: "第三方消防平台" },
+      { id: "LFO-F0118-002", name: "电力电缆感温光纤 02", system: "感温光纤系统", systemCode: "LFO", deviceType: "感温光纤主机", zone: "二号舱 · 西段", location: "F0118+000 ~ F0122+000 · 电缆夹层", status: "warn", statusLabel: "预警", parameters: [{ label: "最高温度", value: "52.7", unit: "℃" }, { label: "温升速率", value: "1.8", unit: "℃/min" }], latestAlarm: { type: "火警", level: "紧急", message: "光纤测温区段温升异常", time: "10:28:04", restored: false }, updatedAt: "10:29:43", source: "第三方消防平台" },
+    ];
+
+    const nearbyCameras = {
+      "FAS-F0104-028": [{ name: "一号舱西段摄像机 04", location: "F0104+106 · 逃生通道", distance: 18, status: "online" }, { name: "一号舱西段摄像机 05", location: "F0104+142 · 防火门前", distance: 46, status: "online" }],
+      "FDM-F0116-012": [{ name: "二号舱西段摄像机 12", location: "F0116+085 · 疏散出口", distance: 12, status: "online" }, { name: "二号舱西段摄像机 13", location: "F0116+124 · 走道转角", distance: 34, status: "offline" }],
+      "FPM-F0108-002": [{ name: "风机房固定摄像机 02", location: "F0108+028 · 风机房入口", distance: 22, status: "online" }],
+      "EAM-F0110-044": [{ name: "二号舱东段摄像机 08", location: "F0110+042 · 配电柜前", distance: 15, status: "online" }],
+      "ELG-F0119-008": [{ name: "二号舱西段摄像机 18", location: "F0119+028 · 西侧出口", distance: 19, status: "online" }],
+      "LFO-F0118-002": [{ name: "二号舱西段摄像机 21", location: "F0118+012 · 电缆夹层入口", distance: 31, status: "online" }, { name: "二号舱西段摄像机 22", location: "F0118+075 · 电缆夹层", distance: 88, status: "online" }],
+    };
+
+    const state = { system: "all", status: "all", level: "all", zone: "all", query: "" };
+    const statusClass = { online: "success", warn: "warning", fault: "danger", offline: "offline" };
+    const alarmClass = { 紧急: "danger", 重要: "warning", 一般: "muted" };
+    const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+    const byId = (id) => document.getElementById(id);
+
+    function renderFilters() {
+      const systems = [...new Set(devices.map((item) => item.system))];
+      const zones = [...new Set(devices.map((item) => item.zone))];
+      byId("systemFilter").innerHTML = `<option value="all">全部子系统</option>${systems.map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
+      byId("zoneFilter").innerHTML = `<option value="all">全部分区</option>${zones.map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
+    }
+
+    function renderSummary() {
+      const alarmCount = devices.filter((item) => item.latestAlarm && !item.latestAlarm.restored).length;
+      const onlineCount = devices.filter((item) => item.status === "online").length;
+      const onlineRate = devices.length ? Math.round((onlineCount / devices.length) * 100) : 0;
+      byId("summaryDevices").textContent = devices.length;
+      byId("summaryAlarms").textContent = alarmCount;
+      byId("summaryOnlineRate").textContent = `${onlineRate}%`;
+      byId("summaryOnlineNote").textContent = `${onlineCount} / ${devices.length} 台在线`;
+    }
+
+    function filteredDevices() {
+      const query = state.query.toLowerCase();
+      return devices.filter((item) => {
+        const searchable = [item.name, item.id, item.system, item.deviceType, item.zone, item.location, item.latestAlarm?.message].filter(Boolean).join(" ").toLowerCase();
+        return (state.system === "all" || item.system === state.system)
+          && (state.status === "all" || item.status === state.status)
+          && (state.zone === "all" || item.zone === state.zone)
+          && (state.level === "all" || item.latestAlarm?.level === state.level)
+          && (!query || searchable.includes(query));
+      });
+    }
+
+    function parameterMarkup(item) {
+      if (!item.parameters.length) return '<span class="fire-muted-value">暂无实时参数</span>';
+      return item.parameters.slice(0, 2).map((parameter) => `<span class="fire-parameter"><b>${escapeHtml(parameter.value)}</b>${escapeHtml(parameter.unit)}<em>${escapeHtml(parameter.label)}</em></span>`).join("");
+    }
+
+    function alarmMarkup(item) {
+      if (!item.latestAlarm) return '<span class="fire-muted-value">暂无报警</span>';
+      const alarm = item.latestAlarm;
+      return `<span class="fire-alarm-summary"><b class="fire-alarm-level ${alarmClass[alarm.level] || "muted"}">${escapeHtml(alarm.type)} · ${escapeHtml(alarm.level)}</b><small>${escapeHtml(alarm.time)} · ${escapeHtml(alarm.message)}</small></span>`;
+    }
+
+    function renderTable() {
+      const list = filteredDevices();
+      byId("resultCount").textContent = `共 ${list.length} 条`;
+      byId("deviceTableBody").innerHTML = list.length ? list.map((item) => {
+        const cameras = nearbyCameras[item.id] || [];
+        return `<tr data-device-id="${escapeHtml(item.id)}"><td><span class="fire-system-tag">${escapeHtml(item.system)}</span><small>${escapeHtml(item.systemCode)} · ${escapeHtml(item.deviceType)}</small></td><td><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.id)}</small></td><td><strong>${escapeHtml(item.zone)}</strong><small>${escapeHtml(item.location)}</small></td><td><span class="fire-status ${statusClass[item.status]}"><i></i>${escapeHtml(item.statusLabel)}</span></td><td><div class="fire-parameter-list">${parameterMarkup(item)}</div></td><td>${alarmMarkup(item)}</td><td><span class="fire-updated">${escapeHtml(item.updatedAt)}</span><small>第三方同步</small></td><td><div class="fire-row-actions"><button class="table-action" type="button" data-device-action="detail">详情</button>${item.latestAlarm && !item.latestAlarm.restored && cameras.length ? `<button class="table-action fire-video-action" type="button" data-device-action="nearby-video"><i class="fa-solid fa-video"></i>附近视频</button>` : ""}</div></td></tr>`;
+      }).join("") : '<tr><td colspan="8" class="fire-empty"><i class="fa-regular fa-circle-check"></i><strong>暂无符合条件的设备</strong><span>请调整筛选条件后重试</span></td></tr>';
+    }
+
+    function renderAll() {
+      renderSummary();
+      renderTable();
+      byId("systemFilter").value = state.system;
+      byId("deviceStatus").value = state.status;
+      byId("alarmLevel").value = state.level;
+      byId("zoneFilter").value = state.zone;
+    }
+
+    function detailBody(item) {
+      const parameters = item.parameters.length ? `<div class="fire-detail-parameter-grid">${item.parameters.map((parameter) => `<div><span>${escapeHtml(parameter.label)}</span><strong>${escapeHtml(parameter.value)} ${escapeHtml(parameter.unit)}</strong></div>`).join("")}</div>` : '<div class="fire-detail-empty">该设备当前离线，暂无实时运行参数。</div>';
+      const alarm = item.latestAlarm ? `<div class="fire-detail-alarm ${alarmClass[item.latestAlarm.level] || "muted"}"><span>${escapeHtml(item.latestAlarm.type)} · ${escapeHtml(item.latestAlarm.level)}</span><strong>${escapeHtml(item.latestAlarm.message)}</strong><small>${escapeHtml(item.latestAlarm.time)} · ${item.latestAlarm.restored ? "已恢复" : "未恢复"}</small></div>` : '<div class="fire-detail-empty">暂无报警记录。</div>';
+      return `<div class="fire-detail-hero"><span class="fire-detail-icon"><i class="fa-solid fa-fire-flame-curved"></i></span><div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.system)} · ${escapeHtml(item.id)}</small></div><span class="fire-status ${statusClass[item.status]}"><i></i>${escapeHtml(item.statusLabel)}</span></div><section class="fire-detail-section"><h3>位置与来源</h3><div class="fire-detail-grid"><div><span>防火分区</span><strong>${escapeHtml(item.zone)}</strong></div><div><span>精确位置</span><strong>${escapeHtml(item.location)}</strong></div><div><span>设备类型</span><strong>${escapeHtml(item.deviceType)}</strong></div><div><span>数据来源</span><strong>${escapeHtml(item.source)}</strong></div></div></section><section class="fire-detail-section"><h3>运行参数</h3>${parameters}</section><section class="fire-detail-section"><h3>最近报警</h3>${alarm}</section><section class="fire-detail-section"><div class="fire-detail-sync"><span>最近同步</span><strong>${escapeHtml(item.updatedAt)}</strong></div></section>`;
+    }
+
+    function openDeviceDetail(id) {
+      const item = devices.find((entry) => entry.id === id);
+      if (!item) return;
+      window.openAppDrawer({ title: "消防设备详情", body: detailBody(item), footer: '<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>' });
+    }
+
+    function openNearbyVideo(id) {
+      const item = devices.find((entry) => entry.id === id);
+      const cameras = [...(nearbyCameras[id] || [])].sort((a, b) => a.distance - b.distance);
+      if (!item || !cameras.length) return;
+      const primary = cameras[0];
+      const cameraRows = cameras.map((camera) => `<div class="fire-camera-row"><span class="fire-camera-icon ${camera.status}"><i class="fa-solid fa-video"></i></span><div><strong>${escapeHtml(camera.name)}</strong><small>${escapeHtml(camera.location)} · 距离 ${camera.distance}m</small></div><span class="fire-camera-status ${camera.status}">${camera.status === "online" ? "在线" : "离线"}</span></div>`).join("");
+      const preview = primary.status === "online" ? `<div class="fire-video-preview"><i class="fa-solid fa-video"></i><strong>${escapeHtml(primary.name)}</strong><span>实时画面预览 · 只读</span><em>LIVE</em></div>` : '<div class="fire-video-preview offline"><i class="fa-solid fa-video-slash"></i><strong>视频信号中断</strong><span>附近摄像机当前离线</span></div>';
+      window.openAppDrawer({ title: "报警点附近视频", body: `<div class="fire-video-context"><span class="fire-alarm-level danger">${escapeHtml(item.latestAlarm?.type || "报警")}</span><div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.zone)} · ${escapeHtml(item.latestAlarm?.time || item.updatedAt)}</small></div></div>${preview}<section class="fire-detail-section"><h3>附近摄像机 <small>按距离排序</small></h3><div class="fire-camera-list">${cameraRows}</div></section><p class="fire-video-note"><i class="fa-solid fa-circle-info"></i>视频仅用于报警复核，画面控制请前往视频监控模块。</p>`, footer: '<a class="btn btn-primary" href="../monitoring/video-monitor.html"><i class="fa-solid fa-video"></i>打开视频监控</a><button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>' });
+    }
+
+    function applyFilters() {
+      state.system = byId("systemFilter").value;
+      state.status = byId("deviceStatus").value;
+      state.level = byId("alarmLevel").value;
+      state.zone = byId("zoneFilter").value;
+      state.query = byId("deviceSearch").value.trim();
+      renderTable();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderFilters();
+      renderAll();
+      document.addEventListener("click", (event) => {
+        const action = event.target.closest("[data-action]")?.dataset.action;
+        if (action === "search") applyFilters();
+        if (action === "reset") { Object.assign(state, { system: "all", status: "all", level: "all", zone: "all", query: "" }); byId("deviceSearch").value = ""; renderAll(); }
+        if (action === "refresh") { const syncEl = byId("lastSync"); if (syncEl) syncEl.textContent = "刚刚"; byId("summarySync").textContent = "第三方接口 · 刚刚同步"; renderAll(); }
+      });
+      byId("deviceSearch").addEventListener("keydown", (event) => { if (event.key === "Enter") applyFilters(); });
+      byId("deviceTableBody").addEventListener("click", (event) => {
+        const row = event.target.closest("tr[data-device-id]");
+        if (!row) return;
+        const action = event.target.closest("[data-device-action]")?.dataset.deviceAction;
+        if (action === "nearby-video") openNearbyVideo(row.dataset.deviceId);
+        else openDeviceDetail(row.dataset.deviceId);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -248,7 +248,7 @@
         'B1': { total: 74, online: 70, onlineRate: '95%', offlineRate: '5%', alarms: 3, devices: [14, 14, 0, 0] }
       };
       const systemData = {
-        overview: { intro: '集中展示项目暖通、电气、给排水、消防、电梯、燃气、光伏及自然通风等机电系统运行状态，实现设备统一监测、故障预警和跨系统协同。', subs: [], total: 11521, online: 11232, alarms: 7, devices: buildingFloors.flatMap(({ id }) => ['1F', '2F', '3F', '4F', '5F'].map((floor) => `厦门金山财富中心${id}${floor}设备房`)) },
+        overview: { intro: '集中展示项目暖通、电气、给排水、消防、电梯、燃气、光伏及自然通风等机电系统运行状态，实现设备统一监测、故障预警和跨系统协同。', subs: [], total: 11521, online: 11232, alarms: 7, devices: buildingFloors.flatMap(({ id }) => ['1F', '2F', '3F', '4F', '5F'].map((floor) => `科学岛管廊监控中心${id}${floor}设备房`)) },
         hvac: { intro: '采用集中供冷系统，覆盖办公及公共区域；末端结合新风与热回收系统，实现温湿度调节、空气品质监测和高效节能运行。', subs: ['空调水系统', '空调末端系统', '空调风系统', '通风系统'], total: 1831, online: 1675, alarms: 3, devices: ['低区送风机房', '高区排风机房', '生活热交换机房', '空调循环泵', '新风机组', '冷却塔'] },
         electric: { intro: '高低压配电系统互为备用，覆盖变配电房、动力设备和公共照明，实时监测电压、电流、功率及设备运行状态。', subs: ['高低压配电系统', '动力配电系统', '照明配电系统'], total: 765, online: 761, alarms: 3, devices: ['高压进线柜', '低压配电柜', '动力配电箱', '公共照明箱', '应急照明箱', '智能电表'] },
         water: { intro: '给排水系统涵盖生活供水、污废水、雨水及回用水，结合水泵、水箱和液位监测设备，实现用水安全与节水管理。', subs: ['给水系统', '污废水系统', '雨水系统', '雨水回用系统'], total: 308, online: 308, alarms: 3, devices: ['给水泵', '热水水泵', '雨水供水泵', '污水提升泵', '液位传感器', '水质监测仪'] },
@@ -268,8 +268,8 @@
           const floor = floorIndex + 1;
           const seed = (building - 1) * 5 + floorIndex;
           return {
-            shaftName: `厦门金山财富中心${building}栋${floor}F弱电井`,
-            roomName: `厦门金山财富中心${building}栋${floor}F弱电机房`,
+            shaftName: `科学岛管廊监控中心${building}栋${floor}F弱电井`,
+            roomName: `科学岛管廊监控中心${building}栋${floor}F弱电机房`,
             status: seed % 9 === 8 ? '离线' : '在线',
             roomStatus: seed % 9 === 8 ? '检修' : '运行',
             temperature: (17.2 + (seed % 6) * 0.4).toFixed(2),
@@ -632,7 +632,7 @@
         }
         document.getElementById('systemSubnav').innerHTML = data.subs.map((name, index) => `<button class="${index === 0 ? 'active' : ''}" type="button">${name}</button>`).join('');
         const overviewRooms = buildingFloors.flatMap(({ id, floors }, buildingIndex) => floors.slice().reverse().map((floor, floorIndex) => ({
-          name: `厦门金山财富中心${id}${floor}设备房`,
+          name: `科学岛管廊监控中心${id}${floor}设备房`,
           building: id,
           floor,
           total: 8 + ((buildingIndex * 3 + floorIndex * 2) % 13)
@@ -1082,3 +1082,4 @@
       window.setInterval(updateClock, 1000);
       screen.setAttribute('data-ready', 'true');
     })();
+

@@ -2,15 +2,28 @@
   const menu = window.APP_MENU || [];
 
   const navIcons = {
-    home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"></path><path d="M9 21v-6h6v6"></path>',
+    home: '<path d="M3.5 18a9 9 0 1 1 17 0"></path><path d="m12 15.5 4.2-5"></path><circle cx="12" cy="15.5" r="1.8"></circle><path d="M6 18h2M11 18h2M16 18h2"></path>',
+    gis: '<path d="m9 4 6 16"></path><path d="M15 4 3 12l6 2 6 6 6-16H9Z"></path>',
     project: '<path d="M3 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path><path d="M17 8h2a2 2 0 0 1 2 2v11H3"></path><path d="M7 7h4M7 11h4M7 15h4"></path>',
     device: '<path d="m12 3 8 4-8 4-8-4 8-4Z"></path><path d="m4 12 8 4 8-4"></path><path d="m4 16 8 4 8-4"></path>',
     system: '<path d="M12.22 2h-.44a2 2 0 0 0-1.99 1.82l-.18 1.37a7 7 0 0 0-1.24.72l-1.31-.5a2 2 0 0 0-2.5 1.16l-.16.4a2 2 0 0 0 .78 2.65l1.13.71a7 7 0 0 0 0 1.43l-1.13.71a2 2 0 0 0-.78 2.65l.16.4a2 2 0 0 0 2.5 1.16l1.31-.5c.39.28.8.52 1.24.72l.18 1.37A2 2 0 0 0 11.78 22h.44a2 2 0 0 0 1.99-1.82l.18-1.37a7 7 0 0 0 1.24-.72l1.31.5a2 2 0 0 0 2.5-1.16l.16-.4a2 2 0 0 0-.78-2.65l-1.13-.71a7 7 0 0 0 0-1.43l1.13-.71a2 2 0 0 0 .78-2.65l-.16-.4a2 2 0 0 0-2.5-1.16l-1.31.5a7 7 0 0 0-1.24-.72l-.18-1.37A2 2 0 0 0 12.22 2Z"></path><circle cx="12" cy="12" r="3"></circle>',
     lot: '<path d="M4 7h16M4 17h16M7 4v16M17 4v16"></path><circle cx="7" cy="7" r="2"></circle><circle cx="17" cy="17" r="2"></circle>',
     energy: '<path d="m13 2-9 12h6l-1 8 9-12h-6l1-8Z"></path>',
     "alarm-center": '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
+    "big-data": '<path d="M3 3v18h18"></path><path d="m7 15 3.5-4.5 3 2.5L20 6"></path><circle cx="7" cy="15" r="1.4"></circle><circle cx="13.5" cy="13" r="1.4"></circle><circle cx="20" cy="6" r="1.4"></circle>',
+    "fire-system": '<path d="M12 22c4.42 0 8-2.91 8-7.2 0-3.03-1.52-5.54-4.5-7.8.05 2.27-.59 3.88-1.82 4.83.14-3.3-1.58-6.18-4.9-8.63.17 2.9-1.2 4.8-2.64 6.56C4.98 11.43 4 13.09 4 15.2 4 19.49 7.58 22 12 22Z"></path><path d="M9.5 17.1c0-1.18.64-2.13 2.08-3.5-.02 1.4.4 2.3 1.17 2.8.06-.7.31-1.22.75-1.57.55.8 1 1.6 1 2.52 0 1.44-1.1 2.45-2.5 2.45s-2.5-1.01-2.5-2.7Z"></path>',
+    "fire-alarm": '<path d="M12 22c4.42 0 8-2.91 8-7.2 0-3.03-1.52-5.54-4.5-7.8.05 2.27-.59 3.88-1.82 4.83.14-3.3-1.58-6.18-4.9-8.63.17 2.9-1.2 4.8-2.64 6.56C4.98 11.43 4 13.09 4 15.2 4 19.49 7.58 22 12 22Z"></path><path d="M9.5 17.1c0-1.18.64-2.13 2.08-3.5-.02 1.4.4 2.3 1.17 2.8.06-.7.31-1.22.75-1.57.55.8 1 1.6 1 2.52 0 1.44-1.1 2.45-2.5 2.45s-2.5-1.01-2.5-2.7Z"></path>',
+    "environment-monitoring": '<path d="M12 21c4.5-3.8 7-7.08 7-11a7 7 0 1 0-14 0c0 3.92 2.5 7.2 7 11Z"></path><path d="M12 7v7M8.5 10.5 12 14l3.5-3.5"></path>',
+    "power-monitoring": '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"></path>',
+    "access-control": '<rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 9h5M7 13h3"></path><circle cx="17" cy="12" r="2"></circle>',
     emergency: '<path d="M3 21h18"></path><path d="M5 21v-7l7-4 7 4v7"></path><path d="M12 4v6"></path><path d="M9 7h6"></path><path d="M9 17h6"></path>',
+    inspection: '<path d="M9 5h6"></path><path d="M9 3h6v4H9z"></path><path d="M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path><path d="m8 13 2 2 5-5"></path>',
     "service-center": '<rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 9h4M7 13h7M15 9h2"></path>',
+    "data-storage": '<ellipse cx="12" cy="5" rx="7" ry="3"></ellipse><path d="M5 5v7c0 1.66 3.13 3 7 3s7-1.34 7-3V5"></path><path d="M5 12v7c0 1.66 3.13 3 7 3s7-1.34 7-3v-7"></path>',
+    "interface-platform": '<path d="M8 12h8"></path><path d="M12 8v8"></path><path d="M6.5 5.5 9 8"></path><path d="m17.5 5.5-2.5 2.5"></path><path d="M6.5 18.5 9 16"></path><path d="m17.5 18.5-2.5-2.5"></path><circle cx="12" cy="12" r="3"></circle>',
+    "smart-manhole": '<circle cx="12" cy="12" r="8"></circle><path d="M8 9h8M7 13h10M8 17h8"></path>',
+    "electronic-patrol": '<circle cx="5" cy="19" r="2"></circle><circle cx="19" cy="5" r="2"></circle><path d="M7 18c3-1 2-5 5-6s2-5 5-6"></path><path d="M12 12h.01"></path>',
+    "subsystems": '<rect x="3" y="3" width="7.5" height="7.5" rx="1"></rect><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"></rect><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"></rect>',
   };
 
   function renderNavIcon(item) {
@@ -172,13 +185,13 @@
     const currentKey = document.body.dataset.menuKey || "home";
     target.innerHTML = `
       <div class="brand">
-        <a class="brand-link" href="../home/home.html" aria-label="返回工作台">
+        <a class="brand-link" href="../home/home.html" aria-label="返回设备监测">
           <img class="brand-logo" src="../../assets/images/science-island-icon.png" alt="">
           <span class="brand-name">科学岛管廊监控中心</span>
         </a>
       </div>
       <nav class="nav" aria-label="主导航">
-        ${menu.map((item) => renderItem(item, currentKey)).join("")}
+        ${menu.filter((item) => !item.hidden).map((item) => renderItem(item, currentKey)).join("")}
       </nav>
     `;
     target.querySelectorAll("[data-nav-toggle]").forEach((link) => {

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>巡检计划 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/inspection.css">
+</head>
+<body class="inspection-page" data-menu-key="inspection.plans" data-page-section="设备巡检" data-page-title="巡检计划">
+  <div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header><main class="main"><div class="screen-frame stack">
+    <section class="card inspection-filters"><div class="inspection-filter-grid">
+      <label class="form-field"><span class="form-label">计划名称</span><input class="form-control" data-inspection-filter="name" placeholder="请输入"></label>
+      <label class="form-field"><span class="form-label">计划编码</span><input class="form-control" data-inspection-filter="code" placeholder="请输入"></label>
+      <label class="form-field"><span class="form-label">所属项目</span><select class="form-control" data-inspection-filter="project"><option value="">请选择</option><option>光谷科学岛综合管廊一期</option></select></label>
+      <div class="filter-actions"><button class="btn btn-ghost" type="button" data-inspection-action="expand"><span>展开</span> <i class="fa-solid fa-chevron-down"></i></button><button class="btn btn-secondary" type="button" data-inspection-action="reset">重置</button><button class="btn btn-primary" type="button" data-inspection-action="search">搜索</button></div>
+    </div></section>
+    <section class="card inspection-list-card"><div class="inspection-toolbar"><div class="toolbar-left"><h1 class="toolbar-title">巡检计划</h1></div><div class="toolbar-right"><button class="btn btn-secondary" type="button" data-inspection-action="delete-selected" disabled><i class="fa-solid fa-trash"></i> 删除</button><button class="btn btn-primary" type="button" data-inspection-action="create-plan"><i class="fa-solid fa-plus"></i> 新增</button></div></div>
+      <div class="inspection-table-wrap"><table class="table inspection-table plan-table table-actions-sticky"><thead><tr><th class="check-cell"><input type="checkbox" data-inspection-select-all aria-label="全选"></th><th>计划编码</th><th>计划名称</th><th>所属项目</th><th>等级</th><th>巡检对象</th><th>周期</th><th>状态</th><th>生成时刻</th><th>任务开始</th><th>下次生成</th><th>最近生成</th><th>巡检人</th><th>负责人</th><th>创建时间</th><th>操作</th></tr></thead><tbody id="plansBody"></tbody></table></div><div id="plansPagination" class="inspection-pagination"></div>
+    </section>
+  </div></main></div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script><script src="../../../app/data/inspection-data.js"></script><script src="../../../app/components/sidebar.js?v=nav-home-1"></script><script src="../../../app/components/header.js?v=nav-home-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/inspection.js"></script>
+</body></html>

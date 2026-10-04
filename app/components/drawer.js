@@ -52,11 +52,11 @@
     document.body.style.overflow = "";
   };
 
-  window.openAppConfirm = function ({ title = "提示", message = "确认执行此操作吗？", confirmText = "确定", onConfirm }) {
+  window.openAppConfirm = function ({ title = "提示", message = "确认执行此操作吗？", confirmText = "确定", okClass = "btn-danger-outline", onConfirm }) {
     document.querySelectorAll(".app-confirm-mask").forEach((item) => item.remove());
     const mask = document.createElement("div");
     mask.className = "app-confirm-mask";
-    mask.innerHTML = `<div class="app-confirm-dialog" role="dialog" aria-modal="true"><div class="app-confirm-head"><i class="fa-solid fa-circle-exclamation"></i><strong>${title}</strong><button type="button" data-confirm-close aria-label="关闭">×</button></div><p>${message}</p><div class="app-confirm-actions"><button class="btn btn-secondary" data-confirm-close>取消</button><button class="btn btn-danger-outline" data-confirm-ok>${confirmText}</button></div></div>`;
+    mask.innerHTML = `<div class="app-confirm-dialog" role="dialog" aria-modal="true"><div class="app-confirm-head"><i class="fa-solid fa-circle-exclamation"></i><strong>${title}</strong><button type="button" data-confirm-close aria-label="关闭">×</button></div><p>${message}</p><div class="app-confirm-actions"><button class="btn btn-secondary" data-confirm-close>取消</button><button class="btn ${okClass}" data-confirm-ok>${confirmText}</button></div></div>`;
     document.body.append(mask);
     const close = () => mask.remove();
     mask.querySelectorAll("[data-confirm-close]").forEach((button) => button.addEventListener("click", close));

@@ -8,23 +8,12 @@
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
   <link rel="stylesheet" href="../../assets/css/communication.css">
 </head>
-<body class="monitoring-page communication-page" data-menu-key="communication-system" data-page-section="通信系统" data-page-title="通信系统">
+<body class="monitoring-page communication-page" data-menu-key="communication-system" data-page-section="子系统" data-page-title="通信系统">
   <div class="app-shell">
     <aside id="app-sidebar" class="sidebar"></aside>
     <header id="app-header" class="header"></header>
     <main class="main">
       <div class="screen-frame stack communication-shell">
-        <section class="communication-statusbar" aria-label="通信数据源状态">
-          <div class="communication-status-copy">
-            <span class="communication-status-icon"><i class="fa-solid fa-tower-broadcast"></i></span>
-            <div><strong>第三方通信平台</strong><small>仅展示呼叫数据，位置与通话记录同步入库</small></div>
-          </div>
-          <div class="communication-status-actions">
-            <span class="communication-status-badge" id="integrationStatus">已连接</span>
-            <span class="communication-status-copy"><small>最近同步 <b id="lastSyncAt">2026-10-01 10:24:18</b></small></span>
-            <button class="btn btn-secondary" id="syncButton" type="button"><i class="fa-solid fa-rotate"></i> 刷新数据</button>
-          </div>
-        </section>
 
         <section class="communication-stats" aria-label="通信统计">
           <article class="communication-stat"><span class="communication-stat-icon"><i class="fa-solid fa-phone"></i></span><div><span class="communication-stat-label">呼叫总数</span><strong class="communication-stat-value" id="statTotal">0</strong></div></article>
@@ -73,13 +62,12 @@
       </div>
     </main>
   </div>
-  <script src="../../../app/config/menu.js"></script>
-  <script src="../../../app/components/sidebar.js"></script>
-  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
   <script src="../../../app/components/drawer.js"></script>
   <script src="../../../app/components/requirement.js"></script>
   <script>
-    const integration = { status: "connected", lastSyncAt: "2026-10-01 10:24:18", source: "第三方定位服务", latency: "86 ms" };
     const calls = [
       { id: "CALL-1024", terminal: "综合舱 SOS 终端-03", type: "紧急呼叫", location: "1号管廊 / 综合舱", corridor: "1号管廊", cabin: "综合舱", section: "B2 区段", coordinate: "X: 58 · Y: 46", startedAt: "2026-10-01 10:18:42", duration: "02:16", status: "pending", priority: "高", position: { left: 58, top: 46 } },
       { id: "CALL-1023", terminal: "巡检手台-17", type: "日常调度", location: "2号管廊 / 东段", corridor: "2号管廊", cabin: "电力舱", section: "E4 区段", coordinate: "X: 74 · Y: 31", startedAt: "2026-10-01 10:06:19", duration: "05:48", status: "active", priority: "中", position: { left: 74, top: 31 } },
@@ -108,10 +96,9 @@
     function renderRecords() { const list = records.filter(recordMatches); $("recordResultCount").textContent = `共 ${list.length} 条`; $("recordBody").innerHTML = list.length ? list.map((record) => `<tr data-record-id="${record.id}"><td>${record.id}</td><td>${record.callId}</td><td>${escapeHtml(record.terminal)}</td><td>${record.type}</td><td>${escapeHtml(record.location)}</td><td>${record.startedAt}</td><td>${record.endedAt}</td><td>${record.duration}</td><td><span class="communication-result ${record.resultClass}">${record.result}</span></td><td><button class="btn btn-link record-action" type="button" data-record-detail="${record.id}">详情</button></td></tr>`).join("") : `<tr><td colspan="10"><div class="communication-empty">暂无通话记录</div></td></tr>`; }
     function openCallDrawer(call) { const body = `<div class="drawer-detail-grid"><div><span>呼叫编号</span><strong>${call.id}</strong></div><div><span>终端名称</span><strong>${escapeHtml(call.terminal)}</strong></div><div><span>呼叫类型</span><strong>${call.type}</strong></div><div><span>呼叫状态</span><strong>${statusLabels[call.status]}</strong></div><div><span>关联位置</span><strong>${escapeHtml(call.location)}</strong></div><div><span>定位坐标</span><strong>${call.coordinate}</strong></div><div><span>开始时间</span><strong>${call.startedAt}</strong></div><div><span>通话时长</span><strong>${call.duration}</strong></div></div>`; window.openAppDrawer?.({ title: "位置详情", subtitle: "通信系统 · 位置关联", body, footer: '<button class="btn btn-secondary" data-drawer-close>关闭</button>' }); }
     function openRecordDrawer(record) { const body = `<div class="drawer-detail-grid"><div><span>记录编号</span><strong>${record.id}</strong></div><div><span>呼叫编号</span><strong>${record.callId}</strong></div><div><span>终端名称</span><strong>${escapeHtml(record.terminal)}</strong></div><div><span>通话类型</span><strong>${record.type}</strong></div><div><span>通话位置</span><strong>${escapeHtml(record.location)}</strong></div><div><span>处理结果</span><strong>${record.result}</strong></div><div><span>开始时间</span><strong>${record.startedAt}</strong></div><div><span>结束时间</span><strong>${record.endedAt}</strong></div><div><span>处理人员</span><strong>${record.operator}</strong></div></div>`; window.openAppDrawer?.({ title: "通话记录详情", subtitle: "通信系统 · 记录查询", body, footer: '<button class="btn btn-secondary" data-drawer-close>关闭</button>' }); }
-    function syncData() { const button = $("syncButton"); const badge = $("integrationStatus"); button.disabled = true; badge.className = "communication-status-badge syncing"; badge.textContent = "同步中"; setTimeout(() => { integration.lastSyncAt = new Date().toLocaleString("zh-CN", { hour12: false }).replaceAll("/", "-"); $("lastSyncAt").textContent = integration.lastSyncAt; badge.className = "communication-status-badge"; badge.textContent = "已连接"; button.disabled = false; showToast("通信数据已完成同步"); }, 650); }
     ["callKeyword", "callStatus", "callDate"].forEach((id) => $(id).addEventListener("change", renderCalls));
     $("callSearch").addEventListener("click", renderCalls); $("callReset").addEventListener("click", () => { $("callKeyword").value = ""; $("callStatus").value = "all"; $("callDate").value = "2026-10-01"; renderCalls(); });
-    ["recordTerminal", "recordType", "recordDate"].forEach((id) => $(id).addEventListener("change", renderRecords)); $("recordSearch").addEventListener("click", () => { renderRecords(); showToast("已完成通话记录查询"); }); $("recordExport").addEventListener("click", () => showToast("已生成当前条件下的通话记录导出文件")); $("syncButton").addEventListener("click", syncData);
+    ["recordTerminal", "recordType", "recordDate"].forEach((id) => $(id).addEventListener("change", renderRecords)); $("recordSearch").addEventListener("click", () => { renderRecords(); showToast("已完成通话记录查询"); }); $("recordExport").addEventListener("click", () => showToast("已生成当前条件下的通话记录导出文件"));
     document.addEventListener("click", (event) => { const callRow = event.target.closest("[data-call-id]"); if (callRow) selectCall(callRow.dataset.callId); const recordButton = event.target.closest("[data-record-detail]"); if (recordButton) { const record = records.find((item) => item.id === recordButton.dataset.recordDetail); if (record) openRecordDrawer(record); } });
     $("locationDetail").addEventListener("click", () => { const call = calls.find((item) => item.id === selectedCallId); if (call) openCallDrawer(call); });
     renderStats(); renderCalls(); selectCall(selectedCallId);

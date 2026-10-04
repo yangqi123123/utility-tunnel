@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>火灾报警系统 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/fire-alarm.css">
+</head>
+<body class="fire-alarm-page" data-menu-key="fire-alarm" data-page-section="子系统" data-page-title="火灾报警系统">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="fire-stat-grid" aria-label="火灾报警概览">
+          <article class="fire-stat fire-stat-danger"><span class="fire-stat-label">当前火警</span><strong id="statFire">0</strong><span>需要立即关注</span><i class="fa-solid fa-fire-flame-curved"></i></article>
+          <article class="fire-stat fire-stat-warning"><span class="fire-stat-label">设备故障</span><strong id="statFault">0</strong><span>来自第三方系统</span><i class="fa-solid fa-triangle-exclamation"></i></article>
+          <article class="fire-stat fire-stat-success"><span class="fire-stat-label">在线设备</span><strong id="statOnline">0</strong><span id="statOnlineNote">在线率 0%</span><i class="fa-solid fa-link"></i></article>
+          <article class="fire-stat fire-stat-primary"><span class="fire-stat-label">防火分区</span><strong id="statZone">0</strong><span>纳入监测范围</span><i class="fa-solid fa-border-all"></i></article>
+        </section>
+
+        <section class="card fire-filter-card">
+          <div class="filter-actions fire-filter-row">
+            <label class="form-field"><span class="form-label">信号类型</span><select class="form-control" data-filter="type"><option value="">全部信号</option><option value="火警">火警</option><option value="故障">故障</option><option value="监管">监管</option></select></label>
+            <label class="form-field"><span class="form-label">信号等级</span><select class="form-control" data-filter="level"><option value="">全部等级</option><option value="紧急">紧急</option><option value="重要">重要</option><option value="一般">一般</option></select></label>
+            <label class="form-field"><span class="form-label">处理状态</span><select class="form-control" data-filter="status"><option value="">全部状态</option><option value="未确认">未确认</option><option value="已确认">已确认</option><option value="已恢复">已恢复</option></select></label>
+            <label class="form-field"><span class="form-label">防火分区</span><select class="form-control" data-filter="zone"><option value="">全部分区</option><option>一号舱 · 东段</option><option>一号舱 · 西段</option><option>二号舱 · 东段</option><option>二号舱 · 西段</option></select></label>
+            <button class="btn btn-secondary" type="button" data-action="reset">重置</button>
+            <button class="btn btn-primary" type="button" data-action="search"><i class="fa-solid fa-magnifying-glass"></i>搜索</button>
+          </div>
+        </section>
+
+        <section class="fire-alarm-workspace">
+          <article class="card fire-signal-card">
+            <div class="card-title-row fire-card-toolbar"><div><h2 class="card-title">火警信号</h2><span class="card-caption">接入平台实时推送的信号记录</span></div><span class="read-only-tag"><i class="fa-solid fa-eye"></i>只读</span></div>
+            <div class="table-wrap"><table class="table fire-signal-table"><thead><tr><th>信号时间</th><th>信号类型</th><th>信号描述</th><th>防火分区</th><th>关联设备</th><th>等级</th><th>状态</th><th>操作</th></tr></thead><tbody id="signalBody"></tbody></table></div>
+            <div class="pagination"><span>共 <strong id="signalCount">0</strong> 条信号</span><span class="page-item active">1</span></div>
+          </article>
+
+          <aside class="fire-aside">
+            <article class="card zone-card">
+              <div class="card-title-row fire-card-toolbar"><div><h2 class="card-title">防火分区定位</h2><span class="card-caption">按分区查看当前信号状态</span></div><span class="zone-legend"><i class="zone-dot normal"></i>正常</span></div>
+              <div class="zone-map" id="zoneMap"></div>
+            </article>
+            <article class="card device-status-card">
+              <div class="card-title-row fire-card-toolbar"><div><h2 class="card-title">设备状态</h2><span class="card-caption">第三方设备连接状态</span></div><button class="link-button" type="button" data-action="show-all-devices">查看全部</button></div>
+              <div class="device-status-list" id="deviceStatusList"></div>
+            </article>
+          </aside>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script>
+    const signals = [
+      { id: "FA-20261001-0042", time: "2026-10-01 10:24:18", type: "火警", level: "紧急", desc: "感烟探测器动作，烟雾浓度超限", zone: "一号舱 · 东段", device: "感烟探测器 SD-014", status: "未确认" },
+      { id: "FA-20261001-0041", time: "2026-10-01 10:18:52", type: "故障", level: "重要", desc: "手动报警按钮通信异常", zone: "二号舱 · 西段", device: "手动报警按钮 MCP-028", status: "未确认" },
+      { id: "FA-20261001-0040", time: "2026-10-01 09:56:07", type: "监管", level: "一般", desc: "防火卷帘处于非正常位置", zone: "一号舱 · 西段", device: "防火卷帘 FCS-006", status: "已确认" },
+      { id: "FA-20261001-0039", time: "2026-10-01 09:42:36", type: "火警", level: "紧急", desc: "线型光束感烟火灾探测器报警", zone: "二号舱 · 东段", device: "光束感烟探测器 BDS-003", status: "已恢复" },
+      { id: "FA-20261001-0038", time: "2026-10-01 09:31:11", type: "监管", level: "一般", desc: "消火栓泵房门磁打开", zone: "一号舱 · 东段", device: "泵房门磁 DS-011", status: "已确认" },
+      { id: "FA-20261001-0037", time: "2026-10-01 09:05:43", type: "故障", level: "重要", desc: "区域火灾报警控制器离线", zone: "二号舱 · 西段", device: "区域控制器 FACP-02", status: "已恢复" }
+    ];
+    const zones = [
+      { name: "一号舱 · 东段", code: "Z-01E", status: "alarm", count: 2 },
+      { name: "一号舱 · 西段", code: "Z-01W", status: "normal", count: 1 },
+      { name: "二号舱 · 东段", code: "Z-02E", status: "alarm", count: 1 },
+      { name: "二号舱 · 西段", code: "Z-02W", status: "fault", count: 2 }
+    ];
+    const devices = [
+      { name: "区域火灾报警控制器 FACP-01", type: "控制器", status: "online", last: "3 秒前" },
+      { name: "区域火灾报警控制器 FACP-02", type: "控制器", status: "online", last: "5 秒前" },
+      { name: "感烟探测器 SD-014", type: "感烟探测器", status: "alarm", last: "刚刚" },
+      { name: "手动报警按钮 MCP-028", type: "手动报警按钮", status: "fault", last: "6 分钟前" },
+      { name: "消防广播主机 FCB-01", type: "消防广播", status: "online", last: "8 秒前" }
+    ];
+    const statusText = { online: "在线", alarm: "报警", fault: "故障" };
+    const state = { filters: { type: "", level: "", status: "", zone: "" } };
+    const signalBody = document.getElementById("signalBody");
+    function signalClass(value) { return value === "火警" ? "danger" : value === "故障" ? "warning" : "muted"; }
+    function levelClass(value) { return value === "紧急" ? "danger" : value === "重要" ? "warning" : "normal"; }
+    function renderStats() {
+      const fire = signals.filter((item) => item.type === "火警" && item.status !== "已恢复").length;
+      const fault = signals.filter((item) => item.type === "故障" && item.status !== "已恢复").length;
+      const online = devices.filter((item) => item.status === "online").length;
+      document.getElementById("statFire").textContent = fire;
+      document.getElementById("statFault").textContent = fault;
+      document.getElementById("statOnline").textContent = `${online}/${devices.length}`;
+      document.getElementById("statOnlineNote").textContent = `在线率 ${Math.round((online / devices.length) * 100)}%`;
+      document.getElementById("statZone").textContent = zones.length;
+    }
+    function renderSignals(list = signals) {
+      signalBody.innerHTML = list.length ? list.map((item) => `<tr data-signal-id="${item.id}"><td class="signal-time">${item.time}</td><td><span class="signal-type ${signalClass(item.type)}"><i class="fa-solid ${item.type === "火警" ? "fa-fire" : item.type === "故障" ? "fa-triangle-exclamation" : "fa-circle-info"}"></i>${item.type}</span></td><td class="signal-desc">${item.desc}</td><td>${item.zone}</td><td class="signal-device">${item.device}</td><td><span class="signal-level ${levelClass(item.level)}">${item.level}</span></td><td><span class="signal-status ${item.status === "未确认" ? "pending" : item.status === "已确认" ? "confirmed" : "restored"}">${item.status}</span></td><td><button class="table-action" type="button" data-signal-detail="${item.id}">详情</button></td></tr>`).join("") : '<tr><td class="fire-empty" colspan="8"><i class="fa-regular fa-circle-check"></i><span>暂无符合条件的火警信号</span></td></tr>';
+      document.getElementById("signalCount").textContent = list.length;
+    }
+    function renderZones() {
+      document.getElementById("zoneMap").innerHTML = zones.map((zone) => `<button type="button" class="zone-block ${zone.status}" data-zone="${zone.name}"><span class="zone-block-code">${zone.code}</span><strong>${zone.name}</strong><span class="zone-block-meta"><i class="zone-dot ${zone.status === "normal" ? "normal" : zone.status === "alarm" ? "alarm" : "fault"}"></i>${zone.status === "normal" ? "正常" : zone.status === "alarm" ? `${zone.count} 条信号` : "设备故障"}</span></button>`).join("");
+    }
+    function renderDevices() {
+      document.getElementById("deviceStatusList").innerHTML = devices.map((item) => `<div class="device-status-row"><span class="device-status-icon ${item.status}"><i class="fa-solid ${item.status === "online" ? "fa-link" : item.status === "alarm" ? "fa-fire" : "fa-triangle-exclamation"}"></i></span><div class="device-status-main"><strong>${item.name}</strong><span>${item.type} · 最近心跳 ${item.last}</span></div><span class="device-status-label ${item.status}">${statusText[item.status]}</span></div>`).join("");
+    }
+    function filteredSignals() { return signals.filter((item) => Object.entries(state.filters).every(([key, value]) => !value || item[key] === value)); }
+    function applyFilters() { renderSignals(filteredSignals()); }
+    function openSignalDetail(id) {
+      const item = signals.find((signal) => signal.id === id);
+      if (!item) return;
+      window.openAppDrawer({ title: "火警信号详情", subtitle: `火灾报警系统 · ${item.id}`, body: `<div class="fire-detail-status"><span class="signal-type ${signalClass(item.type)}"><i class="fa-solid ${item.type === "火警" ? "fa-fire" : "fa-triangle-exclamation"}"></i>${item.type}</span><span class="signal-status ${item.status === "未确认" ? "pending" : item.status === "已确认" ? "confirmed" : "restored"}">${item.status}</span></div><section class="detail-section"><h3 class="detail-title">信号信息</h3><div class="detail-grid fire-detail-grid"><div class="info-item"><span class="info-label">信号编号</span><span class="info-value">${item.id}</span></div><div class="info-item"><span class="info-label">接收时间</span><span class="info-value">${item.time}</span></div><div class="info-item"><span class="info-label">信号等级</span><span class="info-value"><span class="signal-level ${levelClass(item.level)}">${item.level}</span></span></div><div class="info-item"><span class="info-label">信号描述</span><span class="info-value">${item.desc}</span></div></div></section><section class="detail-section"><h3 class="detail-title">空间定位</h3><div class="detail-grid fire-detail-grid"><div class="info-item"><span class="info-label">防火分区</span><span class="info-value">${item.zone}</span></div><div class="info-item"><span class="info-label">关联设备</span><span class="info-value">${item.device}</span></div><div class="info-item"><span class="info-label">数据来源</span><span class="info-value">消防报警主机 · 北向接口</span></div><div class="info-item"><span class="info-label">最新状态</span><span class="info-value">第三方系统已同步</span></div></div></section>`, footer: '<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>' });
+    }
+    function setSyncTime() { const el = document.getElementById("lastSync"); if (el) el.textContent = "刚刚"; }
+    document.addEventListener("click", (event) => {
+      const action = event.target.closest("[data-action]")?.dataset.action;
+      if (action === "search") { document.querySelectorAll("[data-filter]").forEach((field) => { state.filters[field.dataset.filter] = field.value; }); applyFilters(); }
+      if (action === "reset") { document.querySelectorAll("[data-filter]").forEach((field) => { field.value = ""; state.filters[field.dataset.filter] = ""; }); renderSignals(); }
+      if (action === "refresh") { setSyncTime(); renderStats(); renderSignals(filteredSignals()); }
+      const detail = event.target.closest("[data-signal-detail]");
+      if (detail) openSignalDetail(detail.dataset.signalDetail);
+      const row = event.target.closest("tr[data-signal-id]");
+      if (row && !detail) openSignalDetail(row.dataset.signalId);
+      const zone = event.target.closest("[data-zone]");
+      if (zone) { state.filters.zone = zone.dataset.zone; document.querySelector('[data-filter="zone"]').value = zone.dataset.zone; applyFilters(); }
+      if (action === "show-all-devices") window.openAppDrawer({ title: "设备状态", subtitle: "火灾报警系统 · 第三方设备", body: `<div class="device-status-list device-status-list-drawer">${devices.map((item) => `<div class="device-status-row"><span class="device-status-icon ${item.status}"><i class="fa-solid ${item.status === "online" ? "fa-link" : item.status === "alarm" ? "fa-fire" : "fa-triangle-exclamation"}"></i></span><div class="device-status-main"><strong>${item.name}</strong><span>${item.type} · 最近心跳 ${item.last}</span></div><span class="device-status-label ${item.status}">${statusText[item.status]}</span></div>`).join("")}</div>`, footer: '<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>' });
+    });
+    renderStats(); renderSignals(); renderZones(); renderDevices();
+  </script>
+</body>
+</html>

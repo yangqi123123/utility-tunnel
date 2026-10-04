@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>历史归档配置 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <style>
+    .archive-page .page-head { align-items:center; }.archive-tip { color:var(--text-secondary); font-size:12px; }.archive-grid { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr); gap:16px; }.archive-card { overflow:hidden; }.archive-card-head { min-height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 24px; border-bottom:1px solid var(--divider); }.archive-card-head h2 { margin:0; color:var(--text-title); font-size:16px; }.archive-card-head span { color:var(--text-secondary); font-size:12px; }.archive-form { display:grid; gap:18px; padding:24px; }.archive-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 24px; }.archive-form .form-item { margin:0; }.archive-toggle { display:flex; align-items:center; gap:10px; min-height:32px; color:var(--text-primary); cursor:pointer; }.archive-toggle input { width:16px; height:16px; accent-color:var(--primary); }.archive-actions { display:flex; justify-content:flex-end; gap:8px; padding-top:6px; }.archive-note { margin:0; padding:12px 14px; border:1px solid #d8e7fb; border-radius:4px; color:#547194; background:#f5f9ff; font-size:12px; line-height:1.6; }.archive-task-table { min-width:720px; }.archive-task-table th,.archive-task-table td { white-space:nowrap; }.archive-summary { display:grid; gap:12px; padding:20px 24px; }.archive-summary-item { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:42px; padding-bottom:12px; border-bottom:1px solid var(--divider); }.archive-summary-item:last-child { padding-bottom:0; border-bottom:0; }.archive-summary-item span { color:var(--text-secondary); font-size:12px; }.archive-summary-item strong { color:var(--text-title); font-size:14px; }.data-storage-status { display:inline-flex; align-items:center; gap:6px; min-height:22px; padding:0 8px; border-radius:2px; font-size:12px; }.data-storage-status i { width:6px; height:6px; border-radius:50%; background:currentColor; }.status-success { color:#168152; background:#eaf8f0; }.status-warning { color:#b77912; background:#fff5df; }.status-danger { color:#c14b4b; background:#fff0f0; }.status-default { color:var(--text-secondary); background:#f1f3f6; }
+    @media (max-width:1100px) { .archive-grid { grid-template-columns:1fr; } }.archive-task-card { overflow:hidden; }.archive-task-card .table-wrap { overflow-x:auto; }
+    @media (max-width:760px) { .archive-form-grid { grid-template-columns:1fr; }.archive-card-head { padding-left:16px; padding-right:16px; }.archive-form { padding:16px; }.archive-actions { flex-wrap:wrap; } }
+  </style>
+</head>
+<body class="archive-page" data-menu-key="data-storage.archive-config" data-page-section="数据存储" data-page-title="历史归档配置" data-storage-mode="archive">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="page-head"><div><h1 class="page-title">历史归档配置</h1><p class="page-desc">配置历史监测数据的保留周期和定时归档任务。</p></div></section>
+        <div class="archive-grid">
+          <section class="card archive-card"><header class="archive-card-head"><h2>归档策略</h2></header><div class="archive-form"><label class="archive-toggle"><input type="checkbox" data-archive-field="enabled"><span>启用历史数据自动归档</span></label><div class="archive-form-grid"><label class="form-field form-item"><span class="form-label">历史数据保留时长</span><input class="form-control" type="number" min="1" data-archive-field="retentionDays"></label><label class="form-field form-item"><span class="form-label">时间单位</span><select class="form-control" data-archive-field="retentionUnit"><option>天</option><option>月</option><option>年</option></select></label><label class="form-field form-item"><span class="form-label">定时任务频率</span><select class="form-control" data-archive-field="schedule"><option>每天</option><option>每周</option><option>每月</option></select></label><label class="form-field form-item"><span class="form-label">执行时间</span><input class="form-control" type="time" data-archive-field="executeAt"></label><label class="form-field form-item"><span class="form-label">Cron 表达式</span><input class="form-control" data-archive-field="cron" placeholder="例如：0 0 2 * * ?"></label><label class="form-field form-item"><span class="form-label">失败重试次数</span><input class="form-control" type="number" min="0" max="10" data-archive-field="retryTimes"></label></div><p class="archive-note"><i class="fa-solid fa-circle-info"></i> 归档任务会将超过保留周期的历史采集记录转入归档存储，归档过程中不影响实时数据采集。</p><div class="archive-actions"><button class="btn btn-secondary" type="button" data-archive-action="reset">恢复默认</button><button class="btn btn-secondary" type="button" data-archive-action="run"><i class="fa-solid fa-play"></i> 立即执行</button><button class="btn btn-primary" type="button" data-archive-action="save"><i class="fa-solid fa-check"></i> 保存配置</button></div></div></section>
+          <section class="card archive-card"><header class="archive-card-head"><h2>当前配置摘要</h2></header><div class="archive-summary"><div class="archive-summary-item"><span>归档状态</span><strong data-summary="enabled">-</strong></div><div class="archive-summary-item"><span>数据保留</span><strong data-summary="retention">-</strong></div><div class="archive-summary-item"><span>任务周期</span><strong data-summary="schedule">-</strong></div><div class="archive-summary-item"><span>下次执行</span><strong data-summary="nextRun">2026-10-02 02:00:00</strong></div></div></section>
+        </div>
+        <section class="card archive-task-card"><header class="archive-card-head"><h2>最近归档任务</h2></header><div class="table-wrap"><table class="table archive-task-table"><thead><tr><th>任务名称</th><th>执行周期</th><th>最近执行时间</th><th>执行结果</th><th>下次执行时间</th></tr></thead><tbody id="archiveTaskTable"></tbody></table></div></section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/data/data-storage.js?v=data-storage-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js?v=data-storage-1"></script>
+  <script src="../../../app/components/data-storage.js?v=data-storage-1"></script>
+</body>
+</html>

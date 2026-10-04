@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>标准作业 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/inspection.css">
+</head>
+<body class="inspection-page" data-menu-key="inspection.standard-works" data-page-section="设备巡检" data-page-title="标准作业">
+  <div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header><main class="main"><div class="screen-frame stack">
+    <section class="card inspection-filters"><div class="inspection-filter-grid">
+      <label class="form-field"><span class="form-label">作业方式</span><select class="form-control" data-inspection-filter="mode"><option value="">请选择</option><option>顺序作业</option><option>并行作业</option></select></label>
+      <label class="form-field"><span class="form-label">设备分类</span><select class="form-control" data-inspection-filter="category"><option value="">请选择</option></select></label>
+      <label class="form-field"><span class="form-label">作业模板名称</span><input class="form-control" data-inspection-filter="name" placeholder="请输入"></label>
+      <div class="filter-actions"><button class="btn btn-secondary" type="button" data-inspection-action="reset">重置</button><button class="btn btn-primary" type="button" data-inspection-action="search">搜索</button><button class="btn btn-ghost" type="button" data-inspection-action="expand"><span>展开</span> <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button></div>
+    </div></section>
+    <section class="card inspection-list-card"><div class="inspection-toolbar"><div class="toolbar-left"><h1 class="toolbar-title">标准作业模板</h1></div><div class="toolbar-right"><button class="btn btn-primary" type="button" data-inspection-action="create-work"><i class="fa-solid fa-plus"></i> 新增</button></div></div>
+      <div class="inspection-table-wrap"><table class="table inspection-table table-actions-sticky"><thead><tr><th>模板编号</th><th>作业模板名称</th><th>作业类型</th><th>作业方式</th><th>所属系统</th><th>设备分类</th><th>作业项数量</th><th>作业条目数量</th><th>创建人</th><th>创建时间</th><th>更新人</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="standardWorksBody"></tbody></table></div><div id="standardWorksPagination" class="inspection-pagination"></div>
+    </section>
+  </div></main></div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script><script src="../../../app/data/system-types.js"></script><script src="../../../app/data/device-categories.js"></script><script src="../../../app/data/inspection-data.js"></script><script src="../../../app/components/sidebar.js?v=nav-home-1"></script><script src="../../../app/components/header.js?v=nav-home-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/inspection.js"></script>
+</body></html>

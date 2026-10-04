@@ -143,7 +143,8 @@
 
   function initMap() {
     const target = document.getElementById("dispatchMap");
-    state.map = window.EMERGENCY_MAP?.create(target, { tileRoot: "../../assets/maps/tianditu", center: [31.84318, 117.20342], zoom: 15 });
+    /* 底图与「工作台」一致：BASE_MAP（高德在线底图 + 本地保底底图） */
+    state.map = window.EMERGENCY_MAP?.create(target, { center: [31.84318, 117.20342], zoom: 15 });
     updateMapLayers();
     const event = currentEvent();
     if (event) state.map?.focusEvent(event);
@@ -162,6 +163,9 @@
     if (event.target.closest("[data-dispatch-remove-person]")) { state.selectedIds = state.selectedIds.filter((id) => id !== event.target.closest("[data-dispatch-remove-person]").dataset.dispatchRemovePerson); renderSelectionBar(); renderSelected(); return; }
     if (action === "circle-select") { state.map?.startCircleSelect(selectByBounds); return; }
     if (action === "clear-select") { state.selectedIds = []; state.map?.clearSelection(); renderSelectionBar(); renderTab(); return; }
+    if (action === "zoom-in") { state.map?.zoomIn(); return; }
+    if (action === "zoom-out") { state.map?.zoomOut(); return; }
+    if (action === "zoom-reset") { state.map?.resetView(); return; }
     if (action === "call-selected") { callSelected(); return; }
     if (action === "focus-event") { state.map?.focusEvent(currentEvent()); return; }
     if (action === "toggle-panel" ) { state.panelOpen = !state.panelOpen; document.getElementById("dispatchBottomPanel")?.classList.toggle("collapsed", !state.panelOpen); return; }

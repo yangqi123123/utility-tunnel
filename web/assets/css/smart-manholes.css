@@ -1,0 +1,36 @@
+.manhole-page .screen-frame { min-width: 0; }
+.manhole-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.manhole-summary-card { min-height: 112px; display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; gap: 4px 12px; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-md); }
+.manhole-summary-icon { grid-row: 1 / span 2; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; color: var(--primary); background: var(--primary-light); font-size: 17px; }
+.manhole-summary-card.warning .manhole-summary-icon { color: #b98308; background: rgba(247,186,30,.14); }
+.manhole-summary-card.danger .manhole-summary-icon { color: var(--red); background: rgba(245,63,87,.1); }
+.manhole-summary-card.muted .manhole-summary-icon { color: var(--text-secondary); background: #f2f4f7; }
+.manhole-summary-label { color: var(--text-secondary); font-size: 12px; }
+.manhole-summary-value { color: var(--text-title); font: 700 24px/1 "DIN Alternate", Arial, sans-serif; }
+.manhole-summary-note { grid-column: 2; margin-top: 4px; color: var(--text-secondary); font-size: 12px; }
+.manhole-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; min-height: 58px; }
+.manhole-toolbar .card-title { margin: 0; }
+.manhole-source { display: inline-flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 12px; }
+.manhole-source i { color: var(--green); }
+.manhole-filters .filter-actions { grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(140px, 1fr)) auto auto; }
+.manhole-tabs { padding: 0 24px; }
+.manhole-tabs .tab { min-width: 104px; }
+.manhole-table { min-width: 1120px; }
+.manhole-table tbody tr { cursor: pointer; }
+.manhole-table td, .manhole-table th { white-space: nowrap; }
+.manhole-id { color: var(--text-title); font-weight: 600; }
+.manhole-meta { display: block; margin-top: 3px; color: var(--text-secondary); font-size: 12px; font-weight: 400; }
+.manhole-sync { padding: 10px 24px 0; color: var(--text-secondary); font-size: 12px; }
+.manhole-detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--divider); }
+.manhole-detail-id { margin: 0 0 4px; color: var(--text-title); font-size: 18px; font-weight: 600; }
+.manhole-detail-location { color: var(--text-secondary); font-size: 13px; }
+.manhole-detail-section { padding: 20px 0; border-bottom: 1px solid var(--divider); }
+.manhole-detail-section:last-child { border-bottom: 0; }
+.manhole-detail-section h3 { margin: 0 0 14px; color: var(--text-title); font-size: 14px; font-weight: 600; }
+.manhole-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.manhole-detail-note { margin: 0; color: var(--text-primary); line-height: 1.7; }
+.alarm-level-high { color: var(--red); }
+.alarm-level-medium { color: #b98308; }
+.alarm-level-low { color: var(--primary); }
+@media (max-width: 1100px) { .manhole-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } .manhole-filters .filter-actions { grid-template-columns: repeat(3, minmax(150px, 1fr)); } }
+@media (max-width: 640px) { .manhole-summary { grid-template-columns: 1fr; } .manhole-toolbar { align-items: flex-start; flex-direction: column; padding: 16px 20px; } .manhole-filters .filter-actions { grid-template-columns: 1fr; } .manhole-tabs { padding: 0 12px; } .manhole-detail-grid { grid-template-columns: 1fr; } }

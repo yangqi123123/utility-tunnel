@@ -1,0 +1,12 @@
+/* 共享底图组件样式（与 app/components/base-map.js 配套）
+ * 只放地图通用件：悬浮名称提示、保底底图提示条。页面私有样式仍在各自 CSS 里。 */
+
+/* 悬浮提示（点位名称） */
+.leaflet-tooltip.base-map-tip { padding: 6px 10px; border: 0; border-radius: 3px; background: rgba(26, 28, 31, .9); color: #fff; box-shadow: 0 6px 16px rgba(10, 24, 46, .28); font-size: 12px; font-weight: 400; white-space: nowrap; }
+.leaflet-tooltip.base-map-tip::before { border-top-color: rgba(26, 28, 31, .9); }
+.leaflet-tooltip.base-map-tip.leaflet-tooltip-right::before { border-right-color: rgba(26, 28, 31, .9); }
+.leaflet-tooltip.base-map-tip.leaflet-tooltip-left::before { border-left-color: rgba(26, 28, 31, .9); }
+.leaflet-tooltip.base-map-tip.leaflet-tooltip-bottom::before { border-bottom-color: rgba(26, 28, 31, .9); }
+
+/* 本地保底底图提示条（由 base-map.js 插入容器） */
+.base-map-note { position: absolute; left: 50%; top: 12px; z-index: 400; transform: translateX(-50%); padding: 4px 10px; color: #5d7690; background: rgba(255, 255, 255, .92); border: 1px solid #c4d9e8; border-radius: 3px; font-size: 11px; white-space: nowrap; pointer-events: none; }

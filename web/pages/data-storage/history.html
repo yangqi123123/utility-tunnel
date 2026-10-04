@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>历史数据 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <style>
+    .data-storage-page .page-head { align-items:center; }.history-tip { color:var(--text-secondary); font-size:12px; }
+    .data-storage-filter-row { grid-template-columns:repeat(5,minmax(150px,1fr)) auto auto; }.data-storage-filter-row .form-field:nth-child(4),.data-storage-filter-row .form-field:nth-child(5) { min-width:180px; }
+    .data-storage-list-card { overflow:hidden; }.data-storage-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 24px 0; }.data-storage-toolbar h2 { margin:0; color:var(--text-title); font-size:16px; }.data-storage-toolbar span { color:var(--text-secondary); font-size:12px; }.data-storage-table { min-width:1120px; }.data-storage-table tbody tr { cursor:pointer; }.data-storage-table th,.data-storage-table td { white-space:nowrap; }.data-device-name { display:block; color:var(--text-title); font-weight:600; }.data-storage-table td small { display:block; margin-top:4px; color:var(--text-secondary); font-size:12px; }
+    .data-storage-status { display:inline-flex; align-items:center; gap:6px; min-height:22px; padding:0 8px; border-radius:2px; font-size:12px; }.data-storage-status i { width:6px; height:6px; border-radius:50%; background:currentColor; }.status-success { color:#168152; background:#eaf8f0; }.status-warning { color:#b77912; background:#fff5df; }.status-danger { color:#c14b4b; background:#fff0f0; }.status-default { color:var(--text-secondary); background:#f1f3f6; }
+    .data-storage-empty { min-height:180px; display:grid; place-items:center; align-content:center; gap:8px; color:var(--text-secondary); }.data-storage-empty i { font-size:24px; color:#b5c1d2; }.data-storage-empty strong { color:var(--text-primary); font-weight:500; }.data-storage-empty span { font-size:12px; }.data-storage-detail-section { margin-bottom:24px; }.data-storage-section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }.data-storage-section-head .detail-title { margin-bottom:12px; }.data-storage-info-grid { gap:14px 24px; }.data-storage-tabs { margin-bottom:20px; }.data-storage-tabs .tab { min-width:92px; }.data-storage-history-table { min-width:620px; }.data-storage-files { min-width:520px; }
+    .data-storage-record-mask { position:fixed; inset:0; z-index:1400; display:flex; justify-content:flex-end; background:rgba(26,28,31,.32); }.data-storage-record-drawer { width:min(520px,92vw); height:100%; display:flex; flex-direction:column; background:#fff; box-shadow:-8px 0 24px rgba(26,28,31,.18); }.data-storage-record-drawer header,.data-storage-record-drawer footer { min-height:56px; display:flex; align-items:center; justify-content:space-between; padding:0 24px; border-bottom:1px solid var(--divider); }.data-storage-record-drawer header h2 { margin:0; color:var(--text-title); font-size:16px; }.data-storage-record-drawer header button { width:28px; height:28px; border:0; background:transparent; color:var(--text-secondary); font-size:20px; cursor:pointer; }.data-storage-record-drawer main { flex:1; overflow:auto; padding:24px; }.data-storage-record-drawer footer { justify-content:flex-end; border-top:1px solid var(--divider); border-bottom:0; }.data-storage-payload { margin-top:24px; }.data-storage-payload h3 { margin:0 0 8px; color:var(--text-title); font-size:14px; }.data-storage-payload pre { margin:0; padding:14px; overflow:auto; border-radius:3px; background:#101a2d; color:#dce7f7; font:12px/1.6 Consolas,monospace; }
+    @media (max-width:1100px) { .data-storage-filter-row { grid-template-columns:repeat(2,minmax(160px,1fr)) auto auto; } }.data-storage-empty-inline { min-height:160px; }
+    @media (max-width:640px) { .data-storage-page .page-head { align-items:flex-start; }.data-storage-filter-row { grid-template-columns:1fr; }.data-storage-toolbar { align-items:flex-start; flex-direction:column; padding-left:16px; padding-right:16px; } }
+  </style>
+</head>
+<body class="data-storage-page" data-menu-key="data-storage.history" data-page-section="数据存储" data-page-title="历史数据" data-storage-mode="history">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="page-head"><div><h1 class="page-title">历史数据</h1><p class="page-desc">按系统和采集时间范围查询设备历史监测记录。</p></div></section>
+        <section class="card filters"><div class="filter-actions data-storage-filter-row"><label class="form-field"><span class="form-label">所属系统</span><select class="form-control" data-system-filter><option value="">全部系统</option><option value="env">环境监测</option><option value="power">电力监测平台</option><option value="fire">消防监控系统</option></select></label><label class="form-field"><span class="form-label">设备名称/编码</span><input class="form-control" data-device-keyword placeholder="请输入设备名称或编码"></label><label class="form-field"><span class="form-label">采集开始时间</span><input class="form-control" type="datetime-local" data-history-start></label><label class="form-field"><span class="form-label">采集结束时间</span><input class="form-control" type="datetime-local" data-history-end></label><label class="form-field"><span class="form-label">设备状态</span><select class="form-control" data-device-status><option value="">全部状态</option><option>在线</option><option>告警</option><option>离线</option></select></label><button class="btn btn-secondary" type="button" data-storage-action="reset">重置</button><button class="btn btn-primary" type="button" data-storage-action="search">查询</button></div></section>
+        <section class="card data-storage-list-card"><div class="data-storage-toolbar"><div><h2>设备列表</h2></div></div><div class="table-wrap"><table class="table data-storage-table"><thead><tr><th>设备名称</th><th>所属系统</th><th>设备分类</th><th>项目</th><th>安装位置</th><th>状态</th><th>最新上报时间</th><th>操作</th></tr></thead><tbody id="deviceTable"></tbody></table></div></section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/data/data-storage.js?v=data-storage-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js?v=data-storage-1"></script>
+  <script src="../../../app/components/data-storage.js?v=data-storage-1"></script>
+</body>
+</html>

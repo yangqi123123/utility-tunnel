@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>智能井盖 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/smart-manholes.css">
+</head>
+<body class="manhole-page" data-menu-key="smart-manhole" data-page-section="子系统" data-page-title="智能井盖">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="manhole-summary" aria-label="井盖状态概览">
+          <article class="manhole-summary-card"><span class="manhole-summary-icon"><i class="fa-solid fa-circle-dot"></i></span><span class="manhole-summary-label">井盖总数</span><strong class="manhole-summary-value" id="totalCount">0</strong><span class="manhole-summary-note">已接入第三方平台</span></article>
+          <article class="manhole-summary-card"><span class="manhole-summary-icon"><i class="fa-solid fa-check"></i></span><span class="manhole-summary-label">正常运行</span><strong class="manhole-summary-value" id="normalCount">0</strong><span class="manhole-summary-note">状态稳定</span></article>
+          <article class="manhole-summary-card warning"><span class="manhole-summary-icon"><i class="fa-solid fa-triangle-exclamation"></i></span><span class="manhole-summary-label">当前报警</span><strong class="manhole-summary-value" id="alarmCount">0</strong><span class="manhole-summary-note">需要关注</span></article>
+          <article class="manhole-summary-card muted"><span class="manhole-summary-icon"><i class="fa-solid fa-link-slash"></i></span><span class="manhole-summary-label">离线井盖</span><strong class="manhole-summary-value" id="offlineCount">0</strong><span class="manhole-summary-note">超过 5 分钟未上报</span></article>
+        </section>
+        <section class="card manhole-filters">
+          <div class="filter-actions">
+            <label class="form-field"><span class="form-label">搜索井盖</span><input class="form-control" id="manholeQuery" placeholder="编号 / 位置 / 所属管廊"></label>
+            <label class="form-field"><span class="form-label">状态</span><select class="form-control" id="manholeStatus"><option value="all">全部状态</option><option value="normal">正常</option><option value="warning">倾斜预警</option><option value="alarm">开启报警</option><option value="offline">设备离线</option></select></label>
+            <label class="form-field"><span class="form-label">所属管廊</span><select class="form-control" id="manholeZone"><option value="all">全部管廊</option><option value="1号管廊">1号管廊</option><option value="2号管廊">2号管廊</option><option value="3号管廊">3号管廊</option><option value="5号管廊">5号管廊</option></select></label>
+            <label class="form-field"><span class="form-label">同步状态</span><select class="form-control" id="syncStatus"><option value="all">全部</option><option value="synced">已同步</option><option value="delayed">同步延迟</option></select></label>
+            <button class="btn btn-secondary" type="button" id="resetFilters">重置</button>
+            <button class="btn btn-primary" type="button" id="applyFilters"><i class="fa-solid fa-magnifying-glass"></i> 搜索</button>
+          </div>
+        </section>
+        <section class="card manhole-list-card">
+          <div class="manhole-toolbar"><div><h1 class="card-title">智能井盖</h1><span class="panel-helper">仅展示第三方平台同步数据，本平台不直接下发控制指令</span></div><div class="manhole-source"><i class="fa-solid fa-circle-check"></i><span>第三方数据已接入</span><button class="btn btn-secondary btn-sm" type="button" id="exportData"><i class="fa-solid fa-download"></i> 导出</button></div></div>
+          <div class="tabs manhole-tabs"><button class="tab active" type="button" data-tab="status">井盖状态 <span class="tab-count" id="statusTabCount">0</span></button><button class="tab" type="button" data-tab="alarm">报警记录 <span class="tab-count" id="alarmTabCount">0</span></button></div>
+          <div class="manhole-sync" id="syncHint">最近同步：2026-10-01 10:12:08 · 数据来源：第三方智能井盖平台</div>
+          <div class="table-wrap"><table class="table manhole-table"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+          <div class="pagination"><span>共 <strong id="tableCount">0</strong> 条，每页 10 条</span><span class="page-item active">1</span></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/requirement.js"></script>
+  <script>
+    const manholes = [
+      { id: "MH-1-001", zone: "1号管廊", location: "东侧入口 · F0103", status: "normal", statusText: "正常", tilt: "0.3°", battery: "92%", signal: "良好", reported: "10:12:06", sync: "synced" },
+      { id: "MH-1-002", zone: "1号管廊", location: "B1 变电所西侧", status: "warning", statusText: "倾斜预警", tilt: "8.6°", battery: "87%", signal: "良好", reported: "10:11:58", sync: "synced" },
+      { id: "MH-2-008", zone: "2号管廊", location: "南侧检修通道 · F0208", status: "normal", statusText: "正常", tilt: "0.8°", battery: "76%", signal: "良好", reported: "10:12:04", sync: "synced" },
+      { id: "MH-2-013", zone: "2号管廊", location: "西侧消防通道", status: "alarm", statusText: "开启报警", tilt: "12.4°", battery: "64%", signal: "一般", reported: "10:11:42", sync: "synced" },
+      { id: "MH-3-004", zone: "3号管廊", location: "综合舱 · F0304", status: "offline", statusText: "设备离线", tilt: "--", battery: "--", signal: "--", reported: "09:57:31", sync: "delayed" },
+      { id: "MH-3-009", zone: "3号管廊", location: "北侧出入口", status: "normal", statusText: "正常", tilt: "0.5°", battery: "81%", signal: "良好", reported: "10:12:01", sync: "synced" },
+      { id: "MH-5-021", zone: "5号管廊", location: "屋面电梯机房北侧", status: "warning", statusText: "倾斜预警", tilt: "6.1°", battery: "53%", signal: "一般", reported: "10:11:40", sync: "synced" },
+      { id: "MH-5-025", zone: "5号管廊", location: "屋面北侧人行道", status: "normal", statusText: "正常", tilt: "0.2°", battery: "94%", signal: "良好", reported: "10:12:07", sync: "synced" }
+    ];
+    const alarms = [
+      { id: "AL-20261001-018", manhole: "MH-2-013", zone: "2号管廊", type: "井盖开启", level: "high", levelText: "高", time: "2026-10-01 10:11:42", state: "未处理", location: "西侧消防通道" },
+      { id: "AL-20261001-017", manhole: "MH-5-021", zone: "5号管廊", type: "倾斜超限", level: "medium", levelText: "中", time: "2026-10-01 10:08:19", state: "处理中", location: "屋面电梯机房北侧" },
+      { id: "AL-20261001-015", manhole: "MH-1-002", zone: "1号管廊", type: "倾斜超限", level: "medium", levelText: "中", time: "2026-10-01 09:42:07", state: "已确认", location: "B1 变电所西侧" },
+      { id: "AL-20260930-204", manhole: "MH-3-004", zone: "3号管廊", type: "设备离线", level: "low", levelText: "低", time: "2026-09-30 23:57:31", state: "未处理", location: "综合舱 · F0304" },
+      { id: "AL-20260930-198", manhole: "MH-2-006", zone: "2号管廊", type: "井盖开启", level: "high", levelText: "高", time: "2026-09-30 18:22:14", state: "已恢复", location: "东侧检修口" }
+    ];
+    const els = { query: document.getElementById("manholeQuery"), status: document.getElementById("manholeStatus"), zone: document.getElementById("manholeZone"), sync: document.getElementById("syncStatus"), head: document.getElementById("tableHead"), body: document.getElementById("tableBody"), count: document.getElementById("tableCount") };
+    let activeTab = "status";
+    let filteredManholes = [...manholes];
+    let filteredAlarms = [...alarms];
+    const statusClass = { normal: "success", warning: "warning", alarm: "danger", offline: "" };
+    function renderSummary() { document.getElementById("totalCount").textContent = manholes.length; document.getElementById("normalCount").textContent = manholes.filter((item) => item.status === "normal").length; document.getElementById("alarmCount").textContent = manholes.filter((item) => ["warning", "alarm"].includes(item.status)).length; document.getElementById("offlineCount").textContent = manholes.filter((item) => item.status === "offline").length; document.getElementById("statusTabCount").textContent = manholes.length; document.getElementById("alarmTabCount").textContent = alarms.length; }
+    function renderStatusTable() { els.head.innerHTML = "<tr><th>井盖编号</th><th>所属管廊</th><th>安装位置</th><th>当前状态</th><th>倾斜角度</th><th>电池电量</th><th>信号质量</th><th>最近上报</th><th>操作</th></tr>"; els.body.innerHTML = filteredManholes.length ? filteredManholes.map((item) => `<tr data-view-manhole="${item.id}"><td><span class="manhole-id">${item.id}</span><small class="manhole-meta">第三方编码</small></td><td>${item.zone}</td><td>${item.location}</td><td><span class="tag ${statusClass[item.status]}">${item.statusText}</span></td><td>${item.tilt}</td><td>${item.battery}</td><td>${item.signal}</td><td>${item.reported}</td><td><button class="table-action" type="button" data-view-manhole="${item.id}">查看详情</button></td></tr>`).join("") : `<tr><td colspan="9"><div class="empty-state">暂无符合条件的井盖数据</div></td></tr>`; els.count.textContent = filteredManholes.length; }
+    function renderAlarmTable() { els.head.innerHTML = "<tr><th>报警编号</th><th>井盖编号</th><th>报警类型</th><th>报警级别</th><th>发生时间</th><th>所属管廊</th><th>处理状态</th><th>操作</th></tr>"; els.body.innerHTML = filteredAlarms.length ? filteredAlarms.map((item) => `<tr data-view-alarm="${item.id}"><td><span class="manhole-id">${item.id}</span></td><td>${item.manhole}<small class="manhole-meta">${item.location}</small></td><td>${item.type}</td><td><span class="alarm-level-${item.level}">${item.levelText}级</span></td><td>${item.time}</td><td>${item.zone}</td><td><span class="tag ${item.state === "未处理" ? "danger" : item.state === "处理中" ? "warning" : item.state === "已恢复" ? "success" : ""}">${item.state}</span></td><td><button class="table-action" type="button" data-view-alarm="${item.id}">查看详情</button></td></tr>`).join("") : `<tr><td colspan="8"><div class="empty-state">暂无报警记录</div></td></tr>`; els.count.textContent = filteredAlarms.length; }
+    function renderTable() { activeTab === "status" ? renderStatusTable() : renderAlarmTable(); }
+    function applyFilters() { const query = els.query.value.trim().toLowerCase(); const status = els.status.value; const zone = els.zone.value; const sync = els.sync.value; filteredManholes = manholes.filter((item) => (!query || `${item.id}${item.location}${item.zone}`.toLowerCase().includes(query)) && (status === "all" || item.status === status) && (zone === "all" || item.zone === zone) && (sync === "all" || item.sync === sync)); filteredAlarms = alarms.filter((item) => (!query || `${item.id}${item.manhole}${item.location}${item.zone}`.toLowerCase().includes(query)) && (zone === "all" || item.zone === zone)); renderTable(); }
+    function openManholeDetail(item) { const body = `<div class="manhole-detail-head"><div><h3 class="manhole-detail-id">${item.id}</h3><span class="manhole-detail-location">${item.zone} · ${item.location}</span></div><span class="tag ${statusClass[item.status]}">${item.statusText}</span></div><section class="manhole-detail-section"><h3>状态信息</h3><div class="manhole-detail-grid"><div class="info-item"><span class="info-label">倾斜角度</span><span class="info-value">${item.tilt}</span></div><div class="info-item"><span class="info-label">电池电量</span><span class="info-value">${item.battery}</span></div><div class="info-item"><span class="info-label">信号质量</span><span class="info-value">${item.signal}</span></div><div class="info-item"><span class="info-label">最近上报</span><span class="info-value">2026-10-01 ${item.reported}</span></div></div></section><section class="manhole-detail-section"><h3>数据说明</h3><p class="manhole-detail-note">当前数据由第三方智能井盖平台同步提供，本平台仅作状态展示与报警记录留痕，不向设备下发控制指令。</p></section>`; window.openAppDrawer({ title: "井盖详情", body, footer: '<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>' }); }
+    function openAlarmDetail(item) { const body = `<div class="manhole-detail-head"><div><h3 class="manhole-detail-id">${item.type}</h3><span class="manhole-detail-location">${item.manhole} · ${item.location}</span></div><span class="tag ${item.level === "high" ? "danger" : item.level === "medium" ? "warning" : ""}">${item.levelText}级</span></div><section class="manhole-detail-section"><h3>报警信息</h3><div class="manhole-detail-grid"><div class="info-item"><span class="info-label">报警编号</span><span class="info-value">${item.id}</span></div><div class="info-item"><span class="info-label">发生时间</span><span class="info-value">${item.time}</span></div><div class="info-item"><span class="info-label">所属管廊</span><span class="info-value">${item.zone}</span></div><div class="info-item"><span class="info-label">处理状态</span><span class="info-value">${item.state}</span></div></div></section><section class="manhole-detail-section"><h3>处理说明</h3><p class="manhole-detail-note">该报警记录由第三方平台推送，处理结果在原平台完成后同步回传。</p></section>`; window.openAppDrawer({ title: "报警详情", body, footer: '<button class="btn btn-secondary" data-drawer-close>关闭</button>' }); }
+    document.querySelectorAll("[data-tab]").forEach((tab) => tab.addEventListener("click", () => { activeTab = tab.dataset.tab; document.querySelectorAll("[data-tab]").forEach((item) => item.classList.toggle("active", item === tab)); renderTable(); }));
+    document.getElementById("applyFilters").addEventListener("click", applyFilters);
+    document.getElementById("resetFilters").addEventListener("click", () => { [els.query, els.status, els.zone, els.sync].forEach((item) => { item.value = item.tagName === "SELECT" ? "all" : ""; }); filteredManholes = [...manholes]; filteredAlarms = [...alarms]; renderTable(); });
+    document.getElementById("exportData").addEventListener("click", () => window.openAppDrawer({ title: activeTab === "status" ? "导出井盖状态" : "导出报警记录", body: `<p>已按当前筛选条件生成${activeTab === "status" ? "井盖状态" : "报警记录"}文件（Mock）。</p>`, footer: '<button class="btn btn-secondary" data-drawer-close>取消</button><button class="btn btn-primary" data-drawer-close>确认导出</button>' }));
+    document.addEventListener("click", (event) => { const manhole = event.target.closest("[data-view-manhole]")?.dataset.viewManhole; if (manhole) openManholeDetail(manholes.find((item) => item.id === manhole)); const alarm = event.target.closest("[data-view-alarm]")?.dataset.viewAlarm; if (alarm) openAlarmDetail(alarms.find((item) => item.id === alarm)); });
+    renderSummary(); renderTable();
+  </script>
+</body>
+</html>

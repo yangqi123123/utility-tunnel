@@ -3,17 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>服务中心看板 - 中建四局智能运营管理系统</title>
+  <title>网络管理平台 - 科学岛管廊监控中心</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
   <link rel="stylesheet" href="../../assets/css/service-center.css?v=3">
 </head>
-<body class="service-center-page" data-menu-key="service-center" data-page-section="服务中心" data-page-title="服务中心看板">
+<body class="service-center-page" data-menu-key="service-center" data-page-section="网络管理平台" data-page-title="网络管理平台">
   <div class="app-shell">
     <aside id="app-sidebar" class="sidebar"></aside>
     <header id="app-header" class="header"></header>
     <main class="main">
       <div class="screen-frame service-dashboard">
+        <section class="performance-kpis">
+          <article class="performance-kpi"><span class="kpi-icon blue"><i class="fa-solid fa-network-wired"></i></span><div><span>受监控设备</span><strong>36 <small>台</small></strong><em>在线 34 · 离线 2</em></div></article>
+          <article class="performance-kpi"><span class="kpi-icon green"><i class="fa-solid fa-arrow-right-arrow-left"></i></span><div><span>当前网络流量</span><strong>68.4 <small>Gbps</small></strong></div></article>
+          <article class="performance-kpi"><span class="kpi-icon amber"><i class="fa-solid fa-stopwatch"></i></span><div><span>平均链路延迟</span><strong>12.8 <small>ms</small></strong></div></article>
+          <article class="performance-kpi"><span class="kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></span><div><span>性能告警</span><strong>3 <small>条</small></strong></div></article>
+        </section>
+        <section class="performance-grid">
+          <article class="service-card performance-chart-card"><header class="service-card-header performance-card-head"><div><h2>带宽使用趋势</h2></div><button class="chart-period">24小时</button></header><div class="chart-wrap"><div class="chart-y-axis"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div><div class="line-chart"><div class="chart-grid-lines"><i></i><i></i><i></i><i></i><i></i></div><div class="chart-area"></div><div class="chart-line"></div><div class="chart-point p1"></div><div class="chart-point p2"></div><div class="chart-point p3"></div><div class="chart-point p4"></div><div class="chart-point p5"></div><div class="chart-point p6"></div><div class="chart-labels"><span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>24:00</span></div></div></div><div class="chart-legend"><span><i class="legend-blue"></i>入站流量</span><span><i class="legend-green"></i>出站流量</span><b>峰值 82.6%</b></div></article>
+          <article class="service-card performance-health-card"><header class="service-card-header performance-card-head"><div><h2>设备健康度</h2></div><span>按设备类型统计</span></header><div class="health-list"><div class="health-row"><span><i class="fa-solid fa-route"></i>路由器</span><b>98%</b><div><i style="width:98%"></i></div></div><div class="health-row"><span><i class="fa-solid fa-server"></i>服务器</span><b>96%</b><div><i style="width:96%"></i></div></div><div class="health-row"><span><i class="fa-solid fa-network-wired"></i>交换机</span><b>91%</b><div><i style="width:91%"></i></div></div><div class="health-row"><span><i class="fa-solid fa-wifi"></i>无线接入点</span><b>87%</b><div><i style="width:87%"></i></div></div></div><div class="health-footer"><span><i class="status-dot good"></i>正常 34</span><span><i class="status-dot warn"></i>告警 1</span><span><i class="status-dot off"></i>离线 2</span></div></article>
+        </section>
+        <article class="service-card performance-wide-card"><header class="service-card-header performance-card-head"><div><h2>设备性能监测</h2></div><button class="btn btn-secondary btn-sm"><i class="fa-solid fa-download"></i> 导出报表</button></header><div class="table-wrap"><table class="performance-table"><thead><tr><th>设备名称</th><th>设备类型</th><th>状态</th><th>流量</th><th>延迟</th><th>丢包率</th><th>性能趋势</th></tr></thead><tbody><tr><td><strong>核心路由器 RT-01</strong><small>192.168.110.1</small></td><td>路由器</td><td><span class="device-status good">正常</span></td><td>18.6 Gbps</td><td>8 ms</td><td>0.01%</td><td><span class="sparkline"><i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:60%"></i><i style="height:52%"></i><i style="height:72%"></i><i style="height:65%"></i></span></td></tr><tr><td><strong>汇聚交换机 SW-12</strong><small>192.168.110.12</small></td><td>交换机</td><td><span class="device-status good">正常</span></td><td>9.8 Gbps</td><td>12 ms</td><td>0.03%</td><td><span class="sparkline"><i style="height:35%"></i><i style="height:32%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:58%"></i><i style="height:54%"></i><i style="height:62%"></i></span></td></tr><tr><td><strong>应用服务器 APP-03</strong><small>192.168.110.18</small></td><td>服务器</td><td><span class="device-status warn">高负载</span></td><td>6.2 Gbps</td><td>24 ms</td><td>0.18%</td><td><span class="sparkline warn"><i style="height:45%"></i><i style="height:52%"></i><i style="height:60%"></i><i style="height:72%"></i><i style="height:68%"></i><i style="height:85%"></i><i style="height:80%"></i></span></td></tr></tbody></table></div></article>
         <section class="service-overview-grid">
           <article class="service-card">
             <header class="service-card-header"><h2>CPU</h2></header>
@@ -75,10 +86,12 @@
       </div>
     </main>
   </div>
-  <script src="../../../app/config/menu.js?v=project-1"></script>
-  <script src="../../../app/components/sidebar.js?v=service-center-2"></script>
-  <script src="../../../app/components/header.js?v=service-center-2"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
   <script src="../../../app/components/requirement.js"></script>
 </body>
 </html>
+
+
 

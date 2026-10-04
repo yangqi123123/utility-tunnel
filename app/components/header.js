@@ -68,8 +68,8 @@
     const target = document.getElementById("app-header");
     if (!target) return;
 
-    const title = document.body.dataset.pageTitle || "工作台";
-    const section = document.body.dataset.pageSection || "中建四局智能运营管理系统";
+    const title = document.body.dataset.pageTitle || "设备监测";
+    const section = document.body.dataset.pageSection || "科学岛管廊监控中心";
     const theme = document.documentElement.dataset.theme || "light";
     const collapsed = isSidebarCollapsed();
     const isDark = theme === "dark";
@@ -139,7 +139,9 @@
     searchPanel.innerHTML = `<div class="nav-search-title">菜单导航</div><div class="nav-search-results"></div>`;
     searchWrap.append(searchPanel);
     function flattenMenu(items) {
-      return (items || []).flatMap((item) => item.children?.length ? flattenMenu(item.children) : [item]);
+      return (items || [])
+        .filter((item) => !item.hidden)
+        .flatMap((item) => (item.children?.length ? flattenMenu(item.children) : [item]));
     }
     const menuItems = flattenMenu(window.APP_MENU || []);
     function renderMenuResults(keyword = "") {
@@ -158,8 +160,8 @@
     const defaultTab = { path: activePath, title, closable: activePath === homePath ? false : true };
     let tabs = JSON.parse(sessionStorage.getItem(tabsKey) || "[]");
     tabs = tabs.filter((item) => item && item.path);
-    const homeTab = tabs.find((item) => item.path === homePath) || { path: homePath, title: "工作台", closable: false };
-    homeTab.title = "工作台";
+    const homeTab = tabs.find((item) => item.path === homePath) || { path: homePath, title: "设备监测", closable: false };
+    homeTab.title = "设备监测";
     homeTab.closable = false;
     tabs = [homeTab, ...tabs.filter((item) => item.path !== homePath)];
     if (!tabs.some((item) => item.path === activePath)) tabs.push(defaultTab);
@@ -259,3 +261,4 @@
 
   document.addEventListener("DOMContentLoaded", mountHeader);
 })();
+

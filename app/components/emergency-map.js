@@ -1,12 +1,21 @@
+/* 应急调度台地图：底图复用共享组件 BASE_MAP（与「工作台 / 设备监测总览」同一套
+ * 高德在线底图 + 本地保底底图），本文件只负责应急业务图层（事件/人员/车辆/物资/视频）。 */
 (function () {
   const DEFAULT_CONFIG = {
-    tileRoot: "../../assets/maps/tianditu",
-    baseLayer: "vec",
-    annotationLayer: "cva",
-    projection: "EPSG:3857",
     center: [31.84318, 117.20342],
     zoom: 15,
+    minZoom: 11,
+    maxZoom: 18,
+    fallbackClass: "is-fallback",
   };
+
+  const COLORS = { event: "#F53F57", personnel: "#135AFA", vehicle: "#135AFA", resource: "#14C9BA", camera: "#9359E3" };
+  const GLYPHS = { event: "!", personnel: "人", vehicle: "车", resource: "物", camera: "视" };
+
+  function noop() {}
+  function stub() {
+    return { map: null, fallback: true, setLayers: noop, focusEvent: noop, startCircleSelect: noop, startPolygonSelect: noop, clearSelection: noop, zoomIn: noop, zoomOut: noop, resetView: noop, destroy: noop };
+  }
 
   function icon(color, glyph) {
     return L.divIcon({
@@ -18,25 +27,35 @@
   }
 
   function markerFor(item, kind) {
-    const colors = { event: "#F53F57", personnel: "#135AFA", vehicle: "#135AFA", resource: "#14C9BA", camera: "#9359E3" };
-    const glyphs = { event: "!", personnel: "人", vehicle: "车", resource: "物", camera: "视" };
-    return L.marker([Number(item.latitude), Number(item.longitude)], { icon: icon(colors[kind] || "#135AFA", glyphs[kind]) });
+    const marker = L.marker([Number(item.latitude), Number(item.longitude)], {
+      icon: icon(COLORS[kind] || "#135AFA", GLYPHS[kind]),
+    });
+    const label = item.name || item.title || item.eventId || item.cameraId || "";
+    if (window.BASE_MAP) window.BASE_MAP.bindTip(marker, label);
+    return marker;
   }
 
   function create(element, config = {}) {
-    if (!window.L || !element) return { fallback: true, setLayers() {}, focusEvent() {}, startCircleSelect() {}, startPolygonSelect() {}, clearSelection() {}, destroy() {} };
+    if (!element || !window.BASE_MAP) return stub();
     const options = { ...DEFAULT_CONFIG, ...config };
-    const map = L.map(element, { zoomControl: false, preferCanvas: true }).setView(options.center, options.zoom);
-    L.control.zoom({ position: "bottomright" }).addTo(map);
-    const groups = { event: L.layerGroup().addTo(map), personnel: L.layerGroup().addTo(map), vehicle: L.layerGroup().addTo(map), resource: L.layerGroup().addTo(map), camera: L.layerGroup().addTo(map) };
+    /* 无 Leaflet / 瓦片不可用时 BASE_MAP 负责给容器加保底底图类名与提示条 */
+    const base = window.BASE_MAP.create(element, {
+      center: options.center,
+      zoom: options.zoom,
+      minZoom: options.minZoom,
+      maxZoom: options.maxZoom,
+      fallbackClass: options.fallbackClass,
+    });
+    const map = base.map;
+    if (!map) return stub();
+    const groups = {
+      event: L.layerGroup().addTo(map),
+      personnel: L.layerGroup().addTo(map),
+      vehicle: L.layerGroup().addTo(map),
+      resource: L.layerGroup().addTo(map),
+      camera: L.layerGroup().addTo(map),
+    };
     let selectedLayer = null;
-    let fallbackTimer = window.setTimeout(() => element.classList.add("dispatch-map-fallback"), 1800);
-    const base = L.tileLayer(`${options.tileRoot}/${options.baseLayer}/{z}/{x}/{y}.png`, { maxZoom: 18, attribution: "天地图离线包" });
-    const annotation = L.tileLayer(`${options.tileRoot}/${options.annotationLayer}/{z}/{x}/{y}.png`, { maxZoom: 18, opacity: 0.9 });
-    let tileErrors = 0;
-    const onTileError = () => { tileErrors += 1; if (tileErrors >= 2) element.classList.add("dispatch-map-fallback"); };
-    base.on("tileerror", onTileError); annotation.on("tileerror", onTileError);
-    base.addTo(map); annotation.addTo(map);
 
     function setLayers(data = {}) {
       const sourceKeys = { event: "events", personnel: "personnel", vehicle: "vehicles", resource: "resources", camera: "cameras" };
@@ -62,8 +81,25 @@
       return { cancel: () => { map.off("click", onClick); element.classList.remove("is-selecting"); } };
     }
     function clearSelection() { if (selectedLayer) { map.removeLayer(selectedLayer); selectedLayer = null; } }
-    function destroy() { window.clearTimeout(fallbackTimer); map.remove(); }
-    return { map, fallback: false, setLayers, focusEvent, startCircleSelect: (cb) => startSelect("circle", cb), startPolygonSelect: (cb) => startSelect("polygon", cb), clearSelection, destroy };
+    function zoomIn() { map.zoomIn(); }
+    function zoomOut() { map.zoomOut(); }
+    function resetView() { map.setView(options.center, options.zoom); }
+    function destroy() { base.destroy(); }
+
+    return {
+      map,
+      base,
+      fallback: false,
+      setLayers,
+      focusEvent,
+      startCircleSelect: (cb) => startSelect("circle", cb),
+      startPolygonSelect: (cb) => startSelect("polygon", cb),
+      clearSelection,
+      zoomIn,
+      zoomOut,
+      resetView,
+      destroy,
+    };
   }
 
   window.EMERGENCY_MAP = { create };

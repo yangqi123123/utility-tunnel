@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>南向采集 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/interface-platform.css">
+</head>
+<body class="interface-platform-page south-page" data-menu-key="interface-platform.south" data-page-section="接口管理平台" data-page-title="南向采集">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header>
+    <main class="main"><div class="screen-frame interface-screen">
+      <section class="interface-hero">
+        <div><span class="interface-kicker"><i class="fa-solid fa-arrow-down-to-line"></i> INTERFACE PLATFORM / SOUTHBOUND</span><h1>标准化南向接入</h1><p>整合环境与设备监控、FAS、视频监控、门禁等内部子系统，将异构数据通过多协议适配、协议转换和字段校验，汇聚为平台统一的标准数据。</p></div>
+        <div class="interface-hero-actions"><button class="btn btn-secondary" type="button" data-interface-action="security"><i class="fa-solid fa-shield-halved"></i> 安全策略</button><button class="btn btn-primary" type="button" data-interface-action="protocol"><i class="fa-solid fa-plus"></i> 新增接入</button></div>
+      </section>
+      <section class="interface-metrics">
+        <article class="interface-metric"><div class="interface-metric-label">已接入子系统 <i class="fa-solid fa-cubes"></i></div><strong>12 <small>个</small></strong><span class="interface-metric-note">环境、消防、安防等系统</span></article>
+        <article class="interface-metric teal"><div class="interface-metric-label">在线采集通道 <i class="fa-solid fa-link"></i></div><strong>28 <small>/ 30</small></strong><span class="interface-metric-note">2 个通道需要关注</span></article>
+        <article class="interface-metric amber"><div class="interface-metric-label">标准化点位 <i class="fa-solid fa-database"></i></div><strong>18,642</strong><span class="interface-metric-note">今日新增 328 个点位</span></article>
+        <article class="interface-metric red"><div class="interface-metric-label">待处理异常 <i class="fa-solid fa-triangle-exclamation"></i></div><strong>02 <small>条</small></strong><span class="interface-metric-note">数据质量与连接异常</span></article>
+      </section>
+      <section class="interface-grid">
+        <article class="interface-card"><header class="interface-card-head"><div><h2>协议适配矩阵</h2><p>统一接入标准工业通信协议，自动完成解析与封装</p></div><button class="btn btn-secondary" type="button" data-interface-toast="协议能力清单已导出"><i class="fa-solid fa-download"></i> 导出</button></header>
+          <div class="interface-table-wrap"><table class="interface-table"><thead><tr><th>协议</th><th>适配方式</th><th>接入通道</th><th>数据状态</th><th>最近同步</th><th>操作</th></tr></thead><tbody>
+            <tr><td><strong>OPC UA</strong><small>工业自动化标准</small></td><td>节点订阅 / 浏览</td><td>04</td><td><span class="interface-status success">正常</span></td><td>刚刚 · 42 ms</td><td><button class="interface-action" data-interface-detail="OPC UA · 协议详情">详情</button></td></tr>
+            <tr><td><strong>RESTful API</strong><small>HTTP / JSON</small></td><td>轮询 / 回调</td><td>08</td><td><span class="interface-status success">正常</span></td><td>12 秒前</td><td><button class="interface-action" data-interface-detail="RESTful API · 协议详情">详情</button></td></tr>
+            <tr><td><strong>BACnet/IP</strong><small>楼宇自控协议</small></td><td>对象读写</td><td>03</td><td><span class="interface-status warn">部分异常</span></td><td>1 分钟前</td><td><button class="interface-action" data-interface-detail="BACnet/IP · 协议详情">详情</button></td></tr>
+            <tr><td><strong>RS232 / RS485</strong><small>串行总线</small></td><td>串口轮询</td><td>06</td><td><span class="interface-status success">正常</span></td><td>刚刚 · 18 ms</td><td><button class="interface-action" data-interface-detail="RS232 / RS485 · 协议详情">详情</button></td></tr>
+            <tr><td><strong>Modbus/TCP</strong><small>寄存器采集</small></td><td>批量读取</td><td>09</td><td><span class="interface-status off">待配置</span></td><td>--</td><td><button class="interface-action" data-interface-action="protocol">配置</button></td></tr>
+          </tbody></table></div>
+        </article>
+        <article class="interface-card"><header class="interface-card-head"><div><h2>内部系统接入</h2><p>异构数据进入统一标准数据总线</p></div><span class="tag success">运行稳定</span></header><div class="source-grid">
+          <div class="source-card"><span class="source-icon"><i class="fa-solid fa-temperature-half"></i></span><div><strong>环境与设备监控</strong><small>4,286 点位 · OPC UA</small></div></div>
+          <div class="source-card"><span class="source-icon red"><i class="fa-solid fa-fire-extinguisher"></i></span><div><strong>FAS 消防系统</strong><small>1,842 点位 · BACnet/IP</small></div></div>
+          <div class="source-card"><span class="source-icon teal"><i class="fa-solid fa-video"></i></span><div><strong>视频监控</strong><small>436 路设备 · RESTful API</small></div></div>
+          <div class="source-card"><span class="source-icon orange"><i class="fa-solid fa-door-open"></i></span><div><strong>门禁与通行</strong><small>2,184 点位 · RS485</small></div></div>
+        </div><div class="interface-note"><i class="fa-solid fa-circle-info"></i><span>所有原始数据先经过字段映射、单位换算和质量校验，再写入统一数据总线，供北向接口安全调用。</span></div></article>
+      </section>
+      <section class="interface-card"><header class="interface-card-head"><div><h2>最近采集任务</h2><p>轮询、订阅和回调任务的实时执行状态</p></div><button class="btn btn-primary" type="button" data-interface-action="protocol"><i class="fa-solid fa-plus"></i> 新建采集任务</button></header><div class="interface-table-wrap"><table class="interface-table"><thead><tr><th>任务名称</th><th>来源系统</th><th>采集策略</th><th>数据范围</th><th>最近执行</th><th>状态</th><th>操作</th></tr></thead><tbody>
+        <tr><td><strong>环境监测点位轮询</strong><small>任务 ID：S-00031</small></td><td>环境与设备监控</td><td>OPC UA · 5 秒</td><td>4,286 点位</td><td>刚刚 · 成功</td><td><span class="interface-status success">运行中</span></td><td><span class="interface-actions"><button class="interface-action" data-interface-detail="环境监测点位轮询 · 任务详情">详情</button><button class="interface-action muted" data-interface-toast="采集任务已暂停">暂停</button></span></td></tr>
+        <tr><td><strong>FAS 消防事件订阅</strong><small>任务 ID：S-00027</small></td><td>FAS 消防系统</td><td>BACnet/IP · 实时</td><td>1,842 点位</td><td>12 秒前 · 成功</td><td><span class="interface-status success">运行中</span></td><td><span class="interface-actions"><button class="interface-action" data-interface-detail="FAS 消防事件订阅 · 任务详情">详情</button><button class="interface-action muted" data-interface-toast="采集任务已暂停">暂停</button></span></td></tr>
+        <tr><td><strong>门禁状态同步</strong><small>任务 ID：S-00019</small></td><td>门禁与通行</td><td>RS485 · 1 分钟</td><td>2,184 点位</td><td>2 分钟前 · 超时</td><td><span class="interface-status warn">需关注</span></td><td><span class="interface-actions"><button class="interface-action" data-interface-detail="门禁状态同步 · 任务详情">详情</button><button class="interface-action muted" data-interface-toast="正在执行重试">重试</button></span></td></tr>
+      </tbody></table></div></section>
+    </div></main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script><script src="../../../app/components/sidebar.js?v=nav-home-1"></script><script src="../../../app/components/header.js?v=nav-home-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../assets/js/interface-platform.js"></script>
+</body></html>

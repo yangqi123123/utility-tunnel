@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>部门管理 - 中建四局智能运营管理系统</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="../../assets/css/tob-ui.css"><style>.department-toolbar .title-with-helper{display:flex;align-items:center;gap:8px}.department-toolbar .panel-helper{margin-left:0}</style></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>部门管理 - 科学岛管廊监控中心</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="../../assets/css/tob-ui.css"><style>.department-toolbar .title-with-helper{display:flex;align-items:center;gap:8px}.department-toolbar .panel-helper{margin-left:0}</style></head>
 <body class="department-page" data-menu-key="system.department" data-page-section="系统管理" data-page-title="部门管理"><div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header><main class="main"><div class="screen-frame stack">
 <section class="page-head"><div><h1 class="page-title">部门管理</h1><p class="page-desc">维护组织架构、部门负责人及部门状态。</p></div></section>
 <section class="card filters department-filters"><div class="filter-actions department-filter-row"><label class="form-field"><span class="form-label">部门名称</span><input class="form-control" data-filter="name" placeholder="请输入"></label><label class="form-field"><span class="form-label">部门状态</span><select class="form-control" data-filter="status"><option value="">请选择</option><option>正常</option><option>停用</option></select></label><button class="btn btn-secondary" data-action="reset">重置</button><button class="btn btn-primary" data-action="search">搜索</button></div></section>
 <section class="card department-list-card"><div class="card-title-row department-toolbar"><div class="title-with-helper"><h2 class="card-title">部门列表</h2><span class="panel-helper">双击展开/收起</span></div><div class="btn-row"><button class="btn btn-secondary" data-action="collapse-all">全部收起</button><button class="btn btn-primary" data-action="create"><i class="fa-solid fa-plus"></i> 新增</button></div></div><div class="table-wrap"><table class="table department-table"><thead><tr><th>部门名称</th><th>类别编码</th><th>创建时间</th><th>排序</th><th>状态</th><th>操作</th></tr></thead><tbody id="departmentTable"></tbody></table></div></section>
 </div></main></div>
-<script src="../../../app/config/menu.js?v=project-1"></script><script src="../../../app/components/sidebar.js?v=lot-host-7"></script><script src="../../../app/components/header.js?v=lot-tabs-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/requirement.js"></script>
+<script src="../../../app/config/menu.js?v=nav-home-1"></script><script src="../../../app/components/sidebar.js?v=nav-home-1"></script><script src="../../../app/components/header.js?v=nav-home-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/requirement.js"></script>
 <script>
 const departments=[
-{id:1,name:"中建厦门金山财富中心",code:"XMJS",created:"2026-07-01 10:02:28",sort:0,status:"正常",level:0,parent:null,open:true},
+{id:1,name:"科学岛管廊监控中心",code:"XMJS",created:"2026-07-01 10:02:28",sort:0,status:"正常",level:0,parent:null,open:true},
 {id:2,name:"项目管理中心",code:"XMGLZX",created:"2026-07-01 10:02:28",sort:1,status:"正常",level:1,parent:1,open:true},
 {id:3,name:"项目综合管理部",code:"XMZHGLB",created:"2026-07-01 10:02:28",sort:1,status:"正常",level:2,parent:2},
 {id:4,name:"招商运营部",code:"ZSYYB",created:"2026-07-01 10:02:28",sort:2,status:"正常",level:2,parent:2},
@@ -40,6 +40,8 @@ document.addEventListener("click", (event) => {
   if (deleteButton) { event.preventDefault(); event.stopImmediatePropagation(); const target = deptById(deleteButton.dataset.deptId); const hasChildren = departments.some((item) => item.parent === target.id); if (hasChildren) { window.openAppConfirm({ title: "提示", message: "当前部门下存在子级部门，不允许删除。", confirmText: "知道了" }); } else { window.openAppConfirm({ title: "提示", message: `确认删除部门「${target.name}」吗？`, onConfirm: () => { const index = departments.findIndex((item) => item.id === target.id); if (index >= 0) departments.splice(index, 1); renderDepartments(); } }); } }
 }, true);
 </script></body></html>
+
+
 
 
 

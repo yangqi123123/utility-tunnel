@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>电力监测系统 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/power-monitoring.css">
+</head>
+<body class="power-monitoring-page" data-menu-key="power-monitoring.overview" data-page-section="子系统" data-page-title="运行总览">
+  <script>
+    (() => {
+      const view = new URLSearchParams(location.search).get("view") || "overview";
+      const titles = { overview: "运行总览", devices: "设备监控", events: "事件记录" };
+      document.body.dataset.powerView = view;
+      document.body.dataset.menuKey = `power-monitoring.${titles[view] ? view : "overview"}`;
+      document.body.dataset.pageTitle = titles[view] || titles.overview;
+    })();
+  </script>
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack power-screen">
+        <section id="powerSummary" class="power-summary" aria-label="电力运行指标"></section>
+        <div class="power-main-grid">
+          <section class="card power-panel power-system-panel" aria-labelledby="powerSystemTitle">
+            <div class="power-panel-head"><h2 id="powerSystemTitle">一次系统图</h2><span>实时刷新 · 5 秒</span></div>
+            <div id="powerSystemDiagram" class="power-system-diagram"></div>
+          </section>
+          <section class="card power-panel" aria-labelledby="powerDevicesTitle">
+            <div class="power-panel-head"><h2 id="powerDevicesTitle">关键设备</h2><span>4 类 · 26 台</span></div>
+            <div id="powerDevices" class="power-device-list"></div>
+          </section>
+        </div>
+        <div class="power-trace-grid">
+          <section class="card power-panel" aria-labelledby="powerAlarmsTitle">
+            <div class="power-panel-head"><h2 id="powerAlarmsTitle">实时告警</h2><button type="button" class="power-link" data-power-drawer="alarms">查看全部 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+            <div id="powerAlarms" class="power-event-list"></div>
+          </section>
+          <section class="card power-panel" aria-labelledby="powerEventsTitle">
+            <div class="power-panel-head"><h2 id="powerEventsTitle">运行事件记录</h2><span>近 24 小时</span></div>
+            <div id="powerEvents" class="power-event-list"></div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/data/power-monitoring.js"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/power-monitoring.js"></script>
+  <script src="../../../app/components/requirement.js"></script>
+</body>
+</html>

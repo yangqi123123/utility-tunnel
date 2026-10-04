@@ -65,27 +65,27 @@
     </main>
   </div>
   <script src="../../assets/vendor/leaflet/leaflet.js"></script>
-  <script src="../../../app/config/menu.js"></script>
-  <script src="../../../app/components/sidebar.js"></script>
-  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
   <script src="../../../app/components/drawer.js"></script>
   <script>
     const devices = [
       { id: "ENV-F0103-01", name: "电力舱温湿度传感器 01", system: "环境监测", type: "sensor", zone: "F0103", value: "26.4 ℃", status: "online", glyph: "温" },
       { id: "ENV-F0103-02", name: "电力舱氧气传感器 02", system: "环境监测", type: "sensor", zone: "F0103", value: "19.8 %VOL", status: "online", glyph: "氧" },
       { id: "ENV-F0104-01", name: "燃气舱甲烷探测器 01", system: "环境监测", type: "sensor", zone: "F0104", value: "42 %LEL", status: "warn", glyph: "甲" },
-      { id: "FAS-F0104-08", name: "点型感烟火灾探测器 08", system: "火灾自动报警系统", type: "fire", zone: "F0104", value: "正常", status: "online", glyph: "烟" },
+      { id: "FAS-F0104-08", name: "点型感烟火灾探测器 08", system: "火灾报警系统", type: "fire", zone: "F0104", value: "正常", status: "online", glyph: "烟" },
       { id: "MEC-F0103-01", name: "1# 送风机控制柜", system: "环境监测", type: "machine", zone: "F0103", value: "运行 · 1,420 r/min", status: "online", glyph: "风" },
       { id: "MEC-F0112-02", name: "2# 集水井排水泵", system: "环境监测", type: "machine", zone: "F0112", value: "故障 · 过载保护", status: "fault", glyph: "泵" },
       { id: "SEC-F0107-03", name: "固定式视频监控 03", system: "视频监控系统", type: "security", zone: "F0107", value: "在线 · 主码流", status: "online", glyph: "视" },
       { id: "SEC-F0116-01", name: "智能井盖位移传感器 01", system: "智能井盖", type: "sensor", zone: "F0116", value: "离线 · 46 分钟", status: "offline", glyph: "盖" },
       { id: "FAS-F0119-02", name: "防火门监控模块 02", system: "消防监控系统", type: "fire", zone: "F0119", value: "闭合 · 联动投入", status: "online", glyph: "门" },
-      { id: "PWR-F0101-01", name: "电力运行监测网关 01", system: "电力运行监测平台", type: "machine", zone: "F0101", value: "在线 · 2 ms", status: "online", glyph: "电" },
+      { id: "PWR-F0101-01", name: "电力运行监测网关 01", system: "电力监测平台", type: "machine", zone: "F0101", value: "在线 · 2 ms", status: "online", glyph: "电" },
       { id: "ACS-F0108-01", name: "门禁控制器 01", system: "门禁系统", type: "security", zone: "F0108", value: "在线 · 12 次/月", status: "online", glyph: "禁" },
       { id: "ENV-F0112-03", name: "集水井水位传感器 03", system: "环境监测", type: "sensor", zone: "F0112", value: "0.60 m · 高位预警", status: "warn", glyph: "水" },
     ];
     const systemRows = [
-      ["火灾自动报警系统", 162, 162], ["环境监测", 248, 244], ["安全防范系统", 96, 94], ["视频监控系统", 118, 117], ["入侵报警", 72, 70], ["电子巡更", 56, 56], ["门禁系统", 148, 145], ["智能井盖", 40, 39], ["电力运行监测平台", 186, 182], ["消防监控系统", 92, 88], ["通信广播系统", 68, 64],
+      ["火灾报警系统", 162, 162], ["环境监测", 248, 244], ["安全防范系统", 96, 94], ["视频监控系统", 118, 117], ["入侵报警", 72, 70], ["电子巡更", 56, 56], ["门禁系统", 148, 145], ["智能井盖", 40, 39], ["电力监测平台", 186, 182], ["消防监控系统", 92, 88], ["通信广播系统", 68, 64],
     ];
     const state = { system: "all", type: "all", status: "all", zone: "all", layer: "all", query: "" };
     const statusText = { online: "在线 / 正常", warn: "预警", fault: "故障", offline: "离线" };

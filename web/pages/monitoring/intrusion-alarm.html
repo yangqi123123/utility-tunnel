@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>入侵报警系统 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/intrusion-alarm.css">
+</head>
+<body class="intrusion-page" data-menu-key="intrusion-alarm" data-page-section="子系统" data-page-title="入侵报警系统">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack intrusion-screen">
+        <section class="intrusion-stat-grid" aria-label="报警状态概览">
+          <div class="intrusion-stat"><span class="intrusion-stat-icon is-blue"><i class="fa-solid fa-bell"></i></span><span class="intrusion-stat-label">当前报警</span><strong id="alarmTotal">0</strong><small>当前筛选结果</small></div>
+          <div class="intrusion-stat"><span class="intrusion-stat-icon is-red"><i class="fa-solid fa-triangle-exclamation"></i></span><span class="intrusion-stat-label">一级报警</span><strong id="criticalTotal">0</strong><small>需要立即关注</small></div>
+          <div class="intrusion-stat"><span class="intrusion-stat-icon is-green"><i class="fa-solid fa-tower-broadcast"></i></span><span class="intrusion-stat-label">在线主机</span><strong id="onlineTotal">0</strong><small>第三方设备状态</small></div>
+          <div class="intrusion-stat"><span class="intrusion-stat-icon is-yellow"><i class="fa-solid fa-plug-circle-xmark"></i></span><span class="intrusion-stat-label">离线 / 故障</span><strong id="offlineTotal">0</strong><small>需要核查连接</small></div>
+        </section>
+
+        <section class="card intrusion-filter-card">
+          <div class="intrusion-filter-title"><div><h2>入侵信号查询</h2><span>数据来自第三方入侵报警平台，仅支持查询与定位展示</span></div><span class="intrusion-readonly"><i class="fa-solid fa-lock"></i>只读数据</span></div>
+          <div class="filter-actions intrusion-filter-row">
+            <label class="form-field"><span class="form-label">报警事件</span><input class="form-control" data-filter="event" placeholder="请输入事件名称"></label>
+            <label class="form-field"><span class="form-label">报警主机ID</span><select class="form-control" data-filter="hostId"><option value="">全部主机</option></select></label>
+            <label class="form-field"><span class="form-label">报警类型</span><select class="form-control" data-filter="type"><option value="">全部类型</option></select></label>
+            <label class="form-field"><span class="form-label">报警级别</span><select class="form-control" data-filter="level"><option value="">全部级别</option><option>一级</option><option>二级</option><option>三级</option></select></label>
+            <label class="form-field"><span class="form-label">报警时间</span><input class="form-control" data-filter="time" type="date"></label>
+            <label class="form-field"><span class="form-label">处理状态</span><select class="form-control" data-filter="status"><option value="">全部状态</option><option>未处理</option><option>已确认</option><option>已恢复</option></select></label>
+            <button class="btn btn-secondary" type="button" data-action="reset">重置</button>
+            <button class="btn btn-primary" type="button" data-action="search"><i class="fa-solid fa-magnifying-glass"></i>搜索</button>
+          </div>
+        </section>
+
+        <section class="intrusion-workspace">
+          <article class="card intrusion-list-card">
+            <div class="card-title-row intrusion-list-head"><div><h2 class="card-title">入侵报警事件</h2><span class="intrusion-list-caption">共 <strong id="listCount">0</strong> 条，按接收时间倒序</span></div><span class="intrusion-table-note"><i class="fa-solid fa-clock"></i>信号实时接收</span></div>
+            <div class="table-wrap intrusion-table-wrap">
+              <table class="table intrusion-table">
+                <thead><tr><th>报警事件</th><th>报警主机ID</th><th>报警类型</th><th>报警级别</th><th>报警时间</th><th>入侵位置</th><th>设备状态</th><th>处理状态</th><th>操作</th></tr></thead>
+                <tbody id="intrusionTableBody"></tbody>
+              </table>
+            </div>
+            <div class="pagination intrusion-pagination"><span>共 <strong id="paginationCount">0</strong> 条，每页 10 条</span><span class="page-item active">1</span></div>
+          </article>
+
+          <aside class="card intrusion-detail" aria-live="polite">
+            <div class="intrusion-detail-head"><div><span class="intrusion-detail-kicker">选中报警事件</span><h2 id="selectedEventTitle">请选择报警事件</h2></div><span id="selectedLevel" class="intrusion-level intrusion-level--critical">一级</span></div>
+            <div class="intrusion-detail-body">
+              <section class="intrusion-location-section">
+                <div class="intrusion-section-title"><span>入侵定位</span><span class="intrusion-location-source"><i class="fa-solid fa-location-dot"></i>第三方定位</span></div>
+                <div class="intrusion-location-map" id="locationCanvas" aria-label="管廊入侵定位示意图">
+                  <span class="intrusion-map-grid"></span><span class="intrusion-route route-main"></span><span class="intrusion-route route-branch"></span><span class="intrusion-node node-a"></span><span class="intrusion-node node-b"></span><span class="intrusion-node node-c"></span><span class="intrusion-pulse" id="locationPulse"></span><span class="intrusion-map-label label-a">1号管廊</span><span class="intrusion-map-label label-b">B1舱室</span><span class="intrusion-map-label label-c">入侵点</span>
+                </div>
+                <div class="intrusion-location-path" id="selectedLocation">待定位</div>
+              </section>
+              <section class="intrusion-device-section">
+                <div class="intrusion-section-title"><span>设备状态</span><span class="intrusion-state-chip" id="selectedDeviceStatusChip">在线</span></div>
+                <div class="intrusion-device-summary"><span class="intrusion-device-icon"><i class="fa-solid fa-shield-halved"></i></span><div><strong id="selectedDeviceStatus">请选择事件</strong><span id="selectedDeviceMeta">--</span></div></div>
+                <div class="intrusion-device-grid"><div><span>信号强度</span><strong id="selectedSignal">--</strong></div><div><span>最近心跳</span><strong id="selectedLastSeen">--</strong></div><div><span>防区状态</span><strong id="selectedZoneStatus">--</strong></div><div><span>接入来源</span><strong>第三方平台</strong></div></div>
+              </section>
+              <section class="intrusion-timeline-section"><div class="intrusion-section-title"><span>信号时间线</span><span id="selectedTime" class="intrusion-time-label">--</span></div><ol class="intrusion-timeline" id="selectedTimeline"><li class="intrusion-timeline-empty">选择报警事件查看信号记录</li></ol></section>
+            </div>
+            <div class="intrusion-detail-foot"><button class="btn btn-secondary" type="button" data-action="locate"><i class="fa-solid fa-crosshairs"></i>重新定位</button><button class="btn btn-primary" type="button" data-action="detail"><i class="fa-solid fa-arrow-up-right-from-square"></i>查看详情</button></div>
+          </aside>
+        </section>
+
+        <div class="intrusion-sync-error" id="syncError" hidden><i class="fa-solid fa-circle-exclamation"></i><span>第三方平台同步异常，当前展示上一次成功接收的数据。</span><button type="button" data-action="retry">重试</button></div>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/requirement.js"></script>
+  <script>
+    const intrusionEvents = [
+      { id: 1, event: "钢盗", hostId: "1", type: "钢盗", level: "一级", time: "2025-09-18 13:27:57", status: "未处理", location: { corridor: "1号管廊", cabin: "B1舱室", section: "东侧入口区段", zone: "防区 01" }, device: { name: "入侵报警主机-01", status: "在线", lastSeen: "2025-09-18 13:27:57", signalStrength: "强" }, source: "第三方入侵报警平台", timeline: [{ time: "13:27:57", label: "接收到入侵信号" }, { time: "13:27:58", label: "定位到东侧入口区段" }] },
+      { id: 2, event: "钢盗1", hostId: "1", type: "钢盗1", level: "一级", time: "2025-09-18 13:27:57", status: "已确认", location: { corridor: "1号管廊", cabin: "B1舱室", section: "西侧通道区段", zone: "防区 02" }, device: { name: "入侵报警主机-01", status: "在线", lastSeen: "2025-09-18 13:27:56", signalStrength: "强" }, source: "第三方入侵报警平台", timeline: [{ time: "13:27:57", label: "接收到入侵信号" }, { time: "13:35:10", label: "值守人员确认报警" }] },
+      { id: 3, event: "钢盗2", hostId: "1", type: "钢盗2", level: "二级", time: "2025-09-18 13:27:57", status: "未处理", location: { corridor: "2号管廊", cabin: "B2舱室", section: "南侧检修区段", zone: "防区 03" }, device: { name: "入侵报警主机-02", status: "在线", lastSeen: "2025-09-18 13:27:54", signalStrength: "中" }, source: "第三方入侵报警平台", timeline: [{ time: "13:27:57", label: "接收到入侵信号" }] },
+      { id: 4, event: "钢盗3", hostId: "1", type: "钢盗3", level: "三级", time: "2025-09-18 13:27:57", status: "已恢复", location: { corridor: "3号管廊", cabin: "B3舱室", section: "设备间区段", zone: "防区 01" }, device: { name: "入侵报警主机-03", status: "在线", lastSeen: "2025-09-18 13:27:50", signalStrength: "强" }, source: "第三方入侵报警平台", timeline: [{ time: "13:27:57", label: "接收到入侵信号" }, { time: "13:40:18", label: "信号恢复正常" }] },
+      { id: 5, event: "钢盗4", hostId: "1", type: "钢盗4", level: "一级", time: "2025-09-18 13:27:57", status: "未处理", location: { corridor: "4号管廊", cabin: "B1舱室", section: "北侧通道区段", zone: "防区 04" }, device: { name: "入侵报警主机-04", status: "故障", lastSeen: "2025-09-18 13:26:12", signalStrength: "弱" }, source: "第三方入侵报警平台", timeline: [{ time: "13:27:57", label: "接收到入侵信号" }, { time: "13:28:06", label: "设备状态异常" }] },
+      { id: 6, event: "钢盗", hostId: "1", type: "钢盗", level: "二级", time: "2025-09-18 13:27:32", status: "已确认", location: { corridor: "5号管廊", cabin: "B2舱室", section: "中部连接区段", zone: "防区 06" }, device: { name: "入侵报警主机-05", status: "在线", lastSeen: "2025-09-18 13:27:32", signalStrength: "中" }, source: "第三方入侵报警平台", timeline: [{ time: "13:27:32", label: "接收到入侵信号" }, { time: "13:30:01", label: "值守人员确认报警" }] },
+      { id: 7, event: "周界钢盗", hostId: "123456", type: "钢盗", level: "一级", time: "2025-09-18 10:30:27", status: "未处理", location: { corridor: "1号管廊", cabin: "B1舱室", section: "周界东侧", zone: "周界防区 01" }, device: { name: "周界报警主机-01", status: "离线", lastSeen: "2025-09-18 10:28:04", signalStrength: "--" }, source: "第三方入侵报警平台", timeline: [{ time: "10:30:27", label: "接收到周界入侵信号" }, { time: "10:31:02", label: "主机连接中断" }] },
+      { id: 8, event: "周界钢盗", hostId: "123456", type: "钢盗", level: "二级", time: "2025-09-18 10:30:27", status: "已确认", location: { corridor: "1号管廊", cabin: "B1舱室", section: "周界西侧", zone: "周界防区 02" }, device: { name: "周界报警主机-01", status: "离线", lastSeen: "2025-09-18 10:28:04", signalStrength: "--" }, source: "第三方入侵报警平台", timeline: [{ time: "10:30:27", label: "接收到周界入侵信号" }, { time: "10:36:42", label: "值守人员确认报警" }] }
+    ];
+
+    let currentList = intrusionEvents.map((item) => ({ ...item }));
+    let selectedId = intrusionEvents[0].id;
+    let lastSync = new Date();
+    const filters = Object.fromEntries([...document.querySelectorAll("[data-filter]")].map((field) => [field.dataset.filter, field]));
+    const levelClass = { "一级": "intrusion-level--critical", "二级": "intrusion-level--major", "三级": "intrusion-level--minor" };
+    const deviceClass = { 在线: "intrusion-device--online", 离线: "intrusion-device--offline", 故障: "intrusion-device--fault" };
+
+    function getIntrusionEvents() { return intrusionEvents.map((item) => ({ ...item, location: { ...item.location }, device: { ...item.device }, timeline: [...item.timeline] })); }
+    function fillFilterOptions() {
+      const options = { hostId: [...new Set(intrusionEvents.map((item) => item.hostId))], type: [...new Set(intrusionEvents.map((item) => item.type))] };
+      Object.entries(options).forEach(([key, values]) => { filters[key].innerHTML = `<option value="">全部${key === "hostId" ? "主机" : "类型"}</option>${values.map((value) => `<option value="${value}">${value}</option>`).join("")}`; });
+    }
+    function filterIntrusionEvents(list, values) {
+      return list.filter((item) => (!values.event || item.event.includes(values.event)) && (!values.hostId || item.hostId === values.hostId) && (!values.type || item.type === values.type) && (!values.level || item.level === values.level) && (!values.time || item.time.startsWith(values.time)) && (!values.status || item.status === values.status));
+    }
+    function locationText(item) { return [item.location.corridor, item.location.cabin, item.location.section || "待定位"].filter(Boolean).join(" / "); }
+    function rowMarkup(item) {
+      const selected = String(item.id) === String(selectedId);
+      return `<tr class="${selected ? "is-selected" : ""}" data-intrusion-id="${item.id}"><td><strong>${item.event}</strong></td><td>${item.hostId}</td><td>${item.type}</td><td><span class="intrusion-level ${levelClass[item.level]}">${item.level}</span></td><td class="intrusion-time">${item.time}</td><td class="intrusion-location-cell" title="${locationText(item)}">${locationText(item)}</td><td><span class="intrusion-device-state ${deviceClass[item.device.status]}"><i></i>${item.device.status}</span></td><td><span class="intrusion-handle-state is-${item.status === "未处理" ? "pending" : item.status === "已确认" ? "confirmed" : "restored"}">${item.status}</span></td><td><button class="table-action" type="button" data-detail-id="${item.id}">详情</button></td></tr>`;
+    }
+    function emptyRowMarkup() { return `<tr><td colspan="9"><div class="intrusion-empty"><i class="fa-regular fa-folder-open"></i><strong>暂无匹配的入侵报警</strong><span>请调整筛选条件后重试</span></div></td></tr>`; }
+    function renderIntrusionList(list) {
+      currentList = list;
+      const body = document.getElementById("intrusionTableBody");
+      body.innerHTML = list.length ? list.map(rowMarkup).join("") : emptyRowMarkup();
+      document.getElementById("listCount").textContent = list.length;
+      document.getElementById("paginationCount").textContent = list.length;
+      const selected = list.find((item) => String(item.id) === String(selectedId)) || list[0];
+      if (selected) { selectedId = selected.id; renderDetail(selected); }
+    }
+    function renderSummary(list) {
+      document.getElementById("alarmTotal").textContent = list.length;
+      document.getElementById("criticalTotal").textContent = list.filter((item) => item.level === "一级").length;
+      document.getElementById("onlineTotal").textContent = list.filter((item) => item.device.status === "在线").length;
+      document.getElementById("offlineTotal").textContent = list.filter((item) => item.device.status !== "在线").length;
+    }
+    function renderDetail(item) {
+      if (!item) return;
+      document.getElementById("selectedEventTitle").textContent = item.event;
+      const level = document.getElementById("selectedLevel"); level.className = `intrusion-level ${levelClass[item.level]}`; level.textContent = item.level;
+      document.getElementById("selectedLocation").textContent = `${locationText(item)} / ${item.location.zone || "待定位"}`;
+      document.getElementById("selectedDeviceStatus").textContent = `${item.device.name} · ${item.device.status}`;
+      document.getElementById("selectedDeviceMeta").textContent = `${item.hostId}号报警主机 · ${item.location.zone || "防区待定位"}`;
+      document.getElementById("selectedSignal").textContent = item.device.signalStrength;
+      document.getElementById("selectedLastSeen").textContent = item.device.lastSeen;
+      document.getElementById("selectedZoneStatus").textContent = item.status === "已恢复" ? "已恢复" : "触发";
+      const chip = document.getElementById("selectedDeviceStatusChip"); chip.className = `intrusion-state-chip ${deviceClass[item.device.status]}`; chip.textContent = item.device.status;
+      document.getElementById("selectedTime").textContent = item.time;
+      document.getElementById("selectedTimeline").innerHTML = item.timeline.map((entry, index) => `<li class="${index === item.timeline.length - 1 ? "is-last" : ""}"><span class="intrusion-timeline-dot"></span><strong>${entry.time}</strong><span>${entry.label}</span></li>`).join("");
+      document.getElementById("locationPulse").className = `intrusion-pulse ${item.device.status === "在线" ? "" : "is-warning"}`;
+    }
+    function readFilters() { return Object.fromEntries(Object.entries(filters).map(([key, field]) => [key, field.value.trim()])); }
+    function applyFilters() { const list = filterIntrusionEvents(getIntrusionEvents(), readFilters()); renderSummary(list); renderIntrusionList(list); }
+    function updateSyncTime() { lastSync = new Date(); const el = document.getElementById("syncState"); if (el) el.textContent = `最近同步 ${lastSync.toLocaleTimeString("zh-CN", { hour12: false })}`; }
+    function openIntrusionDetail(item) { if (!item || typeof window.openAppDrawer !== "function") return; window.openAppDrawer({ title: "入侵报警详情", subtitle: "入侵报警系统 · 第三方信号", body: `<section class="intrusion-drawer-detail"><div class="intrusion-drawer-status"><span class="intrusion-level ${levelClass[item.level]}">${item.level}</span><strong>${item.event}</strong></div><dl><div><dt>报警主机ID</dt><dd>${item.hostId}</dd></div><div><dt>报警类型</dt><dd>${item.type}</dd></div><div><dt>报警时间</dt><dd>${item.time}</dd></div><div><dt>入侵位置</dt><dd>${locationText(item)} / ${item.location.zone || "待定位"}</dd></div><div><dt>设备状态</dt><dd>${item.device.name} · ${item.device.status}</dd></div><div><dt>数据来源</dt><dd>${item.source}</dd></div></dl><h3>信号记录</h3><ol>${item.timeline.map((entry) => `<li><strong>${entry.time}</strong><span>${entry.label}</span></li>`).join("")}</ol></section>`, footer: `<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>` }); }
+    document.addEventListener("click", (event) => {
+      const row = event.target.closest("[data-intrusion-id]");
+      if (row && !event.target.closest("button")) { selectedId = row.dataset.intrusionId; renderIntrusionList(currentList); return; }
+      const detailButton = event.target.closest("[data-detail-id]"); if (detailButton) { openIntrusionDetail(currentList.find((item) => String(item.id) === String(detailButton.dataset.detailId))); return; }
+      const action = event.target.closest("[data-action]"); if (!action) return;
+      if (action.dataset.action === "search") applyFilters();
+      if (action.dataset.action === "reset") { Object.values(filters).forEach((field) => { field.value = ""; }); applyFilters(); }
+      if (action.dataset.action === "refresh" || action.dataset.action === "retry") { document.getElementById("syncError").hidden = true; updateSyncTime(); renderSummary(currentList); }
+      if (action.dataset.action === "detail") openIntrusionDetail(currentList.find((item) => String(item.id) === String(selectedId)));
+      if (action.dataset.action === "locate") { document.getElementById("locationCanvas").classList.remove("is-locating"); requestAnimationFrame(() => document.getElementById("locationCanvas").classList.add("is-locating")); }
+    });
+    fillFilterOptions();
+    updateSyncTime();
+    const initialList = getIntrusionEvents();
+    renderSummary(initialList);
+    renderIntrusionList(initialList);
+  </script>
+</body>
+</html>

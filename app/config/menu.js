@@ -1,10 +1,10 @@
 (function () {
   window.APP_MENU = [
     {
-      key: "home",
-      label: "工作台",
-      icon: "fa-solid fa-house",
-      href: "../home/home.html",
+      key: "gis",
+      label: "GIS一张图",
+      icon: "fa-solid fa-map-location-dot",
+      href: "../gis/one-map.html",
     },
     {
       key: "project",
@@ -29,22 +29,104 @@
       ],
     },
     {
+      key: "home",
+      label: "设备监测",
+      icon: "fa-solid fa-gauge-high",
+      href: "../home/home.html",
+    },
+    {
       key: "smart-monitoring",
       label: "智能监测",
       icon: "fa-solid fa-display",
+      hidden: true,
       children: [
         { key: "smart-monitoring.parking", label: "停车记录", href: "../monitoring/parking-record.html", hidden: true },
         { key: "smart-monitoring.pedestrian", label: "人行通行记录", href: "../monitoring/pedestrian-record.html", hidden: true },
-        { key: "smart-monitoring.device", label: "设备监测", href: "../monitoring/device-monitor.html" },
+        { key: "smart-monitoring.device", label: "设备监测", href: "../monitoring/device-monitor.html", hidden: true },
       ],
     },
     {
-      key: "video-monitoring",
-      label: "视频监控",
-      icon: "fa-solid fa-video",
+      key: "subsystems",
+      label: "子系统",
+      icon: "fa-solid fa-table-cells",
       children: [
-        { key: "video-monitoring.live", label: "实时视频", href: "../monitoring/video-monitor.html" },
-        { key: "video-monitoring.replay", label: "录像回放", href: "../monitoring/video-replay.html" },
+        {
+          key: "video-monitoring",
+          label: "视频监控",
+          icon: "fa-solid fa-video",
+          children: [
+            { key: "video-monitoring.live", label: "实时视频", href: "../monitoring/video-monitor.html" },
+            { key: "video-monitoring.replay", label: "录像回放", href: "../monitoring/video-replay.html" },
+          ],
+        },
+        {
+          key: "intrusion-alarm",
+          label: "入侵报警系统",
+          icon: "fa-solid fa-shield-halved",
+          href: "../monitoring/intrusion-alarm.html",
+        },
+        {
+          key: "access-control",
+          label: "门禁系统",
+          icon: "fa-solid fa-id-card-clip",
+          href: "../monitoring/access-control.html",
+        },
+        {
+          key: "power-monitoring",
+          label: "电力监测系统",
+          icon: "fa-solid fa-bolt",
+          children: [
+            { key: "power-monitoring.overview", label: "运行总览", href: "../monitoring/power-monitoring.html?view=overview" },
+            { key: "power-monitoring.devices", label: "设备监控", href: "../monitoring/power-monitoring.html?view=devices" },
+            { key: "power-monitoring.events", label: "事件记录", href: "../monitoring/power-monitoring.html?view=events" },
+          ],
+        },
+        {
+          key: "fire-system",
+          label: "消防系统",
+          icon: "fa-solid fa-fire-flame-curved",
+          href: "../monitoring/fire-system.html",
+        },
+        {
+          key: "environment-monitoring",
+          label: "环境监测系统",
+          icon: "fa-solid fa-leaf",
+          href: "../monitoring/environment-monitor.html",
+        },
+        {
+          key: "electronic-patrol",
+          label: "电子巡更",
+          icon: "fa-solid fa-route",
+          href: "../monitoring/electronic-patrol.html",
+        },
+        {
+          key: "communication-system",
+          label: "通信系统",
+          icon: "fa-solid fa-phone-volume",
+          href: "../communication/communication.html",
+        },
+        {
+          key: "smart-manhole",
+          label: "智能井盖",
+          icon: "fa-solid fa-road-spikes",
+          href: "../monitoring/smart-manholes.html",
+        },
+        {
+          key: "fire-alarm",
+          label: "火灾报警系统",
+          icon: "fa-solid fa-fire-flame-curved",
+          href: "../monitoring/fire-alarm.html",
+        },
+      ],
+    },
+    {
+      key: "inspection",
+      label: "设备巡检",
+      icon: "fa-solid fa-clipboard-check",
+      children: [
+        { key: "inspection.standard-works", label: "标准作业", href: "../inspection/standard-works.html" },
+        { key: "inspection.plans", label: "巡检计划", href: "../inspection/plans.html" },
+        { key: "inspection.tasks", label: "巡检任务", href: "../inspection/tasks.html" },
       ],
     },
     {
@@ -61,12 +143,31 @@
       ],
     },
     {
+      key: "safety",
+      label: "安全管理",
+      icon: "fa-solid fa-shield-halved",
+      children: [
+        { key: "safety.plans", label: "安全预案", href: "../safety/plans.html" },
+        { key: "safety.regulations", label: "法规库", href: "../safety/regulations.html" },
+      ],
+    },
+    {
       key: "alarm-center",
       label: "报警中心",
       icon: "fa-solid fa-bell",
       children: [
         { key: "alarm-center.info", label: "报警信息", href: "../alarm-center/alarm-info.html" },
         { key: "alarm-center.rule", label: "报警规则", href: "../alarm-center/alarm-rule.html" },
+      ],
+    },
+    {
+      key: "big-data",
+      label: "大数据分析",
+      icon: "fa-solid fa-chart-line",
+      children: [
+        { key: "big-data.diagnosis", label: "设备诊断", href: "../big-data/device-diagnosis.html" },
+        { key: "big-data.warning", label: "异常预警", href: "../big-data/abnormal-warning.html" },
+        { key: "big-data.energy", label: "能耗分析", href: "../big-data/energy-analysis.html" },
       ],
     },
     {
@@ -80,6 +181,25 @@
       label: "网络管理平台",
       icon: "fa-solid fa-server",
       href: "../service-center/service-center.html",
+    },
+    {
+      key: "data-storage",
+      label: "数据存储",
+      icon: "fa-solid fa-database",
+      children: [
+        { key: "data-storage.realtime", label: "实时数据", href: "../data-storage/realtime.html" },
+        { key: "data-storage.history", label: "历史数据", href: "../data-storage/history.html" },
+        { key: "data-storage.archive-config", label: "历史归档配置", href: "../data-storage/archive-config.html" },
+      ],
+    },
+    {
+      key: "interface-platform",
+      label: "接口管理平台",
+      icon: "fa-solid fa-plug-circle-bolt",
+      children: [
+        { key: "interface-platform.south", label: "南向采集", href: "../interface-platform/south.html" },
+        { key: "interface-platform.north", label: "北向对接", href: "../interface-platform/north.html" },
+      ],
     },
     {
       key: "system",

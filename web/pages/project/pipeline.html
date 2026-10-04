@@ -13,6 +13,8 @@
     .pipeline-toolbar .btn-row{flex-wrap:wrap;justify-content:flex-end}
     .pipeline-drawer-grid,.pipeline-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
     .pipeline-drawer-grid .full{grid-column:1/-1}
+    .area-multi{position:relative}.area-multi-control{min-height:32px;padding:3px 32px 3px 6px;border:1px solid #d8dee9;border-radius:2px;background:#fff;display:flex;align-items:center;flex-wrap:wrap;gap:4px;cursor:pointer}.area-multi.open .area-multi-control{border-color:var(--primary);box-shadow:0 0 0 2px rgba(19,90,250,.08)}.area-multi-placeholder{padding-left:5px;color:var(--text-disabled)}.area-tag{height:24px;padding:0 6px;display:inline-flex;align-items:center;gap:4px;color:var(--text-primary);background:#f2f4f7;border:1px solid #dfe4ec;border-radius:2px;font-size:12px}.area-tag button{width:14px;height:14px;padding:0;color:#9aa3af;background:#dfe4ec;border-radius:50%;cursor:pointer;line-height:12px}.area-multi-arrow{position:absolute;right:10px;top:11px;width:7px;height:7px;border-right:1.5px solid #86909c;border-bottom:1.5px solid #86909c;transform:rotate(45deg)}.area-multi.open .area-multi-arrow{top:14px;transform:rotate(-135deg)}.area-multi-menu{position:absolute;z-index:1250;top:calc(100% + 4px);left:0;right:0;display:none;max-height:192px;overflow:auto;padding:4px 0;border:1px solid var(--border);border-radius:2px;background:#fff;box-shadow:var(--shadow-popover)}.area-multi.open .area-multi-menu{display:block}.area-multi-option{height:36px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary);cursor:pointer}.area-multi-option:hover{color:var(--primary);background:var(--primary-bg)}.area-multi-option.selected{color:var(--primary)}.area-multi-option.selected::after{content:'✓';font-weight:700}.area-multi.disabled{pointer-events:none}.area-multi.disabled .area-multi-control{background:#f5f7fa;color:var(--text-disabled)}
+    .area-multi-control{min-height:40px;padding:4px 34px 4px 8px;border-color:#135afa}.area-multi.open .area-multi-control{box-shadow:0 0 0 1px rgba(19,90,250,.14)}.area-tag{height:24px;padding:0 8px;color:#50565d;background:#f1f3f6;border:1px solid #d8dee9;border-radius:2px}.area-tag button{font-size:12px;color:#86909c;background:#dfe4ec}.area-multi-menu{top:calc(100% + 8px);padding:8px 0;border-color:#d8dee9;border-radius:0;box-shadow:0 8px 20px rgba(26,28,31,.12)}.area-multi-option{height:40px;padding:0 12px;color:#50565d}.area-multi-option.selected{color:#135afa}.area-multi-option input{position:absolute;opacity:0;pointer-events:none}.area-multi-option.selected::after{content:'✓';color:#135afa;font-size:16px;font-weight:700}
     .status-tag{display:inline-flex;padding:2px 8px;border-radius:2px;font-size:12px}
     .status-tag.success{color:#0c9a8e;background:#e7faf7}
     .status-tag.info{color:#135afa;background:#eaf0ff}
@@ -108,9 +110,9 @@
       </div>
     </main>
   </div>
-  <script src="../../../app/config/menu.js"></script>
-  <script src="../../../app/components/sidebar.js"></script>
-  <script src="../../../app/components/header.js"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
   <script src="../../../app/components/drawer.js"></script>
   <script src="../../assets/vendor/xlsx.full.min.js"></script>
   <script>
@@ -118,10 +120,10 @@
     // 模拟“区段下已关联设备”的数据（与区段管理页设备数一致）：高新大道综合管廊各区段均已关联设备，禁止删除其下管线
     const deviceLinkedSections=new Set(['高新大道综合管廊||防火分区','高新大道综合管廊||出入口','高新大道综合管廊||通风口','高新大道综合管廊||吊装口']);
     const deviceLinked=p=>deviceLinkedSections.has(`${p.corridor}||${p.section}`);
-    const pipelines=[{id:1,code:'PL-W-001',name:'金山给水管线',type:'给水',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'综合舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'金山运营中心',diameter:'DN500',material:'球墨铸铁',length:'1840',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:2,code:'PL-T-002',name:'金山通信光缆',type:'通信',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'综合舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'金山运营中心',diameter:'DN100',material:'单模光纤',length:'2350',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:3,code:'PL-E-003',name:'金山电力电缆',type:'电力',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'电力舱',section:'出入口',media:'电能',owner:'国网武汉供电',operator:'金山运营中心',diameter:'DN150',material:'铝芯电缆',length:'2200',maintainer:'电力维保公司',contact:'张工 13800000001',status:'建设中',date:'2024-03-18',remark:''},{id:4,code:'PL-G-004',name:'金山燃气管道',type:'燃气',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'电力舱',section:'吊装口',media:'天然气',owner:'中燃城市燃气',operator:'金山运营中心',diameter:'DN300',material:'PE100',length:'1260',maintainer:'中燃维保中心',contact:'王工 13800000003',status:'已完工',date:'2025-01-20',remark:''},{id:5,code:'PL-W-005',name:'金山给水管线二',type:'给水',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'燃气舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'金山运营中心',diameter:'DN400',material:'球墨铸铁',length:'1500',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:6,code:'PL-T-006',name:'金山通信光缆二',type:'通信',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'燃气舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'金山运营中心',diameter:'DN100',material:'单模光纤',length:'1800',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:7,code:'PL-E-007',name:'科学岛电力主线',type:'电力',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'电力舱',section:'出入口',media:'电能',owner:'国芯武汉供电',operator:'科学岛运营中心',diameter:'DN150',material:'铝芯电缆',length:'2200',maintainer:'武汉电力维保',contact:'张工 13800000001',status:'建设中',date:'2024-03-18',remark:''},{id:8,code:'PL-G-008',name:'科学岛燃气专线',type:'燃气',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'电力舱',section:'吊装口',media:'天然气',owner:'中燃城市燃气',operator:'科学岛运营中心',diameter:'DN300',material:'PE100',length:'1260',maintainer:'中燃维保中心',contact:'王工 13800000003',status:'已完工',date:'2025-01-20',remark:''},{id:9,code:'PL-W-009',name:'科学岛给水线',type:'给水',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'燃气舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'科学岛运营中心',diameter:'DN400',material:'球墨铸铁',length:'1500',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:10,code:'PL-T-010',name:'科学岛通信线',type:'通信',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'燃气舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'科学岛运营中心',diameter:'DN100',material:'单模光纤',length:'1800',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:11,code:'PL-W-011',name:'东区给水管线',type:'给水',project:'科学岛东区管廊延伸工程',corridor:'科学岛东区综合管廊',cabin:'综合舱',section:'出入口',media:'自来水',owner:'武汉东区水务集团',operator:'科学岛东区运维中心',diameter:'DN500',material:'球墨铸铁',length:'1200',maintainer:'东区维保队',contact:'林工 13800000005',status:'建设中',date:'2025-09-01',remark:''},{id:12,code:'PL-G-012',name:'东区燃气管道',type:'燃气',project:'科学岛东区管廊延伸工程',corridor:'科学岛东区综合管廊',cabin:'综合舱',section:'吊装口',media:'天然气',owner:'武汉东区燃气公司',operator:'科学岛东区运维中心',diameter:'DN300',material:'PE100',length:'1200',maintainer:'东区维保中心',contact:'吴工 13800000006',status:'待完善',date:'2025-09-01',remark:''}];
+    const pipelines=[{id:1,code:'PL-W-001',name:'科学岛给水管线',type:'给水',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'综合舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'科学岛运营中心',diameter:'DN500',material:'球墨铸铁',length:'1840',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:2,code:'PL-T-002',name:'科学岛通信光缆',type:'通信',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'综合舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'科学岛运营中心',diameter:'DN100',material:'单模光纤',length:'2350',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:3,code:'PL-E-003',name:'科学岛电力电缆',type:'电力',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'电力舱',section:'出入口',media:'电能',owner:'国网武汉供电',operator:'科学岛运营中心',diameter:'DN150',material:'铝芯电缆',length:'2200',maintainer:'电力维保公司',contact:'张工 13800000001',status:'建设中',date:'2024-03-18',remark:''},{id:4,code:'PL-G-004',name:'科学岛燃气管道',type:'燃气',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'电力舱',section:'吊装口',media:'天然气',owner:'中燃城市燃气',operator:'科学岛运营中心',diameter:'DN300',material:'PE100',length:'1260',maintainer:'中燃维保中心',contact:'王工 13800000003',status:'已完工',date:'2025-01-20',remark:''},{id:5,code:'PL-W-005',name:'科学岛给水管线二',type:'给水',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'燃气舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'科学岛运营中心',diameter:'DN400',material:'球墨铸铁',length:'1500',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:6,code:'PL-T-006',name:'科学岛通信光缆二',type:'通信',project:'光谷科学岛综合开发项目',corridor:'高新大道综合管廊',cabin:'燃气舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'科学岛运营中心',diameter:'DN100',material:'单模光纤',length:'1800',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:7,code:'PL-E-007',name:'科学岛电力主线',type:'电力',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'电力舱',section:'出入口',media:'电能',owner:'国芯武汉供电',operator:'科学岛运营中心',diameter:'DN150',material:'铝芯电缆',length:'2200',maintainer:'武汉电力维保',contact:'张工 13800000001',status:'建设中',date:'2024-03-18',remark:''},{id:8,code:'PL-G-008',name:'科学岛燃气专线',type:'燃气',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'电力舱',section:'吊装口',media:'天然气',owner:'中燃城市燃气',operator:'科学岛运营中心',diameter:'DN300',material:'PE100',length:'1260',maintainer:'中燃维保中心',contact:'王工 13800000003',status:'已完工',date:'2025-01-20',remark:''},{id:9,code:'PL-W-009',name:'科学岛给水线',type:'给水',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'燃气舱',section:'防火分区',media:'自来水',owner:'武汉市水务集团',operator:'科学岛运营中心',diameter:'DN400',material:'球墨铸铁',length:'1500',maintainer:'市水务维保队',contact:'李工 13800000002',status:'待完善',date:'2024-05-06',remark:''},{id:10,code:'PL-T-010',name:'科学岛通信线',type:'通信',project:'光谷科学岛综合开发项目',corridor:'科学岛大道综合管廊',cabin:'燃气舱',section:'通风口',media:'通信信号',owner:'中国移动武汉分公司',operator:'科学岛运营中心',diameter:'DN100',material:'单模光纤',length:'1800',maintainer:'移动代维中心',contact:'陈工 13800000004',status:'停用',date:'2023-11-02',remark:''},{id:11,code:'PL-W-011',name:'东区给水管线',type:'给水',project:'科学岛东区管廊延伸工程',corridor:'科学岛东区综合管廊',cabin:'综合舱',section:'出入口',media:'自来水',owner:'武汉东区水务集团',operator:'科学岛东区运维中心',diameter:'DN500',material:'球墨铸铁',length:'1200',maintainer:'东区维保队',contact:'林工 13800000005',status:'建设中',date:'2025-09-01',remark:''},{id:12,code:'PL-G-012',name:'东区燃气管道',type:'燃气',project:'科学岛东区管廊延伸工程',corridor:'科学岛东区综合管廊',cabin:'综合舱',section:'吊装口',media:'天然气',owner:'武汉东区燃气公司',operator:'科学岛东区运维中心',diameter:'DN300',material:'PE100',length:'1200',maintainer:'东区维保中心',contact:'吴工 13800000006',status:'待完善',date:'2025-09-01',remark:''}];
     const defs=[
       ['管线编码','code'],['管线名称','name'],['管线类型','type'],
-      ['所属项目','project'],['所属管廊','corridor'],['所属舱室','cabin'],['所属区段','section'],
+      ['所属项目','project'],['所属管廊','corridor'],['所属舱室','cabin'],['所属片区','section'],
       ['介质类型','media'],['权属单位','owner'],['运营单位','operator'],
       ['管径','diameter'],['材质','material'],['长度（m）','length'],
       ['维保单位','maintainer'],['联系人','contact'],['管线状态','status'],['备注','remark']
@@ -196,7 +198,41 @@
       });
       return { reset(){ cascadeLevels.forEach(k=>{ values[k]=''; }); refresh(); } };
     }
+    function bindAreaMulti(root,initial=''){
+      const multi=root.querySelector('[data-area-multi]');
+      if(!multi) return;
+      const hidden=multi.querySelector('[data-field="section"]');
+      const control=multi.querySelector('[data-area-toggle]');
+      const menu=multi.querySelector('.area-multi-menu');
+      let selected=String(initial).split('、').map(x=>x.trim()).filter(Boolean);
+      const available=()=>{
+        const project=root.querySelector('[data-field="project"]')?.value;
+        const corridor=root.querySelector('[data-field="corridor"]')?.value;
+        const cabin=root.querySelector('[data-field="cabin"]')?.value;
+        const projectNode=locationTree.find(x=>x.name===project);
+        const corridorNode=projectNode?.corridors.find(x=>x.name===corridor);
+        return corridorNode?.cabins.find(x=>x.name===cabin)?.sections||[];
+      };
+      const draw=()=>{
+        const options=available();
+        selected=selected.filter(x=>options.includes(x));
+        hidden.value=selected.join('、');
+        multi.classList.toggle('disabled',!options.length);
+        control.innerHTML=selected.length?selected.map(x=>`<span class="area-tag">${esc(x)}<button type="button" data-area-remove="${esc(x)}" aria-label="移除${esc(x)}">×</button></span>`).join(''):'<span class="area-multi-placeholder">请选择所属片区</span>';
+        menu.innerHTML=options.map(x=>`<label class="area-multi-option ${selected.includes(x)?'selected':''}"><input type="checkbox" data-area-option="${esc(x)}" ${selected.includes(x)?'checked':''}><span>${esc(x)}</span></label>`).join('');
+      };
+      control.addEventListener('click',e=>{ if(!e.target.closest('[data-area-remove]')) multi.classList.toggle('open'); });
+      multi.addEventListener('click',e=>{
+        const remove=e.target.closest('[data-area-remove]');
+        if(remove){ e.preventDefault(); e.stopPropagation(); selected=selected.filter(x=>x!==remove.dataset.areaRemove); draw(); }
+      });
+      multi.addEventListener('change',e=>{ const option=e.target.closest('[data-area-option]'); if(!option) return; selected=option.checked?[...new Set([...selected,option.dataset.areaOption])]:selected.filter(x=>x!==option.dataset.areaOption); draw(); multi.classList.add('open'); });
+      root.addEventListener('change',e=>{ if(['project','corridor','cabin'].includes(e.target.dataset.field)){ selected=[]; draw(); } });
+      document.addEventListener('click',e=>{ if(!multi.contains(e.target)) multi.classList.remove('open'); },{ once:false });
+      draw();
+    }
     function control(key,p){
+      if(key==='section') return `<div class="area-multi" data-area-multi><div class="area-multi-control" data-area-toggle><span class="area-multi-placeholder">请选择所属片区</span></div><i class="area-multi-arrow"></i><div class="area-multi-menu"></div><input type="hidden" data-field="section" value="${esc(p.section||'')}"></div>`;
       if(cascadeLevels.includes(key)) return `<select class="form-control" data-field="${key}" data-cascade></select>`;
       if(opts[key]) return `<select class="form-control" data-field="${key}"><option value="">请选择</option>${opts[key].map(x=>`<option value="${x}" ${x===p[key]?'selected':''}>${x}</option>`).join('')}</select>`;
       return `<input class="form-control" data-field="${key}" value="${esc(p[key]||'')}" placeholder="请输入">`;
@@ -206,8 +242,8 @@
     const pipelineFiles=[
       { id:1,type:'管线图纸',name:'科学岛电力主干线竣工图.pdf',size:'3.6 MB' },
       { id:2,type:'验收资料',name:'科学岛燃气专线验收报告.pdf',size:'1.8 MB' },
-      { id:3,type:'维保资料',name:'金山给水管线2026年度维保记录.xlsx',size:'420 KB' },
-      { id:4,type:'其他资料',name:'金山通信光缆点位说明.docx',size:'860 KB' }
+      { id:3,type:'维保资料',name:'科学岛给水管线2026年度维保记录.xlsx',size:'420 KB' },
+      { id:4,type:'其他资料',name:'科学岛通信光缆点位说明.docx',size:'860 KB' }
     ];
     let detailPipeline=null;
     function detailInfo(p){
@@ -258,7 +294,11 @@
         body,
         footer:`<button class="btn btn-secondary" type="button" data-drawer-close>${detail?'关闭':'取消'}</button>${detail?'':`<button class="btn btn-primary" type="button" data-save-pipeline="${mode==='edit'?p.id:''}">确认</button>`}`
       });
-      if(!detail) bindCascade(document.getElementById('drawerBody'),{ project:p.project,corridor:p.corridor,cabin:p.cabin,section:p.section });
+      if(!detail){
+        const drawerBody=document.getElementById('drawerBody');
+        bindCascade(drawerBody,{ project:p.project,corridor:p.corridor,cabin:p.cabin,section:'' });
+        bindAreaMulti(drawerBody,p.section||'');
+      }
     }
     function savePipeline(id){
       const body=document.getElementById('drawerBody');
@@ -394,3 +434,4 @@
   </script>
 </body>
 </html>
+

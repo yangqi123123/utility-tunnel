@@ -1,214 +1,843 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>工作台 - 科学岛管廊监控中心</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>设备监测 - 科学岛管廊监控中心</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
-  <style>
-    .home-board{display:grid;gap:16px}.home-row{display:grid;gap:16px}.home-row-three{grid-template-columns:5fr 4fr 4fr}.home-row-two{grid-template-columns:repeat(2,minmax(0,1fr))}.home-card{min-width:0;padding:20px}.home-card .card-title-row{margin-bottom:18px}.home-more{color:var(--text-secondary);font-size:13px;text-decoration:none;white-space:nowrap;cursor:pointer}.period-switch{display:flex;gap:4px;padding:4px;background:#f3f6fb;border-radius:6px}.period-switch button{height:30px;padding:0 15px;border:0;border-radius:4px;background:transparent;color:var(--text-secondary);cursor:pointer}.period-switch button.active{background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(22,44,80,.12);font-weight:600}.metric-caption{display:flex;justify-content:space-between;gap:8px;color:var(--text-secondary);font-size:12px}.metric-caption strong{color:var(--text-primary);font-size:13px}.asset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 14px}.asset-item{display:grid;grid-template-columns:36px 1fr;align-items:center;gap:10px}.asset-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:8px;color:#fff;background:#5b83ff}.asset-icon.green{background:#69bca9}.asset-icon.orange{background:#e2a246}.asset-label{color:var(--text-secondary);font-size:12px}.asset-value{margin-top:4px;color:var(--text-title);font-size:18px;font-weight:700}.rent-table{width:100%;border-collapse:collapse;font-size:12px}.rent-table th{padding:8px 6px;background:var(--primary-bg);color:var(--text-secondary);font-weight:600;text-align:left}.rent-table td{padding:8px 6px;color:var(--text-primary);border-bottom:1px solid var(--divider)}.rent-rate{color:var(--primary);font-weight:600}.quick-grid.home-quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.home-quick .quick-item{min-height:64px;padding:12px;display:flex;align-items:center;gap:10px;min-width:0}.home-quick .quick-icon{flex:0 0 32px;width:32px;height:32px;margin:0}.home-quick .quick-title{font-size:13px;white-space:nowrap}.home-quick .quick-desc{display:none}.donut-panel{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;min-height:190px}.home-donut{width:140px;height:140px;border-radius:50%;position:relative;display:grid;place-items:center;background:conic-gradient(#5b83ff 0 64%,#78c6df 64% 100%)}.home-donut.purple{background:conic-gradient(#8065df 0 67%,#b05add 67% 100%)}.home-donut::after{content:"";position:absolute;inset:30px;border-radius:50%;background:#fff}.donut-center{position:relative;z-index:1;display:grid;text-align:center;color:var(--text-title);font-size:24px;font-weight:700}.donut-center small{color:var(--text-secondary);font-size:12px;font-weight:400}.stat-list{display:grid;gap:13px}.stat-row{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;color:var(--text-primary);font-size:13px}.stat-dot{width:8px;height:8px;border-radius:50%;background:#5b83ff}.stat-dot.cyan{background:#78c6df}.stat-dot.purple{background:#b05add}.stat-row strong{color:var(--text-title)}.chart-legend{display:flex;gap:14px;align-items:center;color:var(--text-secondary);font-size:12px}.bar-chart{display:grid;gap:10px}.chart-bars{position:relative;height:170px;display:flex;align-items:end;gap:18px;padding:10px 12px 0;border-bottom:1px solid var(--divider);background:repeating-linear-gradient(to bottom,transparent 0,transparent 41px,#edf1f7 42px)}.bar-group{flex:1;height:100%;display:flex;align-items:end;justify-content:center;gap:3px}.bar-stack{width:12px;height:var(--h);background:var(--c);border-radius:3px 3px 0 0}.bar-caption{display:flex;justify-content:space-around;color:var(--text-secondary);font-size:12px}.bar-chart .axis-label{position:absolute;top:0;color:var(--text-secondary);font-size:11px}.axis-left{left:0}.axis-right{right:0}.axis-tick{position:absolute;color:var(--text-secondary);font-size:11px}.tick-left{left:0}.tick-right{right:0}.tick-left.top,.tick-right.top{top:18px}.tick-left.bottom,.tick-right.bottom{bottom:4px}.chart-tooltip{display:none;position:absolute;z-index:4;left:50%;top:18px;min-width:130px;padding:10px 12px;background:#fff;border:1px solid #c5ccd6;border-radius:5px;box-shadow:0 4px 14px rgba(20,36,60,.16);font-size:12px}.chart-tooltip.show{display:grid;gap:6px}.chart-tooltip strong{font-size:14px;color:var(--text-title)}.chart-tooltip span{display:grid;grid-template-columns:8px 1fr auto;gap:6px;align-items:center}.chart-tooltip i{width:8px;height:8px;border-radius:50%}.alarm-summary{display:grid;grid-template-columns:145px 1fr;gap:18px;align-items:center}.alarm-card{background:#fff}.alarm-card .home-donut{background:conic-gradient(#ef765d 0 82%,#e2a246 82% 100%)}.alarm-card .stat-row{border-bottom:1px solid var(--divider);padding-bottom:10px}.list-panel{min-height:210px}.list-row{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--divider);font-size:13px}.list-row:last-child{border-bottom:0}.list-row time{color:var(--text-secondary);font-size:12px}.empty-state{min-height:150px;display:grid;place-items:center;color:var(--text-secondary);font-size:13px}.shortcut-letter{font-size:14px;font-weight:700}.shortcut-config{display:grid;gap:16px}.shortcut-hint{padding:14px 16px;border:1px solid #e7edf6;background:#f7f9fc;color:var(--text-secondary);font-size:13px;line-height:1.6}.shortcut-tree{max-height:360px;overflow:auto;border:1px solid var(--divider);padding:10px 14px}.shortcut-node{display:grid;gap:7px}.shortcut-node .shortcut-node{margin-left:22px}.shortcut-check{display:flex;align-items:center;gap:8px;min-height:30px;color:var(--text-primary);font-size:14px}.shortcut-check input{width:15px;height:15px;accent-color:var(--primary)}.shortcut-check.is-directory{color:#a9b2c1}.shortcut-check.is-directory input{cursor:not-allowed;opacity:.55}.quick-tree-children{margin-left:20px}@media(max-width:1100px){.home-row-three,.home-row-two{grid-template-columns:1fr}}@media(max-width:720px){.asset-grid{grid-template-columns:repeat(2,1fr)}.donut-panel,.alarm-summary{grid-template-columns:1fr;justify-items:center}.stat-list{width:100%}.period-switch{width:100%;justify-content:space-between}}
-  </style>
-  <style>
-    .screen-frame.stack { gap: 16px; }
-    .page-head { margin-bottom: 0; }
-    .metric-grid { gap: 16px; }
-    .list-panel .list-row strong { font: inherit; color: inherit; font-weight: 400; }
-  </style>
-  <style>
-    .bar-chart { min-width: 0; overflow: hidden; }
-    .chart-bars { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; }
-    .chart-bars .bar-group { flex: 0 0 30px; flex-direction: column; justify-content: flex-end; align-items: center; min-width: 30px; }
-    .chart-bars .bar-stack { flex: 0 0 auto; }
-    .bar-caption { overflow-x: auto; overflow-y: hidden; justify-content: flex-start; scrollbar-width: thin; }
-    .bar-caption span { flex: 0 0 30px; text-align: center; }
-    .chart-tooltip { pointer-events: none; }
-  </style>
+  <link rel="stylesheet" href="../../assets/css/home-monitor.css?v=5">
+  <link rel="stylesheet" href="../../assets/css/monitoring.css">
+  <link rel="stylesheet" href="../../assets/css/base-map.css?v=1">
+  <link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css">
 </head>
-<body data-menu-key="home" data-page-section="科学岛管廊监控中心" data-page-title="工作台">
-<div class="app-shell"><aside id="app-sidebar" class="sidebar"></aside><header id="app-header" class="header"></header><main class="main"><div class="screen-frame stack">
-  <section class="page-head"><div><h1 class="page-title">工作台</h1><p class="page-desc">统一查看平台运行、资产、工单与报警信息。</p></div><div class="period-switch" role="tablist" aria-label="统计周期"><button class="active" type="button" data-period="today">今日</button><button type="button" data-period="week">本周</button><button type="button" data-period="month">本月</button><button type="button" data-period="year">本年</button></div></section>
-  <section class="metric-grid"><article class="metric-card"><div class="metric-label">待办总数</div><div class="metric-number" data-stat="todo">30</div><div class="metric-caption"><span>巡检 <strong data-stat="inspection">10</strong></span><span>保养 <strong data-stat="maintenance">10</strong></span><span>工单 <strong data-stat="workorder">10</strong></span></div></article><article class="metric-card"><div class="metric-label">租赁房源</div><div class="metric-number" data-stat="rent">30</div><div class="metric-caption"><span>出租率 <strong data-stat="rentRate">80%</strong></span><span>空置率 <strong data-stat="vacancyRate">20%</strong></span></div></article><article class="metric-card"><div class="metric-label">设备总数</div><div class="metric-number" data-stat="devices">30</div><div class="metric-caption"><span>在线 <strong data-stat="online">10</strong></span><span>离线 <strong data-stat="offline">10</strong></span><span>故障 <strong data-stat="fault">10</strong></span></div></article><article class="metric-card"><div class="metric-label">报警总数</div><div class="metric-number" data-stat="alarms">30</div><div class="metric-caption"><span>未处理 <strong data-stat="alarmOpen">10</strong></span><span>处理中 <strong data-stat="alarmProgress">10</strong></span><span>已处理 <strong data-stat="alarmDone">10</strong></span></div></article></section>
-  <section class="home-board">
-    <div class="home-row home-row-three"><article class="card home-card"><div class="card-title-row"><h2 class="card-title">空间资产</h2><a class="home-more" href="../project/house.html">更多 <i class="fa-solid fa-angle-right"></i></a></div><div class="asset-grid"><div class="asset-item"><span class="asset-icon"><i class="fa-solid fa-house"></i></span><div><div class="asset-label">租赁房源</div><div class="asset-value">124</div></div></div><div class="asset-item"><span class="asset-icon green"><i class="fa-solid fa-house-circle-check"></i></span><div><div class="asset-label">已租房源</div><div class="asset-value">1</div></div></div><div class="asset-item"><span class="asset-icon"><i class="fa-solid fa-house-circle-xmark"></i></span><div><div class="asset-label">空置房源</div><div class="asset-value">123</div></div></div><div class="asset-item"><span class="asset-icon"><i class="fa-solid fa-border-all"></i></span><div><div class="asset-label">租赁面积(m²)</div><div class="asset-value">84,123.60</div></div></div><div class="asset-item"><span class="asset-icon green"><i class="fa-solid fa-building"></i></span><div><div class="asset-label">已租面积(m²)</div><div class="asset-value">54.06</div></div></div><div class="asset-item"><span class="asset-icon orange"><i class="fa-solid fa-key"></i></span><div><div class="asset-label">空置面积(m²)</div><div class="asset-value">84,069.54</div></div></div></div></article><article class="card home-card"><div class="card-title-row"><h2 class="card-title">楼层租赁明细</h2><a class="home-more" href="../project/floor.html">更多 <i class="fa-solid fa-angle-right"></i></a></div><table class="rent-table"><thead><tr><th>楼层</th><th>已租面积/总面积(m²)</th><th>出租率</th></tr></thead><tbody><tr><td>1F-2F</td><td>0 / 2344.44</td><td class="rent-rate">0%</td></tr><tr><td>1F-4F</td><td>4789.44 / 4789.44</td><td class="rent-rate">100%</td></tr><tr><td>1F-6F</td><td>0 / 3311.98</td><td class="rent-rate">0%</td></tr><tr><td>1F-8F</td><td>1797 / 1797</td><td class="rent-rate">100%</td></tr><tr><td>1F-10F</td><td>0 / 2159.37</td><td class="rent-rate">0%</td></tr></tbody></table></article><article class="card home-card"><div class="card-title-row"><h2 class="card-title">快捷导航</h2><a class="home-more" href="../system/menu.html">管理 <i class="fa-solid fa-gear"></i></a></div><div class="quick-grid home-quick"><a class="quick-item" href="../project/project-management.html"><span class="quick-icon blue"><i class="fa-solid fa-clipboard-list"></i></span><span class="quick-title">保养计划</span></a><a class="quick-item" href="../device/maintenance.html"><span class="quick-icon green"><i class="fa-solid fa-arrows-rotate"></i></span><span class="quick-title">巡检计划</span></a><a class="quick-item" href="../device/list.html"><span class="quick-icon yellow"><i class="fa-solid fa-boxes-stacked"></i></span><span class="quick-title">库存台账</span></a><a class="quick-item" href="../device/list.html"><span class="quick-icon blue"><i class="fa-solid fa-list-check"></i></span><span class="quick-title">设备列表</span></a><a class="quick-item" href="../energy/carbon-data.html"><span class="quick-icon purple"><i class="fa-solid fa-gauge-high"></i></span><span class="quick-title">仪表档案</span></a><a class="quick-item" href="../energy/carbon-data.html"><span class="quick-icon green"><i class="fa-solid fa-chart-column"></i></span><span class="quick-title">仪表用量</span></a></div></article></div>
-    <div class="home-row home-row-two"><article class="card home-card"><div class="card-title-row"><h2 class="card-title">报修类型统计</h2><a class="home-more" href="../project/project-management.html">更多 <i class="fa-solid fa-angle-right"></i></a></div><div class="donut-panel"><div class="home-donut"><div class="donut-center">11<small>报修总数</small></div></div><div class="stat-list"><div class="stat-row"><i class="stat-dot"></i><span>室内报修</span><strong>63.64%</strong></div><div class="stat-row"><i class="stat-dot cyan"></i><span>公区报修</span><strong>36.36%</strong></div></div></div></article><article class="card home-card"><div class="card-title-row"><h2 class="card-title">投诉类型统计</h2><a class="home-more" href="../project/project-management.html">更多 <i class="fa-solid fa-angle-right"></i></a></div><div class="donut-panel"><div class="home-donut purple"><div class="donut-center">3<small>投诉总数</small></div></div><div class="stat-list"><div class="stat-row"><i class="stat-dot purple"></i><span>物业服务</span><strong>66.67%</strong></div><div class="stat-row"><i class="stat-dot" style="background:#8065df"></i><span>食堂服务</span><strong>33.33%</strong></div></div></div></article></div>
-    <div class="home-row home-row-two"><article class="card home-card"><div class="card-title-row"><h2 class="card-title">报修工单状态分析</h2><span class="status-muted">本月</span></div><div class="bar-chart"><div class="chart-bars"><div class="bar-group"><i class="bar-stack" style="--h:50%;--c:#5278e4"></i><i class="bar-stack" style="--h:25%;--c:#6bb6de"></i></div><div class="bar-group"><i class="bar-stack" style="--h:85%;--c:#5278e4"></i><i class="bar-stack" style="--h:45%;--c:#6bb6de"></i></div><div class="bar-group"><i class="bar-stack" style="--h:65%;--c:#5278e4"></i><i class="bar-stack" style="--h:30%;--c:#71c8d9"></i></div><div class="bar-group"><i class="bar-stack" style="--h:45%;--c:#5278e4"></i></div><div class="bar-group"><i class="bar-stack" style="--h:40%;--c:#60b5a8"></i></div><div class="bar-group"><i class="bar-stack" style="--h:55%;--c:#5278e4"></i></div></div><div class="bar-caption"><span>1号</span><span>2号</span><span>3号</span><span>10号</span><span>16号</span><span>21号</span></div><div class="chart-legend"><span><i class="legend-dot" style="background:#5278e4"></i>待处理</span><span><i class="legend-dot" style="background:#6bb6de"></i>处理中</span><span><i class="legend-dot" style="background:#e2a246"></i>完成率</span></div></div></article><article class="card home-card"><div class="card-title-row"><h2 class="card-title">投诉工单状态分析</h2><span class="status-muted">本月</span></div><div class="bar-chart"><div class="chart-bars"><div class="bar-group"><i class="bar-stack" style="--h:80%;--c:#8265df"></i><i class="bar-stack" style="--h:35%;--c:#b05add"></i></div><div class="bar-group"><i class="bar-stack" style="--h:46%;--c:#8265df"></i></div><div class="bar-group"><i class="bar-stack" style="--h:30%;--c:#b05add"></i></div><div class="bar-group"><i class="bar-stack" style="--h:56%;--c:#8265df"></i></div></div><div class="bar-caption"><span>2号</span><span>10号</span><span>16号</span><span>21号</span></div><div class="chart-legend"><span><i class="legend-dot" style="background:#8265df"></i>待确认</span><span><i class="legend-dot" style="background:#b05add"></i>已完成</span><span><i class="legend-dot" style="background:#e2a246"></i>完成率</span></div></div></article></div>
-    <div class="home-row home-row-two"><article class="card home-card"><div class="card-title-row"><h2 class="card-title">设备异常工单状态分析</h2><span class="status-muted">本月</span></div><div class="bar-chart"><div class="chart-bars"><div class="bar-group"><i class="bar-stack" style="--h:75%;--c:#d85b4c"></i></div><div class="bar-group"><i class="bar-stack" style="--h:55%;--c:#e47c2f"></i></div><div class="bar-group"><i class="bar-stack" style="--h:50%;--c:#e47c2f"></i></div></div><div class="bar-caption"><span>7号</span><span>21号</span><span>22号</span></div><div class="chart-legend"><span><i class="legend-dot" style="background:#e47c2f"></i>待处理</span><span><i class="legend-dot" style="background:#d85b4c"></i>已完成</span><span><i class="legend-dot" style="background:#e2a246"></i>完成率</span></div></div></article><article class="card home-card alarm-card"><div class="card-title-row"><h2 class="card-title">报警类型</h2><a class="home-more" href="../alarm-center/alarm-info.html">详情 <i class="fa-solid fa-angle-right"></i></a></div><div class="alarm-summary"><div class="home-donut"><div class="donut-center">11<small>报警总数</small></div></div><div class="stat-list"><div class="stat-row"><i class="stat-dot" style="background:#ef765d"></i><span>设备属性</span><strong>9个　81.82%</strong></div><div class="stat-row"><i class="stat-dot" style="background:#e2a246"></i><span>设备离线</span><strong>2个　18.18%</strong></div></div></div></article></div>
-    <div class="home-row home-row-two"><article class="card home-card list-panel"><div class="card-title-row"><h2 class="card-title">待办事项 <span class="tag danger">5</span></h2><a class="home-more" href="../device/maintenance.html">更多 <i class="fa-solid fa-angle-right"></i></a></div><div class="empty-state"><i class="fa-regular fa-clipboard" style="font-size:28px;margin-right:8px"></i>暂无待办事项</div></article><article class="card home-card list-panel"><div class="card-title-row"><h2 class="card-title">系统消息 <span class="tag danger">3</span></h2><a class="home-more" href="../alarm-center/alarm-info.html">更多 <i class="fa-solid fa-angle-right"></i></a></div><div class="list-row"><i class="stat-dot" style="background:#d4dce8"></i><span>工单超时通知</span><time>08/04 09:53:19</time></div><div class="list-row"><i class="stat-dot" style="background:#ef8f2d"></i><strong>设备属性报警提醒</strong><time>08/04 09:53:19</time></div><div class="list-row"><i class="stat-dot" style="background:#ef8f2d"></i><strong>设备离线报警提醒</strong><time>08/04 09:13:19</time></div><div class="list-row"><i class="stat-dot" style="background:#d4dce8"></i><span>系统维护通知</span><time>07/31 13:51:34</time></div></article></div>
+<body class="dm-page" data-menu-key="home" data-page-section="科学岛管廊监控中心" data-page-title="设备监测">
+<div class="app-shell">
+  <aside id="app-sidebar" class="sidebar"></aside>
+  <header id="app-header" class="header"></header>
+  <main class="main">
+    <div class="dm-root">
+      <section class="dm-metrics">
+        <article class="dm-metric">
+          <span class="dm-metric-icon"><i class="fa-solid fa-layer-group"></i></span>
+          <div class="dm-metric-label">设备总数 <i class="fa-regular fa-circle-question" title="平台已接入的全部设备数量"></i></div>
+          <strong class="dm-metric-value" id="dmMetricTotal">—</strong>
+          <p class="dm-metric-sub">覆盖 <b id="dmMetricSystems">11</b> 个子系统</p>
+        </article>
+        <article class="dm-metric dm-metric--online">
+          <span class="dm-metric-icon"><i class="fa-solid fa-circle-check"></i></span>
+          <div class="dm-metric-label">在线 / 正常 <i class="fa-regular fa-circle-question" title="心跳正常且在线的设备数量"></i></div>
+          <strong class="dm-metric-value" id="dmMetricOnline">—</strong>
+          <p class="dm-metric-sub"><b id="dmMetricOnlineRate">—</b> 在线率</p>
+        </article>
+        <article class="dm-metric dm-metric--warn">
+          <span class="dm-metric-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          <div class="dm-metric-label">预警设备 <i class="fa-regular fa-circle-question" title="监测指标越限、进入预警区间的设备"></i></div>
+          <strong class="dm-metric-value" id="dmMetricWarn">—</strong>
+          <p class="dm-metric-sub dm-metric-sub--clip" id="dmMetricWarnSystems">—</p>
+        </article>
+        <article class="dm-metric dm-metric--fault">
+          <span class="dm-metric-icon"><i class="fa-solid fa-plug-circle-xmark"></i></span>
+          <div class="dm-metric-label">故障 / 离线 <i class="fa-regular fa-circle-question" title="故障停机或通信中断的设备"></i></div>
+          <strong class="dm-metric-value" id="dmMetricFault">—</strong>
+          <p class="dm-metric-sub"><b id="dmMetricFaultRate">—</b> 需处理</p>
+        </article>
+      </section>
+
+      <section class="dm-stage" id="dmStage">
+        <div class="dm-map" id="dmMap" aria-label="设备态势地图"></div>
+
+        <button class="dm-side-toggle dm-side-toggle--left" type="button" data-dm-collapse="left" title="收起面板" aria-label="收起左侧面板"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="dm-side-toggle dm-side-toggle--right" type="button" data-dm-collapse="right" title="收起面板" aria-label="收起右侧面板"><i class="fa-solid fa-chevron-right"></i></button>
+
+        <aside class="dm-panel dm-left">
+          <div class="dm-statusbar" id="dmStatusBar">
+            <button class="dm-chip is-active" type="button" data-dm-status="all"><i></i>全部</button>
+            <button class="dm-chip" type="button" data-dm-status="online"><i></i>在线</button>
+            <button class="dm-chip" type="button" data-dm-status="offline"><i></i>离线</button>
+            <button class="dm-chip" type="button" data-dm-status="warn"><i></i>预警</button>
+          </div>
+          <div class="dm-tabs">
+            <button class="dm-tab is-active" type="button" data-dm-mode="system">系统类型</button>
+            <button class="dm-tab" type="button" data-dm-mode="space">空间类型</button>
+          </div>
+          <div class="dm-tree" id="dmTree" role="tree" aria-label="系统类型 / 空间类型"></div>
+        </aside>
+
+        <aside class="dm-panel dm-right">
+          <div class="dm-panel-head">
+            <h2>设备监测明细</h2>
+            <p id="dmScope">所属系统：全部系统</p>
+          </div>
+          <div class="dm-table-wrap" id="dmTableWrap">
+            <table class="dm-table dm-point-table">
+              <thead>
+                <tr>
+                  <th class="dm-col-index">序号</th>
+                  <th>设备名称</th>
+                  <th>设备编码</th>
+                  <th>设备状态</th>
+                  <th>所属系统</th>
+                  <th class="dm-col-op">操作</th>
+                </tr>
+              </thead>
+              <tbody id="dmTableBody"></tbody>
+            </table>
+          </div>
+          <div class="dm-panel-foot dm-panel-foot--pager">
+            <span class="dm-pager-total">共 <b id="dmPointCount">0</b> 个监测点位</span>
+            <span class="dm-page-list" id="dmPointPager"></span>
+          </div>
+        </aside>
+
+        <div class="dm-legend" id="dmLegend">
+          <div class="dm-legend-head">图例 <span id="dmLegendScope">全部系统</span></div>
+          <div class="dm-legend-body" id="dmLegendBody"></div>
+        </div>
+
+        <div class="dm-map-tools">
+          <button type="button" data-dm-map="zoom-in"><i class="fa-solid fa-plus"></i> 放大</button>
+          <button type="button" data-dm-map="zoom-out"><i class="fa-solid fa-minus"></i> 缩小</button>
+          <button type="button" data-dm-map="reset"><i class="fa-solid fa-crosshairs"></i> 复位</button>
+          <button type="button" data-dm-map="fullscreen"><i class="fa-solid fa-expand"></i> 全屏</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="dm-modal-mask" id="dmModalMask">
+  <section class="dm-modal" role="dialog" aria-modal="true" aria-labelledby="dmModalTitle">
+    <header class="dm-modal-head">
+      <h2 id="dmModalTitle">设备详情</h2>
+      <button class="dm-modal-close" type="button" data-dm-close aria-label="关闭">×</button>
+    </header>
+    <div class="dm-modal-tabs" role="tablist">
+      <button class="dm-modal-tab is-active" type="button" role="tab" data-dm-tab="info">设备信息</button>
+      <button class="dm-modal-tab" type="button" role="tab" data-dm-tab="live">实时数据</button>
+      <button class="dm-modal-tab" type="button" role="tab" data-dm-tab="history">历史数据</button>
+    </div>
+    <div class="dm-modal-body">
+      <div data-dm-panel="info"></div>
+      <div data-dm-panel="live" hidden></div>
+      <div data-dm-panel="history" hidden></div>
+    </div>
   </section>
-</div></main></div>
-<script src="../../../app/config/menu.js?v=project-1"></script><script src="../../../app/data/mock-data.js"></script><script src="../../../app/components/sidebar.js?v=lot-host-7"></script><script src="../../../app/components/header.js?v=lot-tabs-1"></script><script src="../../../app/components/drawer.js"></script><script src="../../../app/components/requirement.js"></script>
-<script>
-  document.querySelectorAll(".rent-table tbody tr").forEach((row, index) => { const building = index < 3 ? "1号楼" : "2号楼"; const floor = ["1F", "4F", "6F", "8F", "10F"][index]; row.cells[0].textContent = `${building}${floor}`; });
-(() => {
-  const periods = {
-    today: { todo: 30, inspection: 10, maintenance: 10, workorder: 10, rent: 30, rentRate: "80%", vacancyRate: "20%", devices: 30, online: 10, offline: 10, fault: 10, alarms: 30, alarmOpen: 10, alarmProgress: 10, alarmDone: 10 },
-    week: { todo: 86, inspection: 31, maintenance: 28, workorder: 27, rent: 124, rentRate: "82%", vacancyRate: "18%", devices: 1094, online: 932, offline: 98, fault: 64, alarms: 42, alarmOpen: 19, alarmProgress: 13, alarmDone: 10 },
-    month: { todo: 356, inspection: 118, maintenance: 104, workorder: 134, rent: 124, rentRate: "80%", vacancyRate: "20%", devices: 1094, online: 932, offline: 98, fault: 64, alarms: 56, alarmOpen: 24, alarmProgress: 18, alarmDone: 14 },
-    year: { todo: 2480, inspection: 820, maintenance: 760, workorder: 900, rent: 124, rentRate: "78%", vacancyRate: "22%", devices: 1094, online: 904, offline: 121, fault: 69, alarms: 620, alarmOpen: 210, alarmProgress: 190, alarmDone: 220 }
-  };
-  const setStats = (key) => {
-    Object.entries(periods[key]).forEach(([name, value]) => document.querySelectorAll(`[data-stat="${name}"]`).forEach((node) => node.textContent = value));
-    const totals = { today: [11, 3, 30], week: [28, 9, 42], month: [96, 24, 56], year: [1180, 360, 620] }[key];
-    const totalLabels = ["报修总数", "投诉总数", "报警总数"];
-    totalLabels.forEach((label, index) => { const node = [...document.querySelectorAll(".donut-center")].find((item) => item.textContent.includes(label)); if (node) node.firstChild.textContent = totals[index]; });
-  };
-  document.querySelectorAll("[data-period]").forEach((button) => button.addEventListener("click", () => {
-    document.querySelectorAll("[data-period]").forEach((item) => item.classList.toggle("active", item === button));
-    setStats(button.dataset.period);
-  }));
+</div>
 
-  const chartTitles = ["报修工单状态分析", "投诉工单状态分析", "设备异常工单状态分析"];
-  chartTitles.forEach((title) => {
-    const heading = [...document.querySelectorAll(".card-title")].find((node) => node.textContent.trim() === title);
-    const card = heading?.closest(".home-card");
-    const legend = card?.querySelector(".chart-legend");
-    if (heading && legend) heading.parentElement.appendChild(legend);
-    card?.querySelector(".status-muted")?.remove();
-  });
-  ["空间资产", "楼层租赁明细", "报修类型统计", "投诉类型统计"].forEach((title) => {
-    const heading = [...document.querySelectorAll(".card-title")].find((node) => node.textContent.trim() === title);
-    heading?.parentElement.querySelector(".home-more")?.remove();
-  });
-  const alarmHeading = [...document.querySelectorAll(".card-title")].find((node) => node.textContent.trim() === "报警类型");
-  alarmHeading?.parentElement.querySelector(".home-more")?.remove();
-
-  const menuItems = ["设备管理", "报警消息", "巡检计划", "保养计划", "投诉建议", "报事报修"].map((label) => ({ label, href: "#", depth: 0 }));
-  const walk = (items, depth = 0) => (items || []).forEach((item) => { menuItems.push({ ...item, depth }); walk(item.children, depth + 1); });
-  walk(window.APP_MENU || []);
-  const quickDefaults = ["设备管理", "报警消息", "巡检计划", "保养计划", "投诉建议", "报事报修"];
-  let quickNames = [...quickDefaults];
-  const quickHost = document.querySelector(".home-quick");
-  const quickLinks = { "设备管理": "../device/list.html", "报警消息": "../alarm-center/alarm-info.html", "巡检计划": "../device/maintenance.html", "保养计划": "../device/maintenance.html", "投诉建议": "#", "报事报修": "#" };
-  const renderQuick = () => { if (!quickHost) return; quickHost.innerHTML = quickNames.slice(0, 6).map((name, index) => `<a class="quick-item" href="${quickLinks[name] || "#"}"><span class="quick-icon ${["blue", "green", "yellow", "purple"][index % 4]}"><span class="shortcut-letter">${name.slice(0, 1)}</span></span><span class="quick-title">${name}</span></a>`).join(""); };
-  renderQuick();
-  const manage = [...document.querySelectorAll(".home-card")].find((card) => card.querySelector(".card-title")?.textContent.trim() === "快捷导航")?.querySelector(".home-more");
-  const renderShortcutTree = (items, depth = 0) => (items || []).map((item) => {
-    const isDirectory = !item.href && item.children?.length;
-    const node = `<label class="shortcut-check ${isDirectory ? "is-directory" : ""}" style="padding-left:${depth * 18}px"><input type="checkbox" data-shortcut-name="${item.label}" ${isDirectory ? "disabled" : ""} ${quickNames.includes(item.label) ? "checked" : ""}>${item.label}</label>`;
-    return node + (item.children?.length ? `<div class="quick-tree-children">${renderShortcutTree(item.children, depth + 1)}</div>` : "");
-  }).join("");
-  const treeHtml = renderShortcutTree(window.APP_MENU || []);
-  manage?.setAttribute("href", "#");
-  manage?.addEventListener("click", (event) => { event.preventDefault(); window.openAppDrawer({ title: "配置快捷导航", body: `<div class="shortcut-config"><div class="shortcut-hint">最多选择6个常用菜单，权限被收回后首页会自动隐藏对应入口。</div><div class="shortcut-tree">${treeHtml || "暂无可配置菜单"}</div></div>`, footer: `<button class="btn btn-secondary" data-drawer-close>取消</button><button class="btn btn-primary" data-shortcut-save>保存</button>` }); setTimeout(() => { document.querySelector("[data-shortcut-save]")?.addEventListener("click", () => { const selected = [...document.querySelectorAll("[data-shortcut-name]:checked:not(:disabled)")].map((node) => node.dataset.shortcutName); if (selected.length > 6) return; quickNames = selected; renderQuick(); window.closeAppDrawer(); }); }, 0); });
-  document.querySelectorAll(".home-more").forEach((link) => { if (link !== manage) link.addEventListener("click", (event) => event.preventDefault()); });
-
-  const taskList = document.querySelector(".list-panel");
-  const todoCard = [...document.querySelectorAll(".list-panel")].find((card) => card.querySelector(".card-title")?.textContent.includes("待办事项"));
-  if (todoCard) { const items = [{ title: "设备巡检待处理", meta: "设备管理 · 今日 10:30", level: "warning" }, { title: "保养计划待确认", meta: "设备管理 · 今日 14:00", level: "primary" }, { title: "报事报修待接单", meta: "服务中心 · 明日 09:00", level: "danger" }]; todoCard.querySelector(".empty-state")?.remove(); items.forEach((item) => { const row = document.createElement("div"); row.className = "list-row"; row.innerHTML = `<i class="dot ${item.level}"></i><span>${item.title}</span><time>${item.meta}</time>`; todoCard.appendChild(row); }); }
-})();
-</script>
+  <script src="../../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../../../app/components/base-map.js"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+<script src="../../../app/data/system-types.js"></script>
+<script src="../../../app/data/device-categories.js"></script>
+<script src="../../../app/data/device-monitor-data.js"></script>
+<script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+<script src="../../../app/components/header.js?v=nav-home-1"></script>
+<script src="../../../app/components/drawer.js"></script>
+<script src="../../../app/components/requirement.js"></script>
 <script>
-(() => {
-  const axis = {
-    today: Array.from({length: 24}, (_, i) => `${String(i).padStart(2, "0")}:00`),
-    week: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
-    month: ["1日", "5日", "10日", "15日", "20日", "25日", "30日"],
-    year: Array.from({length: 12}, (_, i) => `${i + 1}月`)
+(function () {
+  "use strict";
+  var D = window.DEVICE_MONITOR_DATA || { systems: [], devices: [], spatialTree: [] };
+  var DEVICES = D.devices || [];
+  var REPORT_TIME = D.reportTime || "";
+  var PAGE_SIZE = 10;
+  var POINT_PAGE_SIZE = 10;
+  var STATUS_TEXT = { online: "在线 / 正常", warn: "预警", fault: "故障", offline: "离线" };
+  var STATUS_SHORT = { online: "在线", warn: "预警", fault: "故障", offline: "离线" };
+  /* 左侧筛选：在线 / 离线 / 预警 —— 离线合并“故障”，与顶部「故障 / 离线」卡片口径一致 */
+  var STATUS_FILTER = { online: ["online"], offline: ["offline", "fault"], warn: ["warn"] };
+  var CHART_COLORS = ["#135AFA", "#14C9BA", "#F7BA1E", "#F53F57", "#9359E3", "#2E9BD6"];
+  var VIDEO_SYSTEM = "视频监控系统";
+  /* 视频监控画面（复用视频监控-实时视频组件的画面资源） */
+  var LIVE_IMAGE = "../../assets/images/access-gate.jpg";
+  var PTZ_PAD = [
+    ["up-left", "fa-arrow-up-left", "向左上"], ["up", "fa-arrow-up", "向上"], ["up-right", "fa-arrow-up-right", "向右上"],
+    ["left", "fa-arrow-left", "向左"], ["stop", "fa-stop", "停止"], ["right", "fa-arrow-right", "向右"],
+    ["down-left", "fa-arrow-down-left", "向左下"], ["down", "fa-arrow-down", "向下"], ["down-right", "fa-arrow-down-right", "向右下"]
+  ];
+
+  var state = {
+    mode: "system",
+    system: "all",
+    spaceField: "",
+    spaceValue: "",
+    status: "all",
+    hidden: {},
+    collapsed: {},
+    panels: { left: false, right: false },
+    tablePage: 1,
+    current: null,
+    tab: "info",
+    history: [],
+    historyRows: [],
+    historyPage: 1,
+    from: "",
+    to: "",
+    period: "today",
+    chartMetrics: [0, 1]
   };
-  const chartData = {
-    repair: { today: [1, 0, 2, 1, 0, 1, 2, 1, 0, 1, 1, 2, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 0, 1], week: [5, 8, 4, 7, 3, 2, 1], month: [8, 12, 9, 15, 10, 13, 7], year: [42, 48, 56, 62, 58, 64, 70, 66, 74, 80, 76, 84] },
-    complaint: { today: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0], week: [1, 2, 0, 1, 2, 1, 1], month: [2, 4, 3, 5, 2, 4, 3], year: [18, 20, 24, 22, 28, 30, 26, 32, 35, 38, 40, 44] },
-    device: { today: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], week: [3, 4, 2, 5, 3, 2, 1], month: [5, 8, 6, 9, 7, 10, 6], year: [20, 24, 28, 26, 32, 35, 30, 38, 42, 46, 44, 50] }
-  };
-  const charts = [...document.querySelectorAll(".home-card")].filter((card) => ["报修工单状态分析", "投诉工单状态分析", "设备异常工单状态分析"].includes(card.querySelector(".card-title")?.textContent.trim()));
-  const setAxis = (key) => charts.forEach((card, index) => {
-    const type = index === 0 ? "repair" : index === 1 ? "complaint" : "device";
-    const labels = axis[key];
-    const data = chartData[type][key];
-    const caption = card.querySelector(".bar-caption");
-    const bars = card.querySelector(".chart-bars");
-    if (!caption || !bars) return;
-    caption.innerHTML = labels.map((label) => `<span>${label}</span>`).join("");
-    bars.innerHTML = data.map((value, i) => `<div class="bar-group"><i class="bar-stack" style="--h:${Math.max(8, Math.min(92, value * 5))}%;--c:${index === 1 ? "#8265df" : index === 2 ? "#d85b4c" : "#5278e4"}"></i>${index === 2 ? `<i class="bar-stack" style="--h:${Math.max(6, Math.min(80, value * 3))}%;--c:#e47c2f"></i><i class="bar-stack" style="--h:${Math.max(5, Math.min(70, value * 2))}%;--c:#e2a246"></i>` : ""}</div>`).join("");
-    if (index === 2) { const curve = document.createElementNS("http://www.w3.org/2000/svg", "svg"); curve.className.baseVal = "completion-curve"; curve.setAttribute("viewBox", `0 0 ${Math.max(320, labels.length * 48)} 170`); curve.innerHTML = `<polyline points="${data.map((value, i) => `${i * 48 + 24},${150 - Math.min(125, value * 2)}`).join(" ")}" fill="none" stroke="#e2a246" stroke-width="2"/><circle cx="24" cy="${150 - Math.min(125, data[0] * 2)}" r="3" fill="#fff" stroke="#e2a246" stroke-width="2"/>`; bars.appendChild(curve); }
+
+  var el = function (id) { return document.getElementById(id); };
+  var esc = function (v) { return String(v === undefined || v === null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
+  var fmt = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); };
+  var dec = function (value, decimals) { return Number(value).toFixed(decimals); };
+  var byId = function (id) { return DEVICES.filter(function (d) { return d.id === id; })[0]; };
+
+  /* 空间层级默认折叠到舱室层，避免树过长 */
+  (D.spatialTree || []).forEach(function (p) {
+    p.corridors.forEach(function (c) { c.cabins.forEach(function (b) { state.collapsed["cabin:" + b.name] = true; }); });
   });
-  document.querySelectorAll("[data-period]").forEach((button) => button.addEventListener("click", () => setTimeout(() => setAxis(button.dataset.period), 0)));
-  setAxis("today");
-  const complaintCard = [...document.querySelectorAll(".home-card")].find((card) => card.querySelector(".card-title")?.textContent.trim() === "投诉类型统计");
-  const complaintRows = complaintCard?.querySelectorAll(".stat-row strong");
-  if (complaintRows?.length === 2) { complaintRows[0].textContent = "2个　66.67%"; complaintRows[1].textContent = "1个　33.33%"; }
-  const deviceLegend = charts[2]?.querySelector(".chart-legend");
-  if (deviceLegend) deviceLegend.innerHTML = '<span><i class="legend-dot" style="background:#d85b4c"></i>未处理</span><span><i class="legend-dot" style="background:#e47c2f"></i>处理中</span><span><i class="legend-dot" style="background:#e2a246"></i>已处理</span><span><i class="legend-dot" style="background:#e2a246"></i>完成率</span>';
-})();
-</script>
-<script>
-(() => {
-  const labels = {
-    today: Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`),
-    week: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
-    month: ["1日", "5日", "10日", "15日", "20日", "25日", "30日"],
-    year: Array.from({ length: 12 }, (_, i) => `${i + 1}月`)
-  };
-  const stateNames = ["待处理", "处理中", "待确认", "已完成", "已关闭"];
-  const colors = ["#5278e4", "#6bb6de", "#71c8d9", "#4f68d7", "#60b5a8"];
-  const series = {
-    repair: { today: [1, 2, 1, 0, 2, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 0, 1], week: [5, 8, 4, 7, 3, 2, 1], month: [8, 12, 9, 15, 10, 13, 7], year: [42, 48, 56, 62, 58, 64, 70, 66, 74, 80, 76, 84] },
-    complaint: { today: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0], week: [1, 2, 0, 1, 2, 1, 1], month: [2, 4, 3, 5, 2, 4, 3], year: [18, 20, 24, 22, 28, 30, 26, 32, 35, 38, 40, 44] },
-    device: { today: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], week: [3, 4, 2, 5, 3, 2, 1], month: [5, 8, 6, 9, 7, 10, 6], year: [20, 24, 28, 26, 32, 35, 30, 38, 42, 46, 44, 50] }
-  };
-  const chartCards = [...document.querySelectorAll(".home-card")].filter((card) => ["报修工单状态分析", "投诉工单状态分析", "设备异常工单状态分析"].includes(card.querySelector(".card-title")?.textContent.trim()));
-  const downsample = (list) => { const step = Math.max(1, Math.ceil(list.length / 8)); return list.map((value, index) => index % step === 0 || index === list.length - 1 ? value : ""); };
-  const tooltip = (card) => { let node = card.querySelector(".chart-tooltip"); if (!node) { node = document.createElement("div"); node.className = "chart-tooltip"; card.querySelector(".chart-bars").appendChild(node); } return node; };
-  const render = (period) => chartCards.forEach((card, chartIndex) => {
-    const type = chartIndex === 0 ? "repair" : chartIndex === 1 ? "complaint" : "device";
-    const points = labels[period];
-    const values = series[type][period];
-    const bars = card.querySelector(".chart-bars");
-    const caption = card.querySelector(".bar-caption");
-    if (!bars || !caption) return;
-    const legend = card.querySelector(".chart-legend");
-    if (legend && chartIndex === 0) legend.innerHTML = '<span><i class="legend-dot" style="background:#5278e4"></i>待处理</span><span><i class="legend-dot" style="background:#6bb6de"></i>处理中</span><span><i class="legend-dot" style="background:#71c8d9"></i>待确认</span><span><i class="legend-dot" style="background:#4f68d7"></i>已完成</span><span><i class="legend-dot" style="background:#60b5a8"></i>已关闭</span><span><i class="legend-dot" style="background:#e2a246"></i>完成率</span>';
-    bars.innerHTML = `<span class="axis-label axis-left">数量</span><span class="axis-label axis-right">完成率</span><span class="axis-tick tick-left top">${Math.max(...values, 2)}</span><span class="axis-tick tick-left bottom">0</span><span class="axis-tick tick-right top">100%</span><span class="axis-tick tick-right bottom">0%</span>`;
-    const visibleLabels = downsample(points);
-    caption.innerHTML = visibleLabels.map((label) => `<span>${label}</span>`).join("");
-    values.forEach((value, index) => {
-      const group = document.createElement("div"); group.className = "bar-group"; group.dataset.label = points[index];
-      const stacks = chartIndex === 0 ? [value * .42, value * .24, value * .14, value * .12, value * .08] : chartIndex === 1 ? [value * .6, value * .4] : [value * .5, value * .3, value * .2];
-      const stackColors = chartIndex === 0 ? colors : chartIndex === 1 ? ["#8265df", "#b05add"] : ["#d85b4c", "#e47c2f", "#e2a246"];
-      stacks.forEach((amount, stackIndex) => { const bar = document.createElement("i"); bar.className = "bar-stack"; bar.style.setProperty("--h", `${Math.max(5, Math.min(90, amount * 20))}%`); bar.style.setProperty("--c", stackColors[stackIndex]); group.appendChild(bar); });
-      group.addEventListener("mouseenter", () => { const names = chartIndex === 0 ? stateNames : chartIndex === 1 ? ["待确认", "已完成"] : ["未处理", "处理中", "已处理"]; const tip = tooltip(card); tip.innerHTML = `<strong>${points[index]}</strong>${names.map((name, i) => `<span><i style="background:${stackColors[i]}"></i>${name}<b>${Math.round(stacks[i])}</b></span>`).join("")}<span><i style="background:#e2a246"></i>完成率<b>${Math.min(100, 40 + value * 8)}%</b></span>`; tip.classList.add("show"); });
-      group.addEventListener("mouseleave", () => tooltip(card).classList.remove("show")); bars.appendChild(group);
+
+  /* ---------------- 过滤 ---------------- */
+  function matches(device, opts) {
+    opts = opts || {};
+    if (!opts.ignoreSystem && state.system !== "all" && device.system !== state.system) return false;
+    if (!opts.ignoreHidden && state.hidden[device.type]) return false;
+    if (!opts.ignoreStatus && state.status !== "all") {
+      var filter = STATUS_FILTER[state.status] || [state.status];
+      if (filter.indexOf(device.status) < 0) return false;
+    }
+    if (!opts.ignoreSpace && state.spaceField && device[state.spaceField] !== state.spaceValue) return false;
+    return true;
+  }
+  function visibleDevices() { return DEVICES.filter(function (d) { return matches(d); }); }
+  function legendPool() { return DEVICES.filter(function (d) { return matches(d, { ignoreHidden: true }); }); }
+  function treePool() { return DEVICES.filter(function (d) { return matches(d, { ignoreSystem: true }); }); }
+  function countOf(field, value) { return treePool().filter(function (d) { return d[field] === value; }).length; }
+
+  /* ---------------- 顶部统计 ---------------- */
+  function renderMetrics() {
+    var sum = { total: 0, online: 0, warn: 0, fault: 0, offline: 0 };
+    (D.systems || []).forEach(function (s) {
+      sum.total += s.total; sum.online += s.online; sum.warn += s.warn; sum.fault += s.fault; sum.offline += s.offline;
     });
+    el("dmMetricTotal").textContent = fmt(sum.total);
+    el("dmMetricOnline").textContent = fmt(sum.online);
+    el("dmMetricWarn").textContent = fmt(sum.warn);
+    el("dmMetricFault").textContent = fmt(sum.fault + sum.offline);
+    el("dmMetricSystems").textContent = (D.systems || []).length;
+    el("dmMetricOnlineRate").textContent = (sum.online / sum.total * 100).toFixed(1) + "%";
+    el("dmMetricFaultRate").textContent = ((sum.fault + sum.offline) / sum.total * 100).toFixed(1) + "%";
+    /* 第三张卡的小文案改为展示预警设备所在的系统类型 */
+    var warnSystems = (D.systems || []).filter(function (s) { return s.warn > 0; });
+    var sub = el("dmMetricWarnSystems");
+    if (sub) {
+      var names = warnSystems.map(function (s) { return s.name; });
+      var head = names.slice(0, 2).join("、");
+      sub.textContent = names.length <= 2 ? (names.join("、") + " 共 " + names.length + " 个系统")
+        : head + " 等 " + names.length + " 个系统";
+      sub.title = warnSystems.map(function (s) { return s.name + "：" + s.warn + " 台"; }).join("\n");
+    }
+  }
+
+  /* ---------------- 左侧树 ---------------- */
+  function treeRow(level, kind, value, name, count, options) {
+    options = options || {};
+    var active = false;
+    if (kind === "system") active = state.system === value;
+    if (kind !== "system") active = state.spaceField === kind && state.spaceValue === value;
+    var key = options.collapseKey || "";
+    var hasToggle = !!key;
+    var expanded = hasToggle && !state.collapsed[key];
+    var toggle = hasToggle
+      ? '<button class="dm-tree-toggle" type="button" data-dm-toggle="' + esc(key) + '" aria-label="' + (expanded ? "收起" : "展开") + '">' + (expanded ? "−" : "+") + "</button>"
+      : '<button class="dm-tree-toggle is-leaf" type="button" tabindex="-1" aria-hidden="true"></button>';
+    return '<div class="dm-tree-row' + (active ? " is-active" : "") + '" data-dm-kind="' + esc(kind) + '" data-dm-value="' + esc(value) + '" role="treeitem" style="padding-left:' + (level * 14 + 6) + 'px">'
+      + toggle
+      + '<span class="dm-tree-name" title="' + esc(name) + '">' + esc(name) + "</span>"
+      + '<span class="dm-tree-count">' + count + "</span>"
+      + "</div>";
+  }
+
+  function renderTree() {
+    var host = el("dmTree");
+    if (!host) return;
+    var html = "";
+    if (state.mode === "system") {
+      var pool = treePool();
+      html += treeRow(0, "system", "all", "全部系统", pool.length, { collapseKey: "systemRoot" });
+      if (!state.collapsed.systemRoot) {
+        (D.systems || []).forEach(function (s) {
+          var count = pool.filter(function (d) { return d.system === s.name; }).length;
+          html += treeRow(1, "system", s.name, s.name, count);
+        });
+      }
+    } else {
+      (D.spatialTree || []).forEach(function (project) {
+        html += treeRow(0, "project", project.name, project.name, countOf("project", project.name), { collapseKey: "project:" + project.name });
+        if (state.collapsed["project:" + project.name]) return;
+        project.corridors.forEach(function (corridor) {
+          html += treeRow(1, "corridor", corridor.name, corridor.name, countOf("corridor", corridor.name), { collapseKey: "corridor:" + corridor.name });
+          if (state.collapsed["corridor:" + corridor.name]) return;
+          corridor.cabins.forEach(function (cabin) {
+            html += treeRow(2, "room", cabin.name, cabin.name, countOf("room", cabin.name), { collapseKey: "cabin:" + cabin.name });
+            if (state.collapsed["cabin:" + cabin.name]) return;
+            cabin.sections.forEach(function (section) {
+              html += treeRow(3, "section", section, section, countOf("section", section));
+            });
+          });
+        });
+      });
+    }
+    host.innerHTML = html || '<div class="dm-tree-empty">暂无可选维度</div>';
+  }
+
+  /* ---------------- 图例 ---------------- */
+  function renderLegend() {
+    var host = el("dmLegendBody");
+    if (!host) return;
+    var names = [];
+    legendPool().forEach(function (d) { if (names.indexOf(d.type) < 0) names.push(d.type); });
+    el("dmLegendScope").textContent = state.system === "all" ? "全部系统" : state.system;
+    if (!names.length) { host.innerHTML = '<div class="dm-legend-empty">当前系统暂无设备分类</div>'; return; }
+    host.innerHTML = names.map(function (name) {
+      var style = (D.categoryStyles || {})[name] || { color: "#6B7B8C" };
+      var off = !!state.hidden[name];
+      return '<button class="dm-legend-item' + (off ? " is-off" : "") + '" type="button" data-dm-cat="' + esc(name) + '" title="' + (off ? "点击显示" : "点击隐藏") + '">'
+        + '<i class="fa-solid ' + (off ? "fa-square" : "fa-square-check") + '"></i>'
+        + '<i class="dm-legend-swatch" style="--dm-c:' + esc(style.color) + '"></i>'
+        + "<span>" + esc(name) + "</span></button>";
+    }).join("");
+  }
+
+  /* ---------------- 右侧明细（分页） ---------------- */
+  function pointPages(total) { return Math.max(1, Math.ceil(total / POINT_PAGE_SIZE)); }
+
+  function renderTable() {
+    var list = visibleDevices();
+    var pages = pointPages(list.length);
+    state.tablePage = Math.min(Math.max(1, state.tablePage), pages);
+    var rows = list.slice((state.tablePage - 1) * POINT_PAGE_SIZE, state.tablePage * POINT_PAGE_SIZE);
+    var body = el("dmTableBody");
+    if (body) {
+      body.innerHTML = rows.length ? rows.map(function (d, index) {
+        /* 明细表统一单行省略：文本放进 title，鼠标悬浮显示完整内容 */
+        return '<tr data-dm-id="' + esc(d.id) + '">'
+          + '<td class="dm-col-index">' + ((state.tablePage - 1) * POINT_PAGE_SIZE + index + 1) + "</td>"
+          + '<td class="dm-cell-name" title="' + esc(d.name) + '">' + esc(d.name) + "</td>"
+          + '<td class="dm-cell-code" title="' + esc(d.code) + '">' + esc(d.code) + "</td>"
+          + '<td title="' + esc(STATUS_TEXT[d.status] || STATUS_SHORT[d.status]) + '"><span class="dm-state ' + d.status + '"><i></i>' + STATUS_SHORT[d.status] + "</span></td>"
+          + '<td title="' + esc(d.system) + '">' + esc(d.system) + "</td>"
+          + '<td class="dm-col-op"><button class="dm-link" type="button" data-dm-view="' + esc(d.id) + '">查看</button></td>'
+          + "</tr>";
+      }).join("") : '<tr><td class="dm-empty" colspan="6">当前筛选条件下暂无监测点位</td></tr>';
+    }
+    renderPointPager(list.length, pages);
+    el("dmPointCount").textContent = list.length;
+    var scope = "所属系统：" + (state.system === "all" ? "全部系统" : state.system);
+    if (state.spaceValue) scope += "　空间维度：" + state.spaceValue;
+    el("dmScope").textContent = scope;
+  }
+
+  function renderPointPager(total, pages) {
+    var host = el("dmPointPager");
+    if (!host) return;
+    if (!total) { host.innerHTML = ""; return; }
+    var html = '<button class="dm-page-btn" type="button" data-dm-point-page="prev"' + (state.tablePage <= 1 ? " disabled" : "") + ' aria-label="上一页"><i class="fa-solid fa-angle-left"></i></button>';
+    for (var i = 1; i <= pages; i += 1) {
+      html += '<button class="dm-page-btn' + (i === state.tablePage ? " is-active" : "") + '" type="button" data-dm-point-page="' + i + '" aria-label="第 ' + i + ' 页">' + i + "</button>";
+    }
+    html += '<button class="dm-page-btn" type="button" data-dm-point-page="next"' + (state.tablePage >= pages ? " disabled" : "") + ' aria-label="下一页"><i class="fa-solid fa-angle-right"></i></button>';
+    html += '<span class="dm-pager-size">每页 ' + POINT_PAGE_SIZE + " 条</span>";
+    host.innerHTML = html;
+  }
+
+  /* ---------------- 地图 ---------------- */
+  var map = null;
+  var markerLayer = null;
+  var baseMap = null;
+  function initMap() {
+    var host = el("dmMap");
+    if (!host) return;
+    /* 底图复用共享组件（与应急调度台等页面同一套在线底图 + 本地保底底图） */
+    baseMap = window.BASE_MAP ? window.BASE_MAP.create(host, { center: D.mapCenter || [30.4595, 114.4296], zoom: 14 }) : null;
+    map = baseMap ? baseMap.map : null;
+    if (!map) return;
+    markerLayer = L.layerGroup().addTo(map);
+    renderMap();
+    window.setTimeout(function () { map.invalidateSize(); }, 150);
+  }
+  function renderMap() {
+    if (!map || !markerLayer) return;
+    markerLayer.clearLayers();
+    visibleDevices().forEach(function (d) {
+      var cls = "dm-marker" + (d.status === "online" ? "" : " is-" + d.status);
+      var icon = L.divIcon({
+        className: "dm-marker-wrap",
+        html: '<span class="' + cls + '" style="--dm-c:' + esc(d.color) + '"><i class="fa-solid ' + esc(d.icon) + '"></i></span>',
+        iconSize: [24, 24], iconAnchor: [12, 12]
+      });
+      var marker = L.marker([d.lat, d.lng], { icon: icon, riseOnHover: true, keyboard: false });
+      window.BASE_MAP && window.BASE_MAP.bindTip(marker, d.name);
+      marker.on("click", function () { openDetail(d.id); });
+      marker.addTo(markerLayer);
+    });
+  }
+
+  /* ---------------- 渲染聚合 ---------------- */
+  function renderAll() {
+    renderMetrics();
+    renderTree();
+    renderLegend();
+    renderTable();
+    renderMap();
+  }
+
+  /* ---------------- 设备详情弹窗 ---------------- */
+  var INFO_FIELDS = [
+    ["所属系统", "system"], ["设备分类", "type"],
+    ["所属项目", "project"], ["所属管廊", "corridor"],
+    ["所属舱室", "room"], ["所属区段", "section"],
+    ["所属管线", "pipeline"], ["设备品牌", "brand"],
+    ["设备型号", "model"], ["设备名称", "name"],
+    ["设备编码", "code"], ["安装位置", "location"],
+    ["供应商", "vendor"], ["供应商联系方式", "supplierPhone"],
+    ["生产厂家", "manufacturer"], ["出厂日期", "manufactureDate"],
+    ["到货日期", "deliveryDate"], ["安装日期", "installDate"],
+    ["验收日期", "acceptDate"], ["报废日期", "scrapDate"],
+    ["厂家编码", "factoryCode"], ["CAD编码", "cadCode"],
+    ["来源模块", "sourceModule"], ["服务范围", "service"],
+    ["备注", "remark"], ["是否智能化", "smart"],
+    ["第三方编码", "thirdPartyCode"], ["设备坐标", "coordinate"],
+    ["创建时间", "createdAt"]
+  ];
+
+  function renderInfo() {
+    var d = state.current;
+    el("dmModalTitle").textContent = "设备详情";
+    document.querySelector('[data-dm-panel="info"]').innerHTML = '<div class="dm-info-grid">' + INFO_FIELDS.map(function (pair) {
+      var value = d[pair[1]];
+      return '<div class="info-item"><span class="info-label">' + esc(pair[0]) + '</span><span class="info-value">' + (esc(value) || "-") + "</span></div>";
+    }).join("") + "</div>";
+  }
+
+  function isVideoDevice(d) { return !!(d && (d.video || d.system === VIDEO_SYSTEM)); }
+
+  /* 视频监控设备的实时数据：实时视频画面（复用视频监控-实时视频组件） */
+  function videoFeedHtml(d) {
+    var offline = d.status === "offline";
+    var statusText = offline ? "离线" : d.status === "warn" ? "预警" : "在线";
+    var screen = '<div class="video-screen' + (offline ? " is-offline" : "") + '" data-dm-live-time="' + esc(REPORT_TIME) + '">';
+    screen += offline
+      ? '<div class="dm-feed-offline"><i class="fa-solid fa-video-slash"></i><span>视频信号中断</span><em>' + (d.lastOnline ? "最后在线 " + esc(d.lastOnline) : "该点位当前离线") + "</em></div>"
+      : '<img src="' + LIVE_IMAGE + '" alt="' + esc(d.name) + '实时监控画面">';
+    if (!offline && d.ptz) {
+      screen += '<button type="button" class="video-ptz-trigger" data-dm-ptz-toggle aria-label="' + esc(d.name) + '云台控制" title="云台控制"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>';
+    }
+    screen += '<button type="button" class="video-fullscreen" data-dm-fullscreen aria-label="全屏查看' + esc(d.name) + '" title="全屏查看"><i class="fa-solid fa-expand"></i></button>';
+    if (!offline && d.ptz) screen += videoPtzHtml(d, statusText);
+    screen += "</div>";
+    return '<div class="dm-live-video"><div class="video-feed" data-dm-feed="' + esc(d.id) + '">'
+      + '<div class="video-feed-title"><span>' + esc(d.name) + '</span><span class="dm-feed-status is-' + esc(d.status) + '">' + statusText + "</span></div>"
+      + screen + "</div>" + videoMetaHtml(d) + "</div>";
+  }
+
+  function videoPtzHtml(d, statusText) {
+    return '<div class="video-ptz" id="dmLivePtz" hidden>'
+      + '<div class="video-ptz-head"><span>云台控制</span></div>'
+      + '<button type="button" class="video-ptz-close" data-dm-ptz-close aria-label="关闭云台控制"><i class="fa-solid fa-xmark"></i></button>'
+      + '<div class="video-ptz-camera">' + esc(d.name) + " · " + statusText + "</div>"
+      + '<div class="ptz-pad" aria-label="云台方向控制">'
+      + PTZ_PAD.map(function (item) {
+        return '<button type="button"' + (item[0] === "stop" ? ' class="stop"' : "") + ' data-dm-ptz="' + item[0] + '" aria-label="' + item[2] + '"><i class="fa-solid ' + item[1] + '"></i></button>';
+      }).join("") + "</div></div>";
+  }
+
+  function videoMetaHtml(d) {
+    var meta = d.metrics.map(function (m) {
+      return "<span><em>" + esc(m.name) + "</em><b>" + dec(m.value, m.decimals) + (m.unit ? esc(m.unit) : "") + "</b></span>";
+    }).join("");
+    return '<div class="dm-video-meta"><span class="dm-video-meta-title">视频流信息</span>'
+      + "<span><em>视频通道</em><b>" + esc(d.channel || "—") + "</b></span>"
+      + "<span><em>分辨率</em><b>" + esc(d.resolution || "—") + "</b></span>"
+      + meta + "</div>";
+  }
+
+  function renderLive() {
+    var d = state.current;
+    var host = document.querySelector('[data-dm-panel="live"]');
+    if (!host) return;
+    if (isVideoDevice(d)) { host.innerHTML = videoFeedHtml(d); return; }
+    host.innerHTML = '<div class="dm-live-grid">' + d.metrics.map(function (m) {
+      return '<div class="dm-live-card">'
+        + '<span class="dm-live-name">' + esc(m.name) + "</span>"
+        + '<div class="dm-live-value">' + dec(m.value, m.decimals) + (m.unit ? '<span class="dm-live-unit">' + esc(m.unit) + "</span>" : "") + "</div>"
+        + '<span class="dm-live-time">' + esc(REPORT_TIME) + "</span>"
+        + "</div>";
+    }).join("") + "</div>";
+  }
+
+  function renderHistory() {
+    var d = state.current;
+    var cols = d.metrics;
+    document.querySelector('[data-dm-panel="history"]').innerHTML =
+      '<h3 class="dm-block-title">历史数据</h3>'
+      + '<div class="dm-filter-bar">'
+      + '<span class="dm-filter-label">数据接收时间</span>'
+      + '<input type="date" id="dmHistoryFrom" value="' + esc(state.from) + '">'
+      + '<span class="dm-filter-sep">-</span>'
+      + '<input type="date" id="dmHistoryTo" value="' + esc(state.to) + '">'
+      + '<button class="btn btn-primary" type="button" id="dmHistorySearch">搜索</button>'
+      + '<button class="btn btn-secondary" type="button" id="dmHistoryReset">重置</button>'
+      + "</div>"
+      + '<div class="dm-history-table-wrap"><table class="dm-table dm-history-table"><thead><tr><th>数据接收时间</th>'
+      + cols.map(function (m) { return "<th>" + esc(m.name) + "</th>"; }).join("")
+      + '</tr></thead><tbody id="dmHistoryBody"></tbody></table></div>'
+      + '<div class="dm-pager"><span class="dm-pager-total">共 <b id="dmHistoryTotal">0</b> 条，每页显示 ' + PAGE_SIZE + " 条</span><span id=\"dmPagerButtons\"></span></div>"
+      + '<div class="dm-chart-head"><h3 class="dm-block-title">历史曲线</h3><div class="dm-period-switch">'
+      + ["today", "month", "year"].map(function (p) {
+        return '<button type="button" data-dm-period="' + p + '"' + (state.period === p ? ' class="is-active"' : "") + ">" + ({ today: "今日", month: "本月", year: "本年" }[p]) + "</button>";
+      }).join("")
+      + "</div></div>"
+      + '<div class="dm-chart-legend" id="dmChartLegend"></div>'
+      + '<div class="dm-chart" id="dmChart"><div class="dm-chart-mask"></div><div class="dm-chart-tip"></div></div>';
+    renderHistoryRows();
+    bindHistoryFilter();
+    if (state.tab === "history") renderChart();
+  }
+
+  function renderHistoryRows() {
+    var d = state.current;
+    state.historyRows = state.history.filter(function (row) {
+      var day = row.time.slice(0, 10);
+      if (state.from && day < state.from) return false;
+      if (state.to && day > state.to) return false;
+      return true;
+    });
+    var pages = Math.max(1, Math.ceil(state.historyRows.length / PAGE_SIZE));
+    state.historyPage = Math.min(Math.max(1, state.historyPage), pages);
+    var rows = state.historyRows.slice((state.historyPage - 1) * PAGE_SIZE, state.historyPage * PAGE_SIZE);
+    var body = el("dmHistoryBody");
+    if (body) {
+      body.innerHTML = rows.length ? rows.map(function (row) {
+        return "<tr><td>" + esc(row.time) + "</td>" + row.values.map(function (v, i) { return "<td>" + dec(v, d.metrics[i].decimals) + "</td>"; }).join("") + "</tr>";
+      }).join("") : '<tr><td class="dm-empty" colspan="' + (d.metrics.length + 1) + '">当前时间范围内暂无数据</td></tr>';
+    }
+    el("dmHistoryTotal").textContent = state.historyRows.length;
+    var buttons = '<button class="dm-page-btn" type="button" data-dm-page="prev"' + (state.historyPage <= 1 ? " disabled" : "") + ">‹</button>";
+    for (var i = 1; i <= pages; i += 1) buttons += '<button class="dm-page-btn' + (i === state.historyPage ? " is-active" : "") + '" type="button" data-dm-page="' + i + '">' + i + "</button>";
+    buttons += '<button class="dm-page-btn" type="button" data-dm-page="next"' + (state.historyPage >= pages ? " disabled" : "") + ">›</button>";
+    el("dmPagerButtons").innerHTML = buttons;
+  }
+
+  function bindHistoryFilter() {
+    el("dmHistorySearch").addEventListener("click", function () {
+      state.from = el("dmHistoryFrom").value;
+      state.to = el("dmHistoryTo").value;
+      state.historyPage = 1;
+      renderHistoryRows();
+    });
+    el("dmHistoryReset").addEventListener("click", function () {
+      state.from = ""; state.to = ""; state.historyPage = 1;
+      el("dmHistoryFrom").value = ""; el("dmHistoryTo").value = "";
+      renderHistoryRows();
+    });
+    var pager = el("dmPagerButtons");
+    pager.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-dm-page]");
+      if (!button || button.disabled) return;
+      var pages = Math.max(1, Math.ceil(state.historyRows.length / PAGE_SIZE));
+      var action = button.dataset.dmPage;
+      if (action === "prev") state.historyPage = Math.max(1, state.historyPage - 1);
+      else if (action === "next") state.historyPage = Math.min(pages, state.historyPage + 1);
+      else state.historyPage = Number(action);
+      renderHistoryRows();
+    });
+  }
+
+  /* ---------------- 历史曲线 ---------------- */
+  function renderChart() {
+    var d = state.current;
+    var host = el("dmChart");
+    if (!host || !d) return;
+    var legend = el("dmChartLegend");
+    legend.innerHTML = d.metrics.map(function (m, i) {
+      var on = state.chartMetrics.indexOf(i) >= 0;
+      return '<button type="button" class="' + (on ? "" : "is-off") + '" data-dm-metric="' + i + '" style="--dm-c:' + CHART_COLORS[i % CHART_COLORS.length] + '">'
+        + "<i></i>" + esc(m.name) + " <em>" + dec(m.value, m.decimals) + (m.unit ? esc(m.unit) : "") + "</em></button>";
+    }).join("");
+
+    var width = Math.max(320, host.clientWidth || 700);
+    var height = host.clientHeight || 236;
+    var pad = { left: 10, right: 10, top: 10, bottom: 22 };
+    var labels = D.labelsOf(state.period);
+    var points = labels.length;
+    var plotW = width - pad.left - pad.right;
+    var plotH = height - pad.top - pad.bottom;
+    var step = D.labelStep[state.period] || 1;
+    var series = state.chartMetrics.map(function (mi) {
+      var metric = d.metrics[mi];
+      var values = D.seriesOf(d, mi, state.period);
+      var min = Math.min.apply(null, values);
+      var max = Math.max.apply(null, values);
+      return { mi: mi, metric: metric, values: values, min: min, max: max, range: (max - min) || 1, color: CHART_COLORS[mi % CHART_COLORS.length] };
+    });
+    var xAt = function (i) { return pad.left + (points <= 1 ? plotW / 2 : plotW * i / (points - 1)); };
+    var yAt = function (s, v) { return pad.top + plotH * 0.92 - plotH * 0.84 * ((v - s.min) / s.range); };
+
+    var svg = '<svg viewBox="0 0 ' + width + " " + height + '" preserveAspectRatio="none" aria-label="历史曲线">';
+    [0, 0.33, 0.66, 1].forEach(function (ratio) {
+      var y = (pad.top + plotH * ratio).toFixed(1);
+      svg += '<line x1="' + pad.left + '" y1="' + y + '" x2="' + (width - pad.right) + '" y2="' + y + '" stroke="#eef2f8" stroke-width="1" stroke-dasharray="4 4"/>';
+    });
+    svg += '<line x1="0" y1="' + (height - pad.bottom) + '" x2="' + width + '" y2="' + (height - pad.bottom) + '" stroke="#e5eaf3"/>';
+    series.forEach(function (s) {
+      var path = s.values.map(function (v, i) { return (i ? "L" : "M") + xAt(i).toFixed(1) + " " + yAt(s, v).toFixed(1); }).join(" ");
+      svg += '<path d="' + path + '" fill="none" stroke="' + s.color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    });
+    svg += '<line id="dmChartCross" x1="0" y1="' + pad.top + '" x2="0" y2="' + (height - pad.bottom) + '" stroke="#c3cddb" stroke-width="1" opacity="0"/>';
+    labels.forEach(function (label, i) {
+      if (i % step !== 0 && i !== points - 1) return;
+      var anchor = i === 0 ? "start" : i === points - 1 ? "end" : "middle";
+      svg += '<text x="' + xAt(i).toFixed(1) + '" y="' + (height - 6) + '" fill="#86909C" font-size="10" text-anchor="' + anchor + '">' + esc(label) + "</text>";
+    });
+    svg += "</svg>";
+    host.innerHTML = '<div class="dm-chart-mask"></div><div class="dm-chart-tip"></div>' + svg;
+    host.querySelector("svg").style.width = width + "px";
+    host.querySelector("svg").style.height = height + "px";
+
+    var mask = host.querySelector(".dm-chart-mask");
+    var tip = host.querySelector(".dm-chart-tip");
+    var cross = host.querySelector("#dmChartCross");
+    mask.addEventListener("mousemove", function (event) {
+      var rect = host.getBoundingClientRect();
+      var ratio = (event.clientX - rect.left - pad.left) / (plotW || 1);
+      var index = Math.round(ratio * (points - 1));
+      index = Math.min(Math.max(index, 0), points - 1);
+      var x = xAt(index);
+      cross.setAttribute("x1", x.toFixed(1));
+      cross.setAttribute("x2", x.toFixed(1));
+      cross.setAttribute("opacity", "1");
+      tip.className = "dm-chart-tip is-open";
+      tip.innerHTML = "<strong>" + esc(labels[index]) + "</strong>" + series.map(function (s) {
+        return '<span style="--dm-c:' + s.color + '"><i></i>' + esc(s.metric.name) + "<b>" + dec(s.values[index], s.metric.decimals) + (s.metric.unit ? esc(s.metric.unit) : "") + "</b></span>";
+      }).join("");
+      var left = Math.min(Math.max(x + 12, 4), Math.max(width - 150, 4));
+      tip.style.left = left + "px";
+      tip.style.top = "6px";
+    });
+    mask.addEventListener("mouseleave", function () {
+      tip.className = "dm-chart-tip";
+      cross.setAttribute("opacity", "0");
+    });
+  }
+
+  /* ---------------- 弹窗控制 ---------------- */
+  function closeVideoPtz() {
+    var panel = el("dmLivePtz");
+    if (panel) panel.hidden = true;
+    document.querySelectorAll("[data-dm-ptz-toggle]").forEach(function (button) { button.classList.remove("is-active"); });
+  }
+  function toggleFeedFullscreen(feed) {
+    if (!feed) return;
+    if (document.fullscreenElement) { if (document.exitFullscreen) document.exitFullscreen(); return; }
+    if (feed.requestFullscreen) feed.requestFullscreen();
+    else feed.classList.toggle("is-fullscreen");
+  }
+  function openDetail(id) {
+    var device = byId(id);
+    if (!device) return;
+    state.current = device;
+    state.tab = "info";
+    state.history = (D.historyOf ? D.historyOf(device) : []).map(function (row) { return { time: row.time, values: row.values.slice() }; });
+    state.historyPage = 1;
+    state.from = ""; state.to = "";
+    state.period = "today";
+    state.chartMetrics = device.metrics.map(function (m, i) { return i; }).slice(0, 2);
+    if (!state.chartMetrics.length) state.chartMetrics = [0];
+    el("dmModalMask").classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    renderInfo();
+    renderLive();
+    renderHistory();
+    setTab("info");
+  }
+  function closeDetail() {
+    closeVideoPtz();
+    document.querySelectorAll(".video-feed.is-fullscreen").forEach(function (feed) { feed.classList.remove("is-fullscreen"); });
+    el("dmModalMask").classList.remove("is-open");
+    document.body.style.overflow = "";
+  }
+  function setTab(tab) {
+    state.tab = tab;
+    document.querySelectorAll("[data-dm-tab]").forEach(function (b) { b.classList.toggle("is-active", b.dataset.dmTab === tab); });
+    document.querySelectorAll("[data-dm-panel]").forEach(function (p) { p.hidden = p.dataset.dmPanel !== tab; });
+    if (tab === "history") renderChart();
+  }
+
+  /* ---------------- 事件绑定 ---------------- */
+  function bindEvents() {
+    el("dmModalMask").addEventListener("click", function (event) {
+      if (event.target === el("dmModalMask")) closeDetail();
+    });
+    document.querySelector("[data-dm-close]").addEventListener("click", closeDetail);
+    document.querySelectorAll("[data-dm-tab]").forEach(function (button) {
+      button.addEventListener("click", function () { setTab(button.dataset.dmTab); });
+    });
+    document.querySelector('[data-dm-panel="history"]').addEventListener("click", function (event) {
+      var metric = event.target.closest("[data-dm-metric]");
+      if (metric) {
+        var index = Number(metric.dataset.dmMetric);
+        var at = state.chartMetrics.indexOf(index);
+        if (at >= 0) { if (state.chartMetrics.length > 1) state.chartMetrics.splice(at, 1); }
+        else state.chartMetrics.push(index);
+        state.chartMetrics.sort(function (a, b) { return a - b; });
+        renderChart();
+        return;
+      }
+      var period = event.target.closest("[data-dm-period]");
+      if (period) {
+        state.period = period.dataset.dmPeriod;
+        document.querySelectorAll("[data-dm-period]").forEach(function (b) { b.classList.toggle("is-active", b === period); });
+        renderChart();
+      }
+    });
+
+    document.querySelector('[data-dm-panel="live"]').addEventListener("click", function (event) {
+      var ptzToggle = event.target.closest("[data-dm-ptz-toggle]");
+      if (ptzToggle) {
+        var ptzPanel = el("dmLivePtz");
+        if (ptzPanel) {
+          ptzPanel.hidden = !ptzPanel.hidden;
+          ptzToggle.classList.toggle("is-active", !ptzPanel.hidden);
+        }
+        return;
+      }
+      if (event.target.closest("[data-dm-ptz-close]")) { closeVideoPtz(); return; }
+      var ptzButton = event.target.closest("[data-dm-ptz]");
+      if (ptzButton) {
+        var pad = ptzButton.closest(".ptz-pad");
+        pad.querySelectorAll("[data-dm-ptz]").forEach(function (button) { button.classList.remove("is-active"); });
+        ptzButton.classList.add("is-active");
+        return;
+      }
+      var fullscreen = event.target.closest("[data-dm-fullscreen]");
+      if (fullscreen) toggleFeedFullscreen(fullscreen.closest(".video-feed"));
+    });
+
+    document.querySelectorAll("[data-dm-status]").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        state.status = chip.dataset.dmStatus;
+        state.tablePage = 1;
+        document.querySelectorAll("[data-dm-status]").forEach(function (item) { item.classList.toggle("is-active", item === chip); });
+        renderAll();
+      });
+    });
+
+    /* 左右悬浮面板展开 / 收起 */
+    document.querySelectorAll("[data-dm-collapse]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var side = button.dataset.dmCollapse;
+        var collapsed = !state.panels[side];
+        state.panels[side] = collapsed;
+        el("dmStage").classList.toggle("is-" + side + "-collapsed", collapsed);
+        button.classList.toggle("is-collapsed", collapsed);
+        button.title = collapsed ? "展开面板" : "收起面板";
+        button.setAttribute("aria-label", collapsed ? "展开" + (side === "left" ? "左侧" : "右侧") + "面板" : "收起" + (side === "left" ? "左侧" : "右侧") + "面板");
+        if (map) window.setTimeout(function () { map.invalidateSize(); }, 220);
+      });
+    });
+
+    /* 右侧明细分页 */
+    el("dmPointPager").addEventListener("click", function (event) {
+      var button = event.target.closest("[data-dm-point-page]");
+      if (!button || button.disabled) return;
+      var pages = pointPages(visibleDevices().length);
+      var action = button.dataset.dmPointPage;
+      if (action === "prev") state.tablePage = Math.max(1, state.tablePage - 1);
+      else if (action === "next") state.tablePage = Math.min(pages, state.tablePage + 1);
+      else state.tablePage = Number(action);
+      renderTable();
+      el("dmTableWrap").scrollTop = 0;
+    });
+
+    document.querySelectorAll("[data-dm-mode]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        state.mode = button.dataset.dmMode;
+        /* 系统维度与空间维度互斥，切换时清空另一维度，避免出现不可见筛选 */
+        if (state.mode === "space") state.system = "all";
+        else { state.spaceField = ""; state.spaceValue = ""; }
+        state.tablePage = 1;
+        document.querySelectorAll("[data-dm-mode]").forEach(function (item) { item.classList.toggle("is-active", item === button); });
+        renderAll();
+      });
+    });
+
+    el("dmTree").addEventListener("click", function (event) {
+      var toggle = event.target.closest("[data-dm-toggle]");
+      if (toggle && !toggle.classList.contains("is-leaf")) {
+        event.stopPropagation();
+        var key = toggle.dataset.dmToggle;
+        if (state.collapsed[key]) delete state.collapsed[key]; else state.collapsed[key] = true;
+        renderTree();
+        return;
+      }
+      var row = event.target.closest("[data-dm-kind]");
+      if (!row) return;
+      var kind = row.dataset.dmKind;
+      var value = row.dataset.dmValue;
+      if (kind === "system") {
+        state.system = value;
+      } else {
+        state.spaceField = kind;
+        state.spaceValue = state.spaceField === state.spaceValue ? "" : value;
+        if (!state.spaceValue) state.spaceField = "";
+      }
+      state.tablePage = 1;
+      renderAll();
+    });
+
+    el("dmLegendBody").addEventListener("click", function (event) {
+      var item = event.target.closest("[data-dm-cat]");
+      if (!item) return;
+      var name = item.dataset.dmCat;
+      if (state.hidden[name]) delete state.hidden[name]; else state.hidden[name] = true;
+      state.tablePage = 1;
+      renderAll();
+    });
+
+    el("dmTableBody").addEventListener("click", function (event) {
+      var view = event.target.closest("[data-dm-view]");
+      if (view) { openDetail(view.dataset.dmView); return; }
+      var row = event.target.closest("[data-dm-id]");
+      if (row) openDetail(row.dataset.dmId);
+    });
+
+    document.querySelector(".dm-map-tools").addEventListener("click", function (event) {
+      var button = event.target.closest("[data-dm-map]");
+      if (!button || !map) return;
+      var action = button.dataset.dmMap;
+      if (action === "zoom-in") map.zoomIn();
+      else if (action === "zoom-out") map.zoomOut();
+      else if (action === "reset") map.setView(D.mapCenter || [30.4595, 114.4296], 14);
+      else if (action === "fullscreen") {
+        var stage = document.querySelector(".dm-stage");
+        if (document.fullscreenElement) document.exitFullscreen();
+        else stage.requestFullscreen && stage.requestFullscreen();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape" || !el("dmModalMask").classList.contains("is-open")) return;
+      /* Escape 逐层关闭：全屏画面 → 云台控制面板 → 设备详情弹窗 */
+      if (document.fullscreenElement) { if (document.exitFullscreen) document.exitFullscreen(); return; }
+      var ptzPanel = el("dmLivePtz");
+      if (ptzPanel && !ptzPanel.hidden) { closeVideoPtz(); return; }
+      closeDetail();
+    });
+    window.addEventListener("resize", function () {
+      if (map) map.invalidateSize();
+      if (el("dmModalMask").classList.contains("is-open") && state.tab === "history") renderChart();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    initMap();
+    bindEvents();
+    renderAll();
   });
-  document.querySelectorAll("[data-period]").forEach((button) => button.addEventListener("click", () => render(button.dataset.period)));
-  render("today");
 })();
 </script>
-<style>
-  .home-chart-final { display:grid; grid-template-columns:34px minmax(0,1fr) 42px; height:190px; }
-  .home-axis { position:relative; color:var(--text-secondary); font-size:11px; }
-  .home-axis span { position:absolute; white-space:nowrap; }
-  .home-axis .axis-name { top:0; }.home-axis .axis-top { top:25px; }.home-axis .axis-mid { top:82px; }.home-axis .axis-bottom { bottom:12px; }
-  .home-plot-viewport { min-width:0; overflow:hidden; position:relative; }
-  .home-plot-scroll { height:170px; overflow-x:auto; overflow-y:hidden; scrollbar-width:thin; }
-  .home-plot { position:relative; height:160px; min-width:100%; display:flex; align-items:end; gap:16px; padding:8px 12px 0; background:repeating-linear-gradient(to bottom,transparent 0,transparent 39px,#edf1f7 40px); border-bottom:1px solid var(--divider); }
-  .home-plot .bar-group { flex:0 0 30px; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:1px; cursor:pointer; }
-  .home-plot .bar-stack { flex:0 0 auto; width:20px; min-height:2px; border-radius:3px 3px 0 0; background:var(--c); height:var(--h); }
-  .home-line { position:absolute; inset:8px 12px 0; width:calc(100% - 24px); height:152px; pointer-events:none; overflow:visible; }
-  .home-xaxis { display:flex; height:20px; gap:16px; overflow:hidden; color:var(--text-secondary); font-size:11px; }
-  .home-xaxis span { flex:0 0 30px; text-align:center; white-space:nowrap; }
-  .home-chart-viewport { min-width:0; }
-  .home-hover-tip { display:none; position:fixed; z-index:20; min-width:150px; padding:10px 12px; background:#fff; border:1px solid #c5ccd6; border-radius:5px; box-shadow:0 4px 14px rgba(20,36,60,.16); color:var(--text-secondary); font-size:12px; pointer-events:none; }
-  .home-hover-tip.show { display:grid; gap:6px; }
-  .home-hover-tip strong { color:var(--text-title); font-size:14px; }
-  .home-hover-tip span { display:grid; grid-template-columns:8px 1fr auto; gap:6px; align-items:center; }
-  .home-hover-tip i { width:8px; height:8px; border-radius:50%; }
-</style>
-<script>
-(() => {
-  const labels={today:Array.from({length:24},(_,i)=>`${String(i).padStart(2,"0")}:00`),week:["周一","周二","周三","周四","周五","周六","周日"],month:["1日","5日","10日","15日","20日","25日","30日"],year:Array.from({length:12},(_,i)=>`${i+1}月`)};
-  const values={repair:{today:[1,2,1,0,2,1,2,1,0,1,2,1,0,1,2,1,0,1,2,1,0,1,0,1],week:[5,8,4,7,3,2,1],month:[8,12,9,15,10,13,7],year:[42,48,56,62,58,64,70,66,74,80,76,84]},complaint:{today:[0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0],week:[1,2,0,1,2,1,1],month:[2,4,3,5,2,4,3],year:[18,20,24,22,28,30,26,32,35,38,40,44]},device:{today:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],week:[3,4,2,5,3,2,1],month:[5,8,6,9,7,10,6],year:[20,24,28,26,32,35,30,38,42,46,44,50]}};
-  const configs=[{name:"报修工单状态分析",type:"repair",colors:["#5278e4","#6bb6de","#71c8d9","#4f68d7","#60b5a8"],states:["待处理","处理中","待确认","已完成","已关闭"]},{name:"投诉工单状态分析",type:"complaint",colors:["#8265df","#b05add"],states:["待确认","已完成"]},{name:"设备异常工单状态分析",type:"device",colors:["#d85b4c","#e47c2f","#e2a246"],states:["未处理","处理中","已处理"]}];
-  const hoverTip=()=>{let node=document.querySelector(".home-hover-tip");if(!node){node=document.createElement("div");node.className="home-hover-tip";document.body.appendChild(node)}return node};
-  const draw=(period)=>configs.forEach((cfg)=>{const card=[...document.querySelectorAll(".home-card")].find(c=>c.querySelector(".card-title")?.textContent.trim()===cfg.name);if(!card)return;const chart=card.querySelector(".bar-chart");if(!chart)return;const points=labels[period], nums=values[cfg.type][period], max=Math.max(...nums,2);const stacks=(n)=>cfg.type==="repair"?[n*.42,n*.24,n*.14,n*.12,n*.08]:cfg.type==="complaint"?[n*.6,n*.4]:[n*.5,n*.3,n*.2];chart.innerHTML=`<div class="home-chart-final"><div class="home-axis"><span class="axis-name">数量</span><span class="axis-top">${max}</span><span class="axis-mid">${Math.ceil(max/2)}</span><span class="axis-bottom">0</span></div><div class="home-chart-viewport"><div class="home-plot-scroll"><div class="home-plot"></div></div><div class="home-xaxis"></div></div><div class="home-axis"><span class="axis-name">完成率</span><span class="axis-top">100%</span><span class="axis-mid">50%</span><span class="axis-bottom">0%</span></div></div>`;const plot=chart.querySelector(".home-plot"),xaxis=chart.querySelector(".home-xaxis"),tip=hoverTip();points.forEach((point,i)=>{const group=document.createElement("div");group.className="bar-group";group.dataset.label=point;const parts=stacks(nums[i]);parts.forEach((part,j)=>{const bar=document.createElement("i");bar.className="bar-stack";bar.style.setProperty("--h",`${Math.max(3,Math.min(90,part*20))}%`);bar.style.setProperty("--c",cfg.colors[j]);group.appendChild(bar)});group.addEventListener("mouseenter",(event)=>{tip.innerHTML=`<strong>${point}</strong>${cfg.states.map((state,j)=>`<span><i style="background:${cfg.colors[j]}"></i>${state}<b>${Math.round(parts[j])}</b></span>`).join("")}<span><i style="background:#e2a246"></i>完成率<b>${Math.min(100,40+nums[i]*8)}%</b></span>`;tip.classList.add("show");tip.style.left=`${event.clientX+12}px`;tip.style.top=`${event.clientY+12}px`});group.addEventListener("mousemove",(event)=>{tip.style.left=`${event.clientX+12}px`;tip.style.top=`${event.clientY+12}px`});group.addEventListener("mouseleave",()=>tip.classList.remove("show"));plot.appendChild(group);const label=document.createElement("span");label.textContent=period==="today"&&i%3!==0?"":point;xaxis.appendChild(label)});const line=document.createElementNS("http://www.w3.org/2000/svg","svg");line.classList.add("home-line");line.setAttribute("viewBox",`0 0 ${Math.max(320,points.length*46)} 152`);line.style.width=`${Math.max(320,points.length*46-24)}px`;const pts=nums.map((n,i)=>`${i*46+15},${145-Math.min(125,(40+n*8)*1.25)}`).join(" ");line.innerHTML=`<polyline points="${pts}" fill="none" stroke="#e2a246" stroke-width="2.5"/>`;plot.appendChild(line);});
-  document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>setTimeout(()=>draw(b.dataset.period),0)));draw("today");
-})();
-</script>
-<script>
-(() => {
-  const sizePlots = () => document.querySelectorAll(".home-plot").forEach((plot) => { const compact = plot.children.length <= 12; const width = compact ? plot.parentElement.clientWidth : Math.max(plot.parentElement.clientWidth, plot.children.length * 46); plot.style.width = `${width}px`; plot.querySelectorAll(".bar-group").forEach((group) => { group.style.flex = compact ? "1 1 0" : "0 0 30px"; }); const line = plot.querySelector(".home-line"); if (line) line.style.width = `${Math.max(100, width - 24)}px`; const axis = plot.closest(".home-chart-final")?.querySelector(".home-xaxis"); if (axis) { axis.style.width = `${width}px`; axis.querySelectorAll("span").forEach((item) => item.style.flex = compact ? "1 1 0" : "0 0 30px"); } });
-  sizePlots();
-  document.querySelectorAll("[data-period]").forEach((button) => button.addEventListener("click", () => setTimeout(sizePlots, 30)));
-})();
-</script>
-</body></html>
+</body>
+</html>

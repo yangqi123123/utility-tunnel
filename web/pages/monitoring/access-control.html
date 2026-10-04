@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>门禁系统 - 科学岛管廊监控中心</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/monitoring.css">
+</head>
+<body class="monitoring-page access-control-page" data-menu-key="access-control" data-page-section="子系统" data-page-title="门禁系统">
+  <div class="app-shell">
+    <aside id="app-sidebar" class="sidebar"></aside>
+    <header id="app-header" class="header"></header>
+    <main class="main">
+      <div class="screen-frame stack">
+        <section class="card monitoring-filter-card pedestrian-filter-card">
+          <div class="filter-actions">
+            <label class="form-field"><span class="form-label">通行时间</span><input class="form-control" type="date" data-filter="date"></label>
+            <label class="form-field"><span class="form-label">通行结果</span><select class="form-control" data-filter="result"><option value="">全部</option><option>成功</option><option>失败</option></select></label>
+            <button class="btn btn-secondary" type="button" data-action="reset">重置</button>
+            <button class="btn btn-primary" type="button" data-action="search">搜索</button>
+          </div>
+        </section>
+        <section class="card monitoring-list-card">
+          <div class="card-title-row monitoring-toolbar"><h1 class="card-title">门禁系统</h1><button class="btn btn-secondary" type="button" data-action="export"><i class="fa-solid fa-download"></i> 导出</button></div>
+          <div class="table-wrap"><table class="table monitoring-table"><thead><tr><th>序号</th><th>姓名</th><th>通行方式</th><th>门禁设备</th><th>通行位置</th><th>通行时间</th><th>通行方向</th><th>通行结果</th><th>操作</th></tr></thead><tbody id="recordBody"></tbody></table></div>
+          <div class="pagination"><span>共 <strong id="recordCount">0</strong> 条，每页 10 条</span><span class="page-item active">1</span></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
+  <script src="../../../app/components/drawer.js"></script>
+  <script src="../../../app/components/requirement.js"></script>
+  <script>
+    const records = [
+      { name: "孙笑宇", method: "不分进出", device: "1号楼-MK-18", location: "1号楼", time: "2025-01-09 15:46:42", direction: "进门", result: "成功" },
+      { name: "孙笑宇", method: "不分进出", device: "1号楼-MK-18", location: "1号楼", time: "2025-01-09 15:46:34", direction: "进门", result: "失败" },
+      { name: "孙笑宇", method: "不分进出", device: "1号楼-MK-18", location: "1号楼", time: "2025-01-09 15:46:29", direction: "出门", result: "成功" },
+      { name: "保洁", method: "不分进出", device: "1F-高区电梯间闸机2通道", location: "1F-高区电梯间2通道刷卡进", time: "2025-01-09 15:46:12", direction: "进门", result: "成功" },
+      { name: "保洁", method: "不分进出", device: "1F-高区电梯间闸机2通道", location: "1F-高区电梯间2通道刷卡进", time: "2025-01-09 15:46:11", direction: "进门", result: "失败" },
+      { name: "保洁", method: "不分进出", device: "1F-高区电梯间闸机2通道", location: "1F-高区电梯间2通道刷卡进", time: "2025-01-09 15:46:08", direction: "出门", result: "成功" },
+      { name: "-", method: "不分进出", device: "B2F-MKZ-01", location: "B2层生活水泵房东南侧-消防门5号", time: "2025-01-09 15:44:44", direction: "进门", result: "失败" },
+      { name: "-", method: "不分进出", device: "B2F-MKZ-01", location: "B2层生活水泵房东南侧-消防门5号", time: "2025-01-09 15:44:44", direction: "出门", result: "成功" }
+    ];
+    const recordBody = document.getElementById("recordBody");
+    const recordCount = document.getElementById("recordCount");
+    const photo = "../../assets/images/access-gate.jpg";
+    const escapeHtml = (value) => String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    function render(list = records) {
+      recordBody.innerHTML = list.map((record, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(record.name)}</td><td>${escapeHtml(record.method)}</td><td>${escapeHtml(record.device)}</td><td>${escapeHtml(record.location)}</td><td>${escapeHtml(record.time)}</td><td>${escapeHtml(record.direction)}</td><td class="record-result ${record.result === "成功" ? "success" : "fail"}">${escapeHtml(record.result)}</td><td><button class="table-action" data-view-photo="${records.indexOf(record)}">查看</button></td></tr>`).join("");
+      recordCount.textContent = list.length;
+    }
+    function filter() {
+      const date = document.querySelector('[data-filter="date"]').value;
+      const result = document.querySelector('[data-filter="result"]').value;
+      render(records.filter((record) => (!date || record.time.startsWith(date)) && (!result || record.result === result)));
+    }
+    document.addEventListener("click", (event) => {
+      const action = event.target.closest("[data-action]")?.dataset.action;
+      if (action === "search") filter();
+      if (action === "reset") { document.querySelectorAll("[data-filter]").forEach((field) => { field.value = ""; }); render(); }
+      if (action === "export") window.openAppDrawer({ title: "导出门禁通行记录", body: "<p>已按当前筛选条件生成通行记录文件（Mock）。</p>", footer: '<button class="btn btn-secondary" data-drawer-close>取消</button><button class="btn btn-primary" data-drawer-close>确认导出</button>' });
+      const view = event.target.closest("[data-view-photo]");
+      if (view) {
+        const record = records[Number(view.dataset.viewPhoto)];
+        window.openAppDrawer({ title: "通行照片", body: `<img class="photo-preview" src="${photo}" alt="门禁通行现场照片"><div class="photo-meta"><div class="info-item"><span class="info-label">通行结果</span><span class="info-value">${escapeHtml(record.result)}</span></div><div class="info-item"><span class="info-label">通行时间</span><span class="info-value">${escapeHtml(record.time)}</span></div></div>`, footer: '<button class="btn btn-secondary" data-drawer-close>关闭</button>' });
+      }
+    });
+    render();
+  </script>
+</body>
+</html>

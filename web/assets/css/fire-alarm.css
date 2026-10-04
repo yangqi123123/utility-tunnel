@@ -1,0 +1,78 @@
+.fire-alarm-page .main { overflow-x: hidden; }
+.fire-alarm-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:8px 0 4px; }
+.fire-alarm-head h1 { margin:6px 0 4px; color:var(--text-title); font-size:24px; line-height:1.35; }
+.fire-alarm-head p { margin:0; color:var(--text-secondary); }
+.eyebrow { display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:12px; }
+.sync-dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 3px rgba(20,201,186,.12); }
+.fire-alarm-head-actions { display:flex; align-items:center; gap:16px; }
+.sync-meta { color:var(--text-secondary); font-size:12px; white-space:nowrap; }
+.sync-meta strong { color:var(--text-primary); font-weight:500; }
+.fire-stat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+.fire-stat { position:relative; min-height:116px; display:flex; flex-direction:column; justify-content:center; padding:20px 24px; overflow:hidden; border:1px solid var(--border); border-radius:var(--radius-md); background:#fff; }
+.fire-stat-label { color:var(--text-secondary); font-size:13px; }
+.fire-stat strong { margin:4px 0 2px; color:var(--text-title); font:700 28px/1 "DIN Alternate",Arial,sans-serif; }
+.fire-stat > span:last-of-type { color:var(--text-secondary); font-size:12px; }
+.fire-stat > i { position:absolute; right:22px; top:34px; font-size:28px; opacity:.16; }
+.fire-stat-danger strong,.fire-stat-danger > i { color:var(--red); }
+.fire-stat-warning strong,.fire-stat-warning > i { color:#d59a11; }
+.fire-stat-success strong,.fire-stat-success > i { color:var(--green); }
+.fire-stat-primary strong,.fire-stat-primary > i { color:var(--primary); }
+.fire-filter-card { padding:16px 24px; }
+.fire-filter-row { grid-template-columns:repeat(4,minmax(140px,1fr)) auto auto; }
+.fire-alarm-workspace { display:grid; grid-template-columns:minmax(0,1.42fr) minmax(360px,.78fr); gap:16px; align-items:start; }
+.fire-signal-card,.zone-card,.device-status-card { min-width:0; overflow:hidden; }
+.fire-card-toolbar { min-height:64px; padding:0 20px; margin:0; }
+.fire-card-toolbar .card-title { margin:0 0 3px; }
+.card-caption { display:block; color:var(--text-secondary); font-size:12px; font-weight:400; }
+.read-only-tag,.zone-legend { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:12px; }
+.read-only-tag i { color:var(--primary); }
+.fire-signal-table { min-width:1080px; }
+.fire-signal-table tbody tr { cursor:pointer; }
+.fire-signal-table tbody tr:hover td { background:var(--primary-bg); }
+.fire-signal-table td,.fire-signal-table th { white-space:nowrap; }
+.signal-time { color:var(--text-secondary); font:12px "DIN Alternate",Arial,sans-serif; }
+.signal-desc { max-width:230px; overflow:hidden; text-overflow:ellipsis; }
+.signal-device { max-width:180px; overflow:hidden; text-overflow:ellipsis; }
+.signal-type,.signal-level,.signal-status { display:inline-flex; align-items:center; gap:5px; min-height:22px; padding:0 8px; border-radius:2px; font-size:12px; white-space:nowrap; }
+.signal-type.danger,.signal-level.danger { color:var(--red); background:rgba(245,63,87,.1); }
+.signal-type.warning,.signal-level.warning { color:#b98308; background:rgba(247,186,30,.14); }
+.signal-type.muted,.signal-level.normal { color:var(--text-secondary); background:#f3f5f8; }
+.signal-status.pending { color:var(--red); background:rgba(245,63,87,.1); }
+.signal-status.confirmed { color:var(--primary); background:var(--primary-light); }
+.signal-status.restored { color:var(--green); background:rgba(20,201,186,.1); }
+.fire-empty { height:180px; text-align:center!important; color:var(--text-secondary); }
+.fire-empty i { display:block; margin-bottom:8px; color:var(--green); font-size:24px; }
+.fire-aside { display:grid; gap:16px; min-width:0; }
+.zone-map { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding:16px 20px 20px; background:#fbfcfe; }
+.zone-block { position:relative; display:flex; min-height:112px; flex-direction:column; align-items:flex-start; justify-content:center; gap:5px; padding:14px; border:1px solid var(--border); border-left:3px solid var(--green); border-radius:3px; background:#fff; color:var(--text-title); text-align:left; cursor:pointer; transition:border-color .15s,background .15s; }
+.zone-block:hover { border-color:var(--primary); background:var(--primary-bg); }
+.zone-block.alarm { border-left-color:var(--red); background:rgba(245,63,87,.03); }
+.zone-block.fault { border-left-color:var(--yellow); background:rgba(247,186,30,.04); }
+.zone-block-code { color:var(--text-secondary); font:11px "DIN Alternate",Arial,sans-serif; }
+.zone-block strong { font-size:13px; font-weight:600; }
+.zone-block-meta { display:flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:12px; }
+.zone-dot { width:7px; height:7px; display:inline-block; border-radius:50%; background:var(--green); }
+.zone-dot.alarm { background:var(--red); }
+.zone-dot.fault { background:var(--yellow); }
+.device-status-list { padding:4px 20px 12px; }
+.device-status-row { display:flex; align-items:center; gap:10px; min-height:58px; border-bottom:1px solid var(--divider); }
+.device-status-row:last-child { border-bottom:0; }
+.device-status-icon { width:28px; height:28px; display:grid; place-items:center; flex:none; border-radius:50%; font-size:12px; }
+.device-status-icon.online { color:var(--green); background:rgba(20,201,186,.1); }
+.device-status-icon.alarm { color:var(--red); background:rgba(245,63,87,.1); }
+.device-status-icon.fault { color:#b98308; background:rgba(247,186,30,.14); }
+.device-status-main { min-width:0; flex:1; }
+.device-status-main strong,.device-status-main span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.device-status-main strong { color:var(--text-title); font-size:13px; font-weight:500; }
+.device-status-main span { margin-top:3px; color:var(--text-secondary); font-size:11px; }
+.device-status-label { font-size:12px; }
+.device-status-label.online { color:var(--green); }
+.device-status-label.alarm { color:var(--red); }
+.device-status-label.fault { color:#b98308; }
+.link-button { padding:0; border:0; color:var(--primary); background:transparent; font-size:12px; cursor:pointer; }
+.fire-detail-status { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.fire-detail-grid { gap:16px 24px; }
+.device-status-list-drawer { padding:0; }
+@media (max-width:1200px) { .fire-alarm-workspace { grid-template-columns:1fr; } .fire-aside { grid-template-columns:1fr 1fr; } }
+@media (max-width:900px) { .fire-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .fire-filter-row { grid-template-columns:repeat(2,minmax(0,1fr)); } .fire-alarm-head { align-items:flex-start; flex-direction:column; } .fire-alarm-head-actions { width:100%; justify-content:space-between; } .fire-aside { grid-template-columns:1fr; } }
+@media (max-width:640px) { .fire-stat-grid { grid-template-columns:1fr 1fr; gap:8px; } .fire-stat { min-height:108px; padding:16px; } .fire-stat strong { font-size:24px; } .fire-filter-row { grid-template-columns:1fr; } .fire-filter-card { padding:16px; } .fire-alarm-head-actions { align-items:flex-start; flex-direction:column; gap:10px; } .zone-map { grid-template-columns:1fr 1fr; padding:12px; } }

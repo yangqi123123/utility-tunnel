@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>设备管理 - 中建四局智能运营管理系统</title>
+  <title>设备管理 - 科学岛管廊监控中心</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
@@ -13,8 +13,8 @@
     .device-filter-card .filter-actions { display:grid; grid-template-columns:repeat(4,minmax(150px,1fr)) auto auto auto; gap:16px; align-items:end; }
     .device-filter-card .extra-filter { display:none; }
     .device-filter-card.expanded .extra-filter { display:block; }
-    .device-filter-card .filter-actions > .btn { align-self:end; }
-    .device-filter-card .filter-actions > .btn[data-action="collapse"] { white-space:nowrap; }
+    .device-filter-actions { display:flex; align-items:end; justify-content:flex-start; gap:16px; min-height:32px; }
+    .device-filter-actions .btn { white-space:nowrap; }
     .device-list-card { overflow:hidden; }
     .device-toolbar { padding:16px 24px 0; margin-bottom:12px; }
     .device-toolbar .btn-row { flex-wrap:wrap; justify-content:flex-end; }
@@ -145,10 +145,10 @@
     .report-drawer { width:min(760px,94vw); }
     .report-tabs { margin-bottom:16px; }
     .report-json { min-height:420px; max-height:calc(100vh - 190px); margin:0; padding:20px; overflow:auto; border-radius:2px; background:#0f172a; color:#e5edf9; font:13px/1.65 Consolas,"Courier New",monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
-    @media (max-width:1100px) { .device-filter-card .filter-actions { grid-template-columns:repeat(2,minmax(150px,1fr)) auto auto; } .device-filter-card .filter-actions > .btn[data-action="collapse"] { grid-column:1; } .sync-summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .sync-detail-filter { grid-template-columns:repeat(2,minmax(150px,1fr)) auto auto; } }
+    @media (max-width:1100px) { .device-filter-card .filter-actions { grid-template-columns:repeat(2,minmax(150px,1fr)); } .device-filter-actions { grid-column:1 / -1; } .sync-summary-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .sync-detail-filter { grid-template-columns:repeat(2,minmax(150px,1fr)) auto auto; } }
     @media (max-width:900px) { .point-picker { grid-template-columns:160px minmax(0,1fr); } .point-legend { grid-column:2; margin-top:0; } }
     @media (max-width:760px) { .point-picker { grid-template-columns:1fr; min-height:0; } .point-floor-list { max-height:160px; border-right:0; border-bottom:1px solid var(--divider); } .point-image-wrap { min-height:360px; } .point-legend { grid-column:auto; margin-top:0; } }
-    @media (max-width:640px) { .device-filter-card .filter-actions,.device-form-grid,.device-detail-grid,.sync-log-filter .filter-actions,.sync-detail-filter,.sync-summary-grid { grid-template-columns:1fr; } .device-filter-card .filter-actions > .btn[data-action="collapse"] { grid-column:auto; } .device-detail-toolbar { align-items:stretch; flex-direction:column; } .device-detail-toolbar .form-field { max-width:none; } .device-cascader-panel { width:calc(92vw - 48px); } .device-point-row { grid-template-columns:1fr; } }
+    @media (max-width:640px) { .device-filter-card .filter-actions,.device-form-grid,.device-detail-grid,.sync-log-filter .filter-actions,.sync-detail-filter,.sync-summary-grid { grid-template-columns:1fr; } .device-filter-actions { grid-column:auto; flex-wrap:wrap; } .device-detail-toolbar { align-items:stretch; flex-direction:column; } .device-detail-toolbar .form-field { max-width:none; } .device-cascader-panel { width:calc(92vw - 48px); } .device-point-row { grid-template-columns:1fr; } }
   </style>
 </head>
 <body class="device-page" data-menu-key="device.list" data-page-section="设备管理" data-page-title="设备管理">
@@ -168,9 +168,9 @@
           <label class="form-field extra-filter" data-filter-extra><span class="form-label">所属区段</span><select class="form-control" data-location-level="section" data-filter="section"><option value="">请选择所属区段</option></select></label>
           <label class="form-field extra-filter" data-filter-extra><span class="form-label">所属管线</span><select class="form-control" data-location-level="pipeline" data-filter="pipeline"><option value="">请选择所属管线</option></select></label>
         </div>
-        <button class="btn btn-ghost" type="button" data-action="collapse"><span>展开</span> <i class="fa-solid fa-chevron-down"></i></button><button class="btn btn-secondary" type="button" data-action="reset">重置</button><button class="btn btn-primary" type="button" data-action="search">搜索</button>
         <label class="form-field extra-filter" data-filter-extra><span class="form-label">是否智能化</span><select class="form-control" data-filter="smart"><option value="">请选择</option><option>是</option><option>否</option></select></label>
         <label class="form-field extra-filter" data-filter-extra><span class="form-label">来源模块</span><select class="form-control" data-filter="sourceModule"><option value="">请选择</option><option>人工台账</option><option>第三方同步</option></select></label>
+        <div class="device-filter-actions"><button class="btn btn-ghost" type="button" data-action="collapse"><span>展开</span> <i class="fa-solid fa-chevron-down"></i></button><button class="btn btn-secondary" type="button" data-action="reset">重置</button><button class="btn btn-primary" type="button" data-action="search">搜索</button></div>
       </div></section>
       <section class="card device-list-card">
         <div class="card-title-row device-toolbar"><h1 class="card-title">设备管理</h1><div class="btn-row"><button class="btn btn-secondary" type="button" data-action="sync-device-data"><i class="fa-solid fa-arrows-rotate"></i> 同步设备数据</button><button class="btn btn-secondary" type="button" data-action="sync-device-status"><i class="fa-solid fa-signal"></i> 同步设备状态</button><button class="btn btn-secondary" type="button" data-action="show-sync-log"><i class="fa-solid fa-clock-rotate-left"></i> 同步日志</button><button class="btn btn-secondary" type="button" data-action="download-qr" disabled><i class="fa-solid fa-download"></i> 下载二维码</button><button class="btn btn-secondary" type="button" data-action="import"><i class="fa-solid fa-file-import"></i> 导入</button><button class="btn btn-secondary" type="button" data-action="export"><i class="fa-solid fa-file-export"></i> 导出</button><button class="btn btn-secondary" type="button" data-action="delete-selected" disabled><i class="fa-solid fa-trash"></i> 删除</button><button class="btn btn-primary" type="button" data-open-device="create"><i class="fa-solid fa-plus"></i> 新增设备</button></div></div>
@@ -190,15 +190,15 @@
       </div>
     </div></main>
   </div>
-  <script src="../../../app/config/menu.js?v=project-1"></script>
+  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
   <script src="../../../app/data/mock-data.js"></script>
   <script src="../../../app/data/system-types.js"></script>
   <script src="../../../app/data/device-categories.js"></script>
   <script src="../../assets/vendor/qrcode.min.js"></script>
   <script src="../../assets/vendor/xlsx.full.min.js"></script>
   <script src="../../assets/vendor/jszip.min.js"></script>
-  <script src="../../../app/components/sidebar.js?v=lot-host-7"></script>
-  <script src="../../../app/components/header.js?v=lot-tabs-1"></script>
+  <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
+  <script src="../../../app/components/header.js?v=nav-home-1"></script>
   <script src="../../../app/components/drawer.js"></script>
   <script src="../../../app/components/requirement.js"></script>
   <script>
@@ -206,11 +206,11 @@
     const deviceCategories=window.APP_DEVICE_CATEGORIES || [];
     const sourceDevices=window.APP_DATA.devices || [];
     const locationTree=[
-      { name:"金山财富中心",corridors:[{ name:"1号综合管廊",rooms:[{ name:"电力舱",sections:[{ name:"A区段",pipelines:["10kV电力管线","低压配电管线"] },{ name:"B区段",pipelines:["照明管线"] }] },{ name:"通信舱",sections:[{ name:"A区段",pipelines:["通信光缆管线"] }] }] },{ name:"2号综合管廊",rooms:[{ name:"燃气舱",sections:[{ name:"东区段",pipelines:["燃气主管线"] }] }] }] },
+      { name:"科学岛财富中心",corridors:[{ name:"1号综合管廊",rooms:[{ name:"电力舱",sections:[{ name:"A区段",pipelines:["10kV电力管线","低压配电管线"] },{ name:"B区段",pipelines:["照明管线"] }] },{ name:"通信舱",sections:[{ name:"A区段",pipelines:["通信光缆管线"] }] }] },{ name:"2号综合管廊",rooms:[{ name:"燃气舱",sections:[{ name:"东区段",pipelines:["燃气主管线"] }] }] }] },
       { name:"厦门科学岛",corridors:[{ name:"滨海管廊",rooms:[{ name:"给排水舱",sections:[{ name:"北区段",pipelines:["给水管线","雨水管线"] }] }] }] }
     ];
-    const categoryForIndex=(index) => deviceCategories[index % Math.max(deviceCategories.length,1)] || { name:"未分类",system:"机电系统" };
-    const devices=sourceDevices.map((device,index) => { const category=categoryForIndex(index); const project=locationTree[index % locationTree.length]; const corridor=project.corridors[0]; const room=corridor.rooms[0]; const section=room.sections[0]; return { ...device,code:`001_${device.model.replace(/[^A-Z0-9]/gi,"").slice(0,8) || "device"}_${String(index + 1).padStart(4,"0")}`,system:category.system,type:category.name,project:project.name,corridor:corridor.name,room:room.name,section:section.name,pipeline:section.pipelines[index % section.pipelines.length],location:`设备间 ${index + 1}`,smart:index % 3 === 0 ? "否" : "是",sourceModule:index === 4 ? "第三方同步" : "人工台账",brand:device.vendor,installDate:"2026-07-11",manufactureDate:"2026-06-20",deliveryDate:"2026-07-05",acceptDate:"2026-07-10",service:"设备运行、巡检及维保服务",remark:device.note || "暂无备注",thirdPartyCode:`THIRD-${String(index + 1).padStart(4,"0")}`,coordinate:"" }; });
+    const categoryForIndex=(index) => deviceCategories[index % Math.max(deviceCategories.length,1)] || { name:"未分类",system:"环境监测" };
+    const devices=sourceDevices.map((device,index) => { const category=deviceCategories.find((item) => item.name === device.category) || categoryForIndex(index); const project=locationTree[index % locationTree.length]; const corridor=project.corridors[0]; const room=corridor.rooms[0]; const section=room.sections[0]; return { ...device,code:`001_${device.model.replace(/[^A-Z0-9]/gi,"").slice(0,8) || "device"}_${String(index + 1).padStart(4,"0")}`,system:device.system || category.system,type:device.category || category.name,project:project.name,corridor:corridor.name,room:room.name,section:section.name,pipeline:section.pipelines[index % section.pipelines.length],location:`设备间 ${index + 1}`,smart:device.smart || (index % 3 === 0 ? "否" : "是"),sourceModule:index === 4 ? "第三方同步" : "人工台账",brand:device.vendor,installDate:"2026-07-11",manufactureDate:"2026-06-20",deliveryDate:"2026-07-05",acceptDate:"2026-07-10",service:"设备运行、巡检及维保服务",remark:device.note || "暂无备注",thirdPartyCode:`THIRD-${String(index + 1).padStart(4,"0")}`,coordinate:"" }; });
     let filteredDevices=[...devices];
     let selectedIds=new Set();
     let pendingImportFile=null;
@@ -267,8 +267,12 @@
     function openModal({ title,body,footer,className="" }) { document.querySelector(".device-business-mask")?.remove(); const mask=document.createElement("div"); mask.className="device-business-mask"; mask.innerHTML=`<section class="device-business-modal ${className}" role="dialog" aria-modal="true"><header class="device-modal-head"><h2>${esc(title)}</h2><button class="device-modal-close" type="button" data-modal-close aria-label="关闭">×</button></header><div class="device-modal-body">${body}</div><footer class="device-modal-foot">${footer}</footer></section>`; document.body.append(mask); mask.addEventListener("click",(event) => { if (event.target === mask || event.target.closest("[data-modal-close]")) mask.remove(); }); return mask; }
     function openNestedDeviceDrawer({ title,body,footer,className="" }) { document.querySelector(".nested-device-drawer")?.remove(); const drawer=document.createElement("aside"); drawer.className=`nested-device-drawer ${className}`.trim(); drawer.setAttribute("role","dialog"); drawer.setAttribute("aria-modal","true"); drawer.innerHTML=`<header class="nested-device-drawer-head"><h2>${esc(title)}</h2><button class="nested-device-drawer-close" type="button" data-nested-close aria-label="关闭">×</button></header><main class="nested-device-drawer-body">${body}</main><footer class="nested-device-drawer-foot">${footer}</footer>`; document.body.append(drawer); drawer.addEventListener("click",(event) => { if (event.target.closest("[data-nested-close]")) drawer.remove(); }); return drawer; }
     function batchNumber(prefix="IOTS") { return `${prefix}-${Math.random().toString(16).slice(2,14).toUpperCase().padEnd(12,"0")}`; }
-    function openDeviceSyncDrawer() { window.openAppDrawer({ title:"同步设备数据",body:'<label class="form-field form-item"><span class="form-label form-required">同步模式</span><select class="form-control" data-sync-mode><option value="FULL">首次全量同步</option><option value="INCREMENTAL">后续增量同步</option></select></label><div class="form-field form-item"><span class="form-label">同步设备状态</span><label class="sync-toggle"><input type="checkbox" data-sync-with-status><span>不同步</span><span class="sync-toggle-track" aria-hidden="true"></span></label></div>',footer:'<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-action="start-device-sync">开始同步</button>' }); }
-    function submitDeviceSync() { const mode=document.querySelector("[data-sync-mode]")?.value || "FULL"; const withStatus=document.querySelector("[data-sync-with-status]")?.checked; const id=batchNumber(); syncLogs.unshift({ id,channelName:"设备中心默认通道",channelCode:"device_center_default",mode,status:"RUNNING",total:0,success:0,failed:0,startTime:new Date().toLocaleString("zh-CN",{ hour12:false }).replaceAll("/","-"),endTime:"-",error:"-" }); filteredSyncLogs=[...syncLogs]; window.closeAppDrawer(); showMessage("设备同步任务已提交",`批次号：${id}。任务已在后台执行${withStatus ? "，并同步设备状态" : ""}，可稍后进入同步日志查看结果。`); }
+    const syncPlatformOptions=[
+      ["FIRE_AUTO_ALARM","火灾报警系统"],["ENVIRONMENT_MONITOR","环境监测"],["SECURITY_DEFENSE","安全防范系统"],["VIDEO_MONITOR","视频监控系统"],["INTRUSION_ALARM","入侵报警"],["ELECTRONIC_PATROL","电子巡更"],["ACCESS_CONTROL","门禁系统"],["SMART_MANHOLE","智能井盖"],["POWER_MONITOR","电力监测平台"],["FIRE_MONITOR","消防监控系统"],["COMMUNICATION","通信系统"]
+    ];
+    function syncPlatformOptionsMarkup() { return syncPlatformOptions.map(([value,label]) => `<option value="${value}">${label}</option>`).join(""); }
+    function openDeviceSyncDrawer() { window.openAppDrawer({ title:"同步设备数据",body:`<label class="form-field form-item"><span class="form-label form-required">同步模式</span><select class="form-control" data-sync-mode><option value="FULL">首次全量同步</option><option value="INCREMENTAL">后续增量同步</option></select></label><label class="form-field form-item"><span class="form-label form-required">厂家/平台编码</span><select class="form-control" data-sync-platform required><option value="">请选择厂家/平台编码</option>${syncPlatformOptionsMarkup()}</select></label><div class="form-field form-item"><span class="form-label">同步设备状态</span><label class="sync-toggle"><input type="checkbox" data-sync-with-status><span>不同步</span><span class="sync-toggle-track" aria-hidden="true"></span></label></div>`,footer:'<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-action="start-device-sync">开始同步</button>' }); }
+    function submitDeviceSync() { const mode=document.querySelector("[data-sync-mode]")?.value || "FULL"; const platform=document.querySelector("[data-sync-platform]")?.value || ""; const withStatus=document.querySelector("[data-sync-with-status]")?.checked; if (!platform) { showMessage("提示","请选择厂家/平台编码后再开始同步。"); return; } const id=batchNumber(); syncLogs.unshift({ id,channelName:"设备中心默认通道",channelCode:platform,mode,status:"RUNNING",total:0,success:0,failed:0,startTime:new Date().toLocaleString("zh-CN",{ hour12:false }).replaceAll("/","-"),endTime:"-",error:"-" }); filteredSyncLogs=[...syncLogs]; window.closeAppDrawer(); showMessage("设备同步任务已提交",`批次号：${id}。任务已在后台执行${withStatus ? "，并同步设备状态" : ""}，可稍后进入同步日志查看结果。`); }
     function submitStatusSync() { const id=batchNumber("IOT-S"); showMessage("设备状态同步任务已提交",`批次号：${id}。任务已在后台执行，可稍后刷新设备列表查看结果。`); }
     const pointBuildings=["1栋","2栋","3栋","4栋","5栋"].map((name,index) => ({ name,floors:Array.from({ length:index === 4 ? 6 : 5 },(_,floorIndex) => `${floorIndex + 1}F`) }));
     const pointRecords={
@@ -305,7 +309,7 @@
     const importHeaders=["所属系统","设备分类","设备名称","设备编码","所属项目","所属管廊","所属舱室","所属区段","所属管线","安装位置","是否智能化"];
     const exportHeaders=[...importHeaders,"来源模块"];
     function ensureXlsx() { if (window.XLSX) return true; showMessage("提示","Excel 组件加载失败，请刷新页面后重试。"); return false; }
-    function downloadTemplate() { if (!ensureXlsx()) return; const rows=[importHeaders,["电梯系统","观光梯","1号观光梯","ELEVATOR-001","金山财富中心","1号综合管廊","电力舱","A区段","10kV电力管线","电梯厅","是"]]; const sheet=XLSX.utils.aoa_to_sheet(rows); const book=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(book,sheet,"设备导入模板"); downloadWorkbook(book,"设备导入模板.xlsx"); }
+    function downloadTemplate() { if (!ensureXlsx()) return; const rows=[importHeaders,["电梯系统","观光梯","1号观光梯","ELEVATOR-001","科学岛财富中心","1号综合管廊","电力舱","A区段","10kV电力管线","电梯厅","是"]]; const sheet=XLSX.utils.aoa_to_sheet(rows); const book=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(book,sheet,"设备导入模板"); downloadWorkbook(book,"设备导入模板.xlsx"); }
     function exportDevices() { if (!ensureXlsx()) return; const rows=filteredDevices.map((device) => ({ "所属系统":device.system,"设备分类":device.type,"设备名称":device.name,"设备编码":device.code,"所属项目":device.project,"所属管廊":device.corridor,"所属舱室":device.room,"所属区段":device.section,"所属管线":device.pipeline,"安装位置":device.location,"是否智能化":device.smart,"来源模块":device.sourceModule })); const sheet=XLSX.utils.json_to_sheet(rows,{ header:exportHeaders }); const book=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(book,sheet,"设备管理"); downloadWorkbook(book,"设备管理.xlsx"); }
     function setImportFile(file) { if (!file) return; if (!/\.(xlsx|xls)$/i.test(file.name)) { pendingImportFile=null; showMessage("提示","请选择 xlsx 或 xls 格式文件。"); return; } pendingImportFile=file; const text=document.querySelector("[data-import-file-name]"); if (text) text.textContent=file.name; }
     function openImportDrawer() { pendingImportFile=null; window.openAppDrawer({ title:"导入设备",body:'<label class="device-import-box" data-import-drop><input type="file" data-import-file accept=".xlsx,.xls"><i class="fa-solid fa-cloud-arrow-up"></i><strong>点击或拖拽文件到此处上传</strong><span>支持 xlsx、xls 格式</span></label><p class="device-import-file" data-import-file-name>尚未选择文件</p><div class="device-import-actions"><button class="btn btn-secondary" type="button" data-action="download-template"><i class="fa-solid fa-download"></i> 下载模板</button></div>',footer:'<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-action="confirm-import">确认导入</button>' }); const box=document.querySelector("[data-import-drop]"); box.addEventListener("dragover",(event) => { event.preventDefault(); box.classList.add("dragover"); }); box.addEventListener("dragleave",() => box.classList.remove("dragover")); box.addEventListener("drop",(event) => { event.preventDefault(); box.classList.remove("dragover"); setImportFile(event.dataTransfer.files[0]); }); document.querySelector("[data-import-file]").addEventListener("change",(event) => setImportFile(event.target.files[0])); }
@@ -353,4 +357,6 @@
   </script>
 </body>
 </html>
+
+
 
