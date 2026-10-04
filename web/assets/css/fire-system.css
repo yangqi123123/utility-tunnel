@@ -1,4 +1,5 @@
 .fire-system-page .screen-frame { max-width: none; }
+.fire-system-page .stack > * { min-width: 0; }
 .fire-system-head { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; padding:4px 0 8px; }
 .fire-system-head h1 { margin:6px 0 4px; font-size:26px; line-height:1.2; color:var(--text-title); }
 .fire-system-head p { margin:0; color:var(--text-secondary); }
@@ -16,7 +17,7 @@
 .fire-summary-connection strong { color:var(--green); font-size:24px; }
 .fire-summary-red strong, .fire-summary-red i { color:var(--red); }
 .fire-summary-teal strong, .fire-summary-teal i { color:#0b9f93; }
-.fire-filter-card, .fire-table-card { padding:0; }
+.fire-filter-card, .fire-table-card { min-width:0; padding:0; }
 .fire-card-title-row { min-height:68px; padding:16px 24px; margin:0; border-bottom:1px solid var(--divider); }
 .fire-card-title-row .card-title { margin:0 0 4px; }
 .fire-filter-grid { display:grid; grid-template-columns:1.05fr 0.85fr 0.8fr 0.95fr 1.55fr auto; gap:16px; align-items:end; padding:16px 24px 20px; }

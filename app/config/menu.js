@@ -60,6 +60,12 @@
           ],
         },
         {
+          key: "fire-system",
+          label: "消防系统",
+          icon: "fa-solid fa-fire-flame-curved",
+          href: "../monitoring/fire-system.html",
+        },
+        {
           key: "intrusion-alarm",
           label: "入侵报警系统",
           icon: "fa-solid fa-shield-halved",
@@ -74,12 +80,6 @@
             { key: "power-monitoring.devices", label: "设备监控", href: "../monitoring/power-monitoring.html?view=devices" },
             { key: "power-monitoring.events", label: "事件记录", href: "../monitoring/power-monitoring.html?view=events" },
           ],
-        },
-        {
-          key: "fire-system",
-          label: "消防系统",
-          icon: "fa-solid fa-fire-flame-curved",
-          href: "../monitoring/fire-system.html",
         },
         {
           key: "environment-monitoring",

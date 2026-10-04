@@ -8,12 +8,20 @@
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
   <link rel="stylesheet" href="../../assets/css/fire-system.css">
 </head>
-<body class="fire-system-page" data-menu-key="fire-system" data-page-section="子系统" data-page-title="消防系统">
+<body class="fire-system-page" data-menu-key="fire-system" data-page-section="消防系统" data-page-title="消防系统">
   <div class="app-shell">
     <aside id="app-sidebar" class="sidebar"></aside>
     <header id="app-header" class="header"></header>
     <main class="main">
       <div class="screen-frame stack">
+        <section class="fire-system-head">
+          <div>
+            <div class="eyebrow"><span class="sync-dot"></span>第三方接入 · 只读展示</div>
+            <h1>消防系统</h1>
+            <p>统一查看六类消防子系统的设备状态、报警信息与运行参数。</p>
+          </div>
+          <div class="fire-system-head-actions"><span class="sync-meta">最近同步 <strong id="lastSync">刚刚</strong></span><button class="btn btn-secondary" type="button" data-action="refresh"><i class="fa-solid fa-rotate-right"></i>刷新数据</button></div>
+        </section>
         <section class="fire-summary-grid" aria-label="消防系统概览">
           <article class="fire-summary fire-summary-connection"><span class="fire-summary-label">接入状态</span><strong id="summaryConnection">正常</strong><small id="summarySync">第三方接口 · 刚刚同步</small><i class="fa-solid fa-plug-circle-check" aria-hidden="true"></i></article>
           <article class="fire-summary fire-summary-blue"><span class="fire-summary-label">消防设备</span><strong id="summaryDevices">0</strong><small>六类系统合计</small><i class="fa-solid fa-layer-group" aria-hidden="true"></i></article>
@@ -56,9 +64,9 @@
   <script src="../../../app/components/drawer.js"></script>
   <script>
     const devices = [
-      { id: "FAS-F0101-014", name: "点型感烟火灾探测器 014", system: "火灾报警系统", systemCode: "FAS", deviceType: "感烟探测器", zone: "一号舱 · 东段", location: "F0101+042 · 电力舱", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "烟雾浓度", value: "0.12", unit: "%/m" }], latestAlarm: null, updatedAt: "10:30:08", source: "第三方消防平台" },
-      { id: "FAS-F0104-028", name: "手动报警按钮 028", system: "火灾报警系统", systemCode: "FAS", deviceType: "手动报警按钮", zone: "一号舱 · 西段", location: "F0104+118 · 逃生通道", status: "warn", statusLabel: "预警", parameters: [{ label: "回路电压", value: "23.8", unit: "V" }], latestAlarm: { type: "监管", level: "一般", message: "按钮防护罩开启", time: "10:18:52", restored: false }, updatedAt: "10:29:54", source: "第三方消防平台" },
-      { id: "FAS-F0112-006", name: "线型感温火灾探测器 006", system: "火灾报警系统", systemCode: "FAS", deviceType: "感温探测器", zone: "二号舱 · 东段", location: "F0112+063 · 电缆夹层", status: "fault", statusLabel: "故障", parameters: [{ label: "回路状态", value: "通信异常", unit: "" }], latestAlarm: { type: "故障", level: "重要", message: "区域回路通信中断", time: "09:56:07", restored: false }, updatedAt: "10:24:11", source: "第三方消防平台" },
+      { id: "FAS-F0101-014", name: "点型感烟火灾探测器 014", system: "火灾自动报警系统", systemCode: "FAS", deviceType: "感烟探测器", zone: "一号舱 · 东段", location: "F0101+042 · 电力舱", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "烟雾浓度", value: "0.12", unit: "%/m" }], latestAlarm: null, updatedAt: "10:30:08", source: "第三方消防平台" },
+      { id: "FAS-F0104-028", name: "手动报警按钮 028", system: "火灾自动报警系统", systemCode: "FAS", deviceType: "手动报警按钮", zone: "一号舱 · 西段", location: "F0104+118 · 逃生通道", status: "warn", statusLabel: "预警", parameters: [{ label: "回路电压", value: "23.8", unit: "V" }], latestAlarm: { type: "监管", level: "一般", message: "按钮防护罩开启", time: "10:18:52", restored: false }, updatedAt: "10:29:54", source: "第三方消防平台" },
+      { id: "FAS-F0112-006", name: "线型感温火灾探测器 006", system: "火灾自动报警系统", systemCode: "FAS", deviceType: "感温探测器", zone: "二号舱 · 东段", location: "F0112+063 · 电缆夹层", status: "fault", statusLabel: "故障", parameters: [{ label: "回路状态", value: "通信异常", unit: "" }], latestAlarm: { type: "故障", level: "重要", message: "区域回路通信中断", time: "09:56:07", restored: false }, updatedAt: "10:24:11", source: "第三方消防平台" },
       { id: "FDM-F0102-003", name: "防火门监控模块 003", system: "防火门监控系统", systemCode: "FDM", deviceType: "门磁模块", zone: "一号舱 · 东段", location: "F0102+018 · 防火分区 01", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "门状态", value: "闭合", unit: "" }, { label: "闭门器", value: "投入", unit: "" }], latestAlarm: null, updatedAt: "10:30:02", source: "第三方消防平台" },
       { id: "FDM-F0116-012", name: "常开防火门监控点 012", system: "防火门监控系统", systemCode: "FDM", deviceType: "防火门监控点", zone: "二号舱 · 西段", location: "F0116+097 · 疏散出口", status: "warn", statusLabel: "预警", parameters: [{ label: "门状态", value: "开启 86s", unit: "" }, { label: "联动状态", value: "待复位", unit: "" }], latestAlarm: { type: "监管", level: "重要", message: "防火门超时未关闭", time: "10:27:14", restored: false }, updatedAt: "10:29:58", source: "第三方消防平台" },
       { id: "FPM-F0103-001", name: "消防水泵控制柜电源 01", system: "消防电源监控系统", systemCode: "FPM", deviceType: "电源监控模块", zone: "一号舱 · 东段", location: "F0103+006 · 消防泵房", status: "online", statusLabel: "在线 / 正常", parameters: [{ label: "主电压", value: "381", unit: "V" }, { label: "备用电压", value: "379", unit: "V" }], latestAlarm: null, updatedAt: "10:30:04", source: "第三方消防平台" },
