@@ -1,14 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import vm from "node:vm";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("menu exposes access control directly below video monitoring", async () => {
   const source = await read("app/config/menu.js");
-  assert.match(source, /key:\s*["']video-monitoring["'][\s\S]*?key:\s*["']access-control["'][\s\S]*?key:\s*["']communication-system["']/);
-  assert.match(source, /label:\s*["']门禁系统["']/);
-  assert.match(source, /\.\.\/monitoring\/access-control\.html/);
+  const context = { window: {} };
+  vm.runInNewContext(source, context);
+  const topLevel = context.window.APP_MENU;
+  const access = topLevel.find((item) => item.key === "access-control");
+  const subsystem = topLevel.find((item) => item.key === "subsystems");
+  assert.ok(access, "access-control must be a top-level menu item");
+  assert.equal(access.label, "门禁系统");
+  assert.equal(access.href, "../monitoring/access-control.html");
+  assert.ok(subsystem?.children?.some((item) => item.key === "video-monitoring"), "video monitoring group remains available");
 });
 
 test("access control page exposes the shared read-only record table", async () => {

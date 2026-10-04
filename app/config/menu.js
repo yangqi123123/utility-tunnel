@@ -66,12 +66,6 @@
           href: "../monitoring/intrusion-alarm.html",
         },
         {
-          key: "access-control",
-          label: "门禁系统",
-          icon: "fa-solid fa-id-card-clip",
-          href: "../monitoring/access-control.html",
-        },
-        {
           key: "power-monitoring",
           label: "电力监测系统",
           icon: "fa-solid fa-bolt",
@@ -118,6 +112,12 @@
           href: "../monitoring/fire-alarm.html",
         },
       ],
+    },
+    {
+      key: "access-control",
+      label: "门禁系统",
+      icon: "fa-solid fa-id-card-clip",
+      href: "../monitoring/access-control.html",
     },
     {
       key: "inspection",
