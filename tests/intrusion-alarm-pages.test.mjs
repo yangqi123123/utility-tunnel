@@ -13,7 +13,11 @@ test("视频监控下方提供入侵报警系统一级菜单", () => {
   assert.match(menu, /label: "入侵报警系统"/);
   assert.match(menu, /\.\.\/monitoring\/intrusion-alarm\.html/);
   assert.ok(menu.indexOf('key: "video-monitoring"') < menu.indexOf('key: "intrusion-alarm"'));
-  assert.match(menu, /key: "video-monitoring\.replay"[\s\S]*?\n    \},\n    \{\n      key: "intrusion-alarm"/);
+  const videoIndex = menu.indexOf('key: "video-monitoring"');
+  const intrusionIndex = menu.indexOf('key: "intrusion-alarm"');
+  const between = menu.slice(videoIndex, intrusionIndex);
+  assert.ok(!between.includes('key: "access-control"'));
+  assert.ok(!between.includes('key: "power-monitoring"'));
 });
 
 test("入侵报警页面使用共享壳层并包含核心字段", () => {

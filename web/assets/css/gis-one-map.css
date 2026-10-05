@@ -192,10 +192,17 @@ a{color:inherit;text-decoration:none}
 /* GIS 一张图 · 后台集成补充样式（满幅地图 + 左右悬浮看板） */
 body[data-menu-key="gis"] .main { overflow:hidden; }
 .gis-page { display:flex; flex-direction:column; height:100%; min-height:0; }
-.gis-tabs-bar { display:flex; gap:4px; padding:0 0 12px; border-bottom:1px solid var(--line); flex-wrap:nowrap; overflow:auto; flex:0 0 auto; }
-.gis-tab { flex:0 0 auto; height:34px; padding:0 16px; border:0; background:transparent; color:var(--text-secondary); font-size:14px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
-.gis-tab:hover { color:var(--primary); }
-.gis-tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
+.gis-tabs-bar { position:relative; display:flex; justify-content:center; min-height:46px; padding:0 58px 12px; border-bottom:1px solid var(--line); overflow:hidden; flex:0 0 auto; }
+.gis-tabs-list { display:flex; justify-content:center; gap:8px; max-width:100%; overflow:auto; scrollbar-width:none; padding:0 2px 2px; }
+.gis-tabs-list::-webkit-scrollbar { display:none; }
+.gis-tab { flex:0 0 auto; height:34px; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:0 14px; border:1px solid var(--line); border-radius:5px; background:#fff; color:var(--text-secondary); font-size:13px; cursor:pointer; box-shadow:0 1px 2px rgba(26,28,31,.03); transition:color .16s ease, background-color .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.gis-tab i { color:var(--text-muted); font-size:13px; }
+.gis-tab:hover { color:var(--primary); border-color:rgba(19,90,250,.42); background:var(--primary-bg); box-shadow:0 3px 8px rgba(19,90,250,.10); transform:translateY(-1px); }
+.gis-tab:hover i, .gis-tab.active i { color:currentColor; }
+.gis-tab.active { color:#fff; border-color:var(--primary); background:var(--primary); box-shadow:0 4px 10px rgba(19,90,250,.20); font-weight:600; transform:translateY(-1px); }
+.gis-tab:focus-visible, .gis-tabs-return:focus-visible { outline:2px solid rgba(19,90,250,.36); outline-offset:2px; }
+.gis-tabs-return { position:absolute; top:0; right:12px; width:34px; height:34px; display:grid; place-items:center; border:1px solid var(--line); border-radius:5px; color:var(--text-secondary); background:#fff; cursor:pointer; box-shadow:0 1px 2px rgba(26,28,31,.03); transition:color .16s ease, background-color .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.gis-tabs-return:hover { color:var(--primary); border-color:rgba(19,90,250,.42); background:var(--primary-bg); box-shadow:0 3px 8px rgba(19,90,250,.10); transform:translateY(-1px); }
 .gis-tab-panels { flex:1; min-height:0; overflow:hidden; padding-top:12px; }
 .gis-panel { display:none; height:100%; }
 .gis-panel.active { display:block; }

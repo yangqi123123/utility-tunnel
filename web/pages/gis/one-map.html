@@ -15,7 +15,21 @@
   <header id="app-header" class="header"></header>
   <main class="main">
     <div class="gis-page">
-      <div class="gis-tabs-bar"><button class="gis-tab active" type="button" data-gis-tab="0">系统首页</button><button class="gis-tab " type="button" data-gis-tab="1">环境监控</button><button class="gis-tab " type="button" data-gis-tab="2">消防监控</button><button class="gis-tab " type="button" data-gis-tab="3">安防监控</button><button class="gis-tab " type="button" data-gis-tab="4">通信广播</button><button class="gis-tab " type="button" data-gis-tab="5">电力监控</button><button class="gis-tab " type="button" data-gis-tab="6">设备巡检</button><button class="gis-tab " type="button" data-gis-tab="7">应急指挥</button><button class="gis-tab " type="button" data-gis-tab="8">统计分析</button><button class="gis-tab " type="button" data-gis-tab="9">设备监测</button></div>
+      <div class="gis-tabs-bar">
+        <div class="gis-tabs-list" role="tablist" aria-label="GIS功能视图">
+          <button class="gis-tab active" type="button" role="tab" aria-selected="true" data-gis-tab="0"><i class="fa-solid fa-house" aria-hidden="true"></i><span>系统首页</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="1"><i class="fa-solid fa-leaf" aria-hidden="true"></i><span>环境监控</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="2"><i class="fa-solid fa-fire" aria-hidden="true"></i><span>消防监控</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="3"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>安防监控</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="4"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i><span>通信广播</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="5"><i class="fa-solid fa-bolt" aria-hidden="true"></i><span>电力监控</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="6"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i><span>设备巡检</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="7"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><span>应急指挥</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="8"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>统计分析</span></button>
+          <button class="gis-tab" type="button" role="tab" aria-selected="false" data-gis-tab="9"><i class="fa-solid fa-server" aria-hidden="true"></i><span>设备监测</span></button>
+        </div>
+        <button class="gis-tabs-return" type="button" title="返回" aria-label="返回" data-gis-sidebar-return><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+      </div>
       <div class="gis-tab-panels">
 <div class="gis-panel active" id="gisPanel0" data-gis-panel="0">
   <div class="gis-panel-inner">
@@ -648,6 +662,38 @@
 <script src="../../../app/config/menu.js?v=gis-3"></script>
 <script src="../../../app/components/sidebar.js?v=gis-3"></script>
 <script src="../../../app/components/header.js?v=gis-3"></script>
+<script>
+(function(){
+  var root=document.documentElement;
+  var pageToggleSelector='[data-sidebar-toggle]';
+  function syncHeaderToggle(collapsed){
+    var toggle=document.querySelector(pageToggleSelector);
+    if(!toggle) return;
+    var label=collapsed?'展开侧边栏':'收缩侧边栏';
+    toggle.title=label;
+    toggle.setAttribute('aria-label',label);
+    toggle.innerHTML='<i class="fa-solid '+(collapsed?'fa-menu-unfold':'fa-menu-fold')+'" aria-hidden="true"></i>';
+  }
+  function setPageSidebar(collapsed){
+    root.dataset.sidebar=collapsed?'collapsed':'expanded';
+    syncHeaderToggle(collapsed);
+  }
+
+  // GIS 一张图独立处理侧栏状态，不写入公共页面使用的 localStorage。
+  setPageSidebar(true);
+  document.addEventListener('click',function(event){
+    var toggle=event.target.closest(pageToggleSelector);
+    if(toggle){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setPageSidebar(root.dataset.sidebar!=='collapsed');
+      return;
+    }
+    if(event.target.closest('[data-gis-sidebar-return]')) setPageSidebar(false);
+  },true);
+  document.addEventListener('DOMContentLoaded',function(){ setPageSidebar(true); });
+})();
+</script>
 <script src="../../assets/vendor/leaflet/leaflet.js"></script>
 <!-- 系统首页 -->
 <script>
@@ -2026,6 +2072,7 @@
   function show(idx){
     for(var i=0;i<tabs.length;i++){
       tabs[i].classList.toggle('active', i===idx);
+      tabs[i].setAttribute('aria-selected', i===idx ? 'true' : 'false');
       panels[i].classList.toggle('active', i===idx);
     }
     var suffix=String(idx);
