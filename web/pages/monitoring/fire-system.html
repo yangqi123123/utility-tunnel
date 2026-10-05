@@ -14,14 +14,10 @@
     <header id="app-header" class="header"></header>
     <main class="main">
       <div class="screen-frame stack">
-        <section class="fire-system-head">
-          <div>
-            <div class="eyebrow"><span class="sync-dot"></span>第三方接入 · 只读展示</div>
-            <h1>消防系统</h1>
-            <p>统一查看六类消防子系统的设备状态、报警信息与运行参数。</p>
-          </div>
-          <div class="fire-system-head-actions"><span class="sync-meta">最近同步 <strong id="lastSync">刚刚</strong></span><button class="btn btn-secondary" type="button" data-action="refresh"><i class="fa-solid fa-rotate-right"></i>刷新数据</button></div>
-        </section>
+        <div class="fire-system-toolbar">
+          <span class="sync-meta">最近同步 <strong id="lastSync">刚刚</strong></span>
+          <button class="btn btn-secondary" type="button" data-action="refresh"><i class="fa-solid fa-rotate-right"></i>刷新数据</button>
+        </div>
         <section class="fire-summary-grid" aria-label="消防系统概览">
           <article class="fire-summary fire-summary-connection"><span class="fire-summary-label">接入状态</span><strong id="summaryConnection">正常</strong><small id="summarySync">第三方接口 · 刚刚同步</small><i class="fa-solid fa-plug-circle-check" aria-hidden="true"></i></article>
           <article class="fire-summary fire-summary-blue"><span class="fire-summary-label">消防设备</span><strong id="summaryDevices">0</strong><small>六类系统合计</small><i class="fa-solid fa-layer-group" aria-hidden="true"></i></article>

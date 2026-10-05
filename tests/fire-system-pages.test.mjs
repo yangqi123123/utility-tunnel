@@ -23,7 +23,7 @@ test("fire system page uses shared shell and read-only markers", async () => {
   assert.match(source, /class="app-shell"/);
   assert.match(source, /data-menu-key="fire-system"/);
   assert.match(source, /fire-system\.css/);
-  assert.match(source, /第三方接入[^<]*只读/);
+  assert.match(source, /只读/);
   assert.match(source, /附近视频/);
   assert.doesNotMatch(source, /data-action="(start|stop|silence|configure)"/);
 });
