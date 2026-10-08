@@ -106,18 +106,18 @@
           href: "../monitoring/smart-manholes.html",
         },
         {
+          key: "access-control",
+          label: "门禁系统",
+          icon: "fa-solid fa-id-card-clip",
+          href: "../monitoring/access-control.html",
+        },
+        {
           key: "fire-alarm",
           label: "火灾报警系统",
           icon: "fa-solid fa-fire-flame-curved",
           href: "../monitoring/fire-alarm.html",
         },
       ],
-    },
-    {
-      key: "access-control",
-      label: "门禁系统",
-      icon: "fa-solid fa-id-card-clip",
-      href: "../monitoring/access-control.html",
     },
     {
       key: "inspection",

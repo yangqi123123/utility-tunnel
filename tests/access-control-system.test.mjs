@@ -5,17 +5,19 @@ import vm from "node:vm";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("menu exposes access control directly below video monitoring", async () => {
+test("menu exposes access control above fire alarm in the subsystem menu", async () => {
   const source = await read("app/config/menu.js");
   const context = { window: {} };
   vm.runInNewContext(source, context);
-  const topLevel = context.window.APP_MENU;
-  const access = topLevel.find((item) => item.key === "access-control");
-  const subsystem = topLevel.find((item) => item.key === "subsystems");
-  assert.ok(access, "access-control must be a top-level menu item");
+  const subsystem = context.window.APP_MENU.find((item) => item.key === "subsystems");
+  const accessIndex = subsystem?.children?.findIndex((item) => item.key === "access-control");
+  const fireAlarmIndex = subsystem?.children?.findIndex((item) => item.key === "fire-alarm");
+  const access = subsystem?.children?.[accessIndex];
+  assert.ok(accessIndex >= 0, "access-control must be a subsystem child menu item");
+  assert.ok(accessIndex < fireAlarmIndex, "access-control must be above fire-alarm");
   assert.equal(access.label, "门禁系统");
   assert.equal(access.href, "../monitoring/access-control.html");
-  assert.ok(subsystem?.children?.some((item) => item.key === "video-monitoring"), "video monitoring group remains available");
+  assert.ok(subsystem.children.some((item) => item.key === "video-monitoring"), "video monitoring group remains available");
 });
 
 test("access control page exposes the shared read-only record table", async () => {
