@@ -252,7 +252,7 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 /* 安防监控：视频、门禁、告警与关键区域监控。 */
 #gisPanel3 .gis-security-rail { display:grid; gap:8px; overflow:hidden !important; }
 #gisPanel3 .gis-float-left.gis-security-rail { grid-template-rows:160px minmax(0,1fr); }
-#gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:142px 174px minmax(0,1fr); }
+#gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:170px 174px minmax(0,1fr); }
 #gisPanel3 .gis-security-card { min-height:0; display:flex; flex-direction:column; overflow:hidden; }
 #gisPanel3 .gis-security-card .gis-card-head { flex:0 0 38px; min-height:38px; padding:0 10px; }
 #gisPanel3 .gis-security-card .gis-card-body { flex:1; min-height:0; overflow:hidden; padding:8px; gap:7px; }
@@ -301,23 +301,23 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 #gisPanel3 .gis-security-system-bar i { display:block; height:100%; border-radius:3px; background:var(--ok); }
 #gisPanel3 .gis-security-system-note { display:flex; justify-content:space-between; color:var(--muted); font-size:8px; }
 #gisPanel3 .gis-security-system-note i { display:inline-block; width:6px; height:6px; margin-right:4px; border-radius:50%; background:var(--ok); }
-#gisPanel3 .gis-security-video-overview .gis-card-body { display:grid; grid-template-rows:48px minmax(0,1fr); gap:5px; }
-#gisPanel3 .gis-security-video-stat-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
-#gisPanel3 .gis-security-video-stat-cards > div { display:flex; align-items:center; justify-content:space-between; min-width:0; padding:6px 9px; border:1px solid #79a9c3; background:rgba(19,90,250,.05); }
-#gisPanel3 .gis-security-video-stat-cards span { color:#f3f7ff; font-size:10px; }
-#gisPanel3 .gis-security-video-stat-cards strong { color:#fff; font:700 20px/1 "DIN Alternate",Arial,sans-serif; }
-#gisPanel3 .gis-security-video-stat-cards .fault { border-color:rgba(245,127,127,.72); background:rgba(245,63,87,.08); }
-#gisPanel3 .gis-security-video-stat-cards .fault strong { color:#ff9b9b; }
+#gisPanel3 .gis-security-video-overview .gis-card-body { display:grid; grid-template-rows:42px minmax(0,1fr); gap:8px; padding:10px; }
+#gisPanel3 .gis-security-video-stat-cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+#gisPanel3 .gis-security-video-stat-cards > div { display:flex; align-items:center; justify-content:space-between; min-width:0; padding:6px 10px; border:1px solid #cbd8ea; border-radius:3px; background:#f7f9fd; }
+#gisPanel3 .gis-security-video-stat-cards span { color:#50565d; font-size:11px; }
+#gisPanel3 .gis-security-video-stat-cards strong { color:#1a1c1f; font:700 19px/1 "DIN Alternate",Arial,sans-serif; }
+#gisPanel3 .gis-security-video-stat-cards .fault { border-color:#f3b7be; background:#fff7f8; }
+#gisPanel3 .gis-security-video-stat-cards .fault strong { color:#f53f57; }
 #gisPanel3 .gis-security-video-stat-cards small { font-size:10px; }
-#gisPanel3 .gis-security-video-donuts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:5px; }
-#gisPanel3 .gis-security-donut { display:flex; flex-direction:column; align-items:center; gap:3px; color:#f4f7ff; font-size:9px; }
-#gisPanel3 .gis-security-donut-ring { width:68px; height:68px; display:grid; place-items:center; border-radius:50%; position:relative; background:conic-gradient(#a5ed95 0 97.2%, #315879 97.2% 100%); }
-#gisPanel3 .gis-security-donut-ring::after { content:""; position:absolute; inset:10px; border-radius:50%; background:#5a7896; border:1px solid rgba(255,255,255,.45); }
-#gisPanel3 .gis-security-donut-ring strong { position:relative; z-index:1; color:#fff; font:700 18px/1 "DIN Alternate",Arial,sans-serif; }
+#gisPanel3 .gis-security-video-donuts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:12px; min-height:0; }
+#gisPanel3 .gis-security-donut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; color:#50565d; font-size:10px; }
+#gisPanel3 .gis-security-donut-ring { width:76px; height:76px; display:grid; place-items:center; border-radius:50%; position:relative; background:conic-gradient(#14c9ba 0 97.2%, #e8edf5 97.2% 100%); }
+#gisPanel3 .gis-security-donut-ring::after { content:""; position:absolute; inset:11px; border-radius:50%; background:#fff; border:1px solid #dfe6f0; }
+#gisPanel3 .gis-security-donut-ring strong { position:relative; z-index:1; color:#1a1c1f; font:700 20px/1 "DIN Alternate",Arial,sans-serif; }
 #gisPanel3 .gis-security-donut span { white-space:nowrap; }
-#gisPanel3 .gis-security-donut b { color:#a5ed95; font-size:10px; }
-#gisPanel3 .gis-security-donut.offline .gis-security-donut-ring { background:conic-gradient(#5e95b0 0 2.8%, #315879 2.8% 100%); }
-#gisPanel3 .gis-security-donut.offline b { color:#fff; }
+#gisPanel3 .gis-security-donut b { color:#0e9e92; font-size:11px; }
+#gisPanel3 .gis-security-donut.offline .gis-security-donut-ring { background:conic-gradient(#8fa7c0 0 2.8%, #e8edf5 2.8% 100%); }
+#gisPanel3 .gis-security-donut.offline b { color:#687385; }
 #gisPanel3 .gis-security-global-video { margin-left:auto; height:25px; padding:0 8px; font-size:10px; }
 #gisPanel3 .gis-security-alarm-list { height:100%; overflow:auto; scrollbar-width:thin; scrollbar-color:#cbd4e1 transparent; }
 #gisPanel3 .gis-security-alarm { display:grid; grid-template-columns:24px minmax(0,1fr) auto; align-items:center; gap:6px; min-height:39px; padding:5px 2px; border-bottom:1px solid var(--divider); }
@@ -352,7 +352,7 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 body.gis-access-modal-open { overflow:hidden; }
 @media (max-height:760px) and (min-width:761px) {
   #gisPanel3 .gis-float-left.gis-security-rail { grid-template-rows:146px minmax(0,1fr); }
-  #gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:126px 152px minmax(0,1fr); }
+  #gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:156px 152px minmax(0,1fr); }
 }
 @media (max-width:760px) {
   #gisPanel3 .gis-stage { position:relative; min-height:1150px; }
