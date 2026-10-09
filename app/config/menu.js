@@ -35,6 +35,16 @@
       href: "../home/home.html",
     },
     {
+      key: "inspection",
+      label: "设备巡检",
+      icon: "fa-solid fa-clipboard-check",
+      children: [
+        { key: "inspection.standard-works", label: "标准作业", href: "../inspection/standard-works.html" },
+        { key: "inspection.plans", label: "巡检计划", href: "../inspection/plans.html" },
+        { key: "inspection.tasks", label: "巡检任务", href: "../inspection/tasks.html" },
+      ],
+    },
+    {
       key: "smart-monitoring",
       label: "智能监测",
       icon: "fa-solid fa-display",
@@ -49,6 +59,7 @@
       key: "subsystems",
       label: "子系统",
       icon: "fa-solid fa-table-cells",
+      hidden: true,
       children: [
         {
           key: "video-monitoring",
@@ -120,19 +131,10 @@
       ],
     },
     {
-      key: "inspection",
-      label: "设备巡检",
-      icon: "fa-solid fa-clipboard-check",
-      children: [
-        { key: "inspection.standard-works", label: "标准作业", href: "../inspection/standard-works.html" },
-        { key: "inspection.plans", label: "巡检计划", href: "../inspection/plans.html" },
-        { key: "inspection.tasks", label: "巡检任务", href: "../inspection/tasks.html" },
-      ],
-    },
-    {
       key: "emergency",
       label: "应急管理",
       icon: "fa-solid fa-truck-medical",
+      hidden: true,
       children: [
         { key: "emergency.dispatch", label: "应急调度台", href: "../emergency/dispatch.html" },
         { key: "emergency.events", label: "应急事件", href: "../emergency/events.html" },
@@ -146,6 +148,7 @@
       key: "safety",
       label: "安全管理",
       icon: "fa-solid fa-shield-halved",
+      hidden: true,
       children: [
         { key: "safety.plans", label: "安全预案", href: "../safety/plans.html" },
         { key: "safety.regulations", label: "法规库", href: "../safety/regulations.html" },
@@ -164,6 +167,7 @@
       key: "big-data",
       label: "大数据分析",
       icon: "fa-solid fa-chart-line",
+      hidden: true,
       children: [
         { key: "big-data.diagnosis", label: "设备诊断", href: "../big-data/device-diagnosis.html" },
         { key: "big-data.warning", label: "异常预警", href: "../big-data/abnormal-warning.html" },
@@ -174,18 +178,21 @@
       key: "configuration",
       label: "组态系统",
       icon: "fa-solid fa-diagram-project",
+      hidden: true,
       href: "../network/configuration.html",
     },
     {
       key: "service-center",
       label: "网络管理平台",
       icon: "fa-solid fa-server",
+      hidden: true,
       href: "../service-center/service-center.html",
     },
     {
       key: "data-storage",
       label: "数据存储",
       icon: "fa-solid fa-database",
+      hidden: true,
       children: [
         { key: "data-storage.realtime", label: "实时数据", href: "../data-storage/realtime.html" },
         { key: "data-storage.history", label: "历史数据", href: "../data-storage/history.html" },
@@ -196,6 +203,7 @@
       key: "interface-platform",
       label: "接口管理平台",
       icon: "fa-solid fa-plug-circle-bolt",
+      hidden: true,
       children: [
         { key: "interface-platform.south", label: "南向采集", href: "../interface-platform/south.html" },
         { key: "interface-platform.north", label: "北向对接", href: "../interface-platform/north.html" },
@@ -205,6 +213,7 @@
       key: "system",
       label: "系统管理",
       icon: "fa-solid fa-gear",
+      hidden: true,
       children: [
         { key: "system.user", label: "用户管理", href: "../system/user.html" },
         { key: "system.role", label: "角色管理", href: "../system/role.html" },

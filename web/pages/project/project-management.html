@@ -73,7 +73,7 @@
               <div class="project-toolbar-actions">
                 <button class="btn btn-secondary" data-action="export"><i class="fa-solid fa-file-export"></i> 导出</button>
                 <button class="btn btn-secondary" data-action="delete-selected" disabled><i class="fa-solid fa-trash"></i> 删除</button>
-                <button class="btn btn-primary project-create-button" data-action="create">
+                <button class="btn btn-primary project-create-button" data-action="create" style="display:none"><!-- 隐藏新增项目按钮：后续恢复请删除 style="display:none" -->
                   <i class="fa-solid fa-plus"></i> 新增项目
                 </button>
               </div>
@@ -113,10 +113,11 @@
         </div>
       </main>
     </div>
-    <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+    <script src="../../../app/config/menu.js?v=nav-hide-1"></script>
     <script src="../../../app/components/sidebar.js?v=nav-home-1"></script>
     <script src="../../../app/components/header.js?v=nav-home-1"></script>
     <script src="../../../app/components/drawer.js"></script>
+    <script src="../../../app/components/requirement.js"></script>
     <script>
       (() => {
         let drawerDraft = null;
@@ -153,37 +154,6 @@
             actualEndDate: "",
             updatedAt: "2026-09-26 14:20",
             description: "服务科学岛片区的综合管廊工程。",
-          },
-          {
-            id: 2,
-            code: "PRJ-DH-002",
-            name: "科学岛东区管廊延伸工程",
-            shortName: "东区延伸工程",
-            corridorProject: "科学岛东区管廊延伸工程",
-            type: "综合管廊",
-            status: "待完善",
-            region: "东湖高新区",
-            addressRegion: "湖北省 / 武汉市",
-            address: "东湖高新区未来一路",
-            longitude: "114.468",
-            latitude: "30.501",
-            builder: "东湖高新区建设局",
-            designer: "武汉市政设计研究院",
-            constructor: "科学岛建设发展有限公司",
-            supervisor: "武汉工程建设监理有限公司",
-            operator: "光谷科学岛运维中心",
-            owner: "李涛",
-            phone: "13900001234",
-            corridorCount: 0,
-            cabinCount: 0,
-            sectionCount: 0,
-            pipelineCount: 0,
-            deviceCount: 0,
-            startDate: "2026-10-01",
-            plannedEndDate: "2028-06-30",
-            actualEndDate: "",
-            updatedAt: "2026-09-22 09:10",
-            description: "东区新增管廊建设项目。",
           },
         ];
         const esc = (v) =>

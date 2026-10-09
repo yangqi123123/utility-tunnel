@@ -6,7 +6,7 @@
   const clone = (value) => JSON.parse(JSON.stringify(value));
   const GENERATED_TASKS_KEY = "inspection.generatedTasks";
   const readGeneratedTasks = () => {
-    try { const list = JSON.parse(window.localStorage.getItem(GENERATED_TASKS_KEY) || "[]"); return Array.isArray(list) ? list : []; } catch (error) { return []; }
+    try { const list = JSON.parse(window.localStorage.getItem(GENERATED_TASKS_KEY) || "[]"); return Array.isArray(list) ? list.filter((task) => !`${task.name || ""} ${task.planName || ""}`.includes("测试")) : []; } catch (error) { return []; }
   };
   const writeGeneratedTasks = (list) => {
     try { window.localStorage.setItem(GENERATED_TASKS_KEY, JSON.stringify(list)); } catch (error) { /* 存储不可用时仅在内存中保留 */ }
@@ -31,6 +31,7 @@
     filters: {},
     selected: new Set(),
     configSelected: new Set(),
+    taskSubmitDraft: { taskId: "", note: "" },
   };
 
   const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
@@ -46,9 +47,10 @@
     showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
   };
   const openDrawer = (config, drawerClass = "") => {
-    const drawer = document.getElementById("drawer");
-    drawer?.classList.remove("inspection-task-drawer", "inspection-config-drawer");
+    const existingDrawer = document.getElementById("drawer");
+    existingDrawer?.classList.remove("inspection-task-drawer", "inspection-submit-drawer", "inspection-fill-drawer", "inspection-config-drawer");
     window.openAppDrawer(config);
+    const drawer = document.getElementById("drawer");
     if (drawerClass) drawer?.classList.add(...drawerClass.split(" "));
   };
   const hideMoreMenus = () => document.querySelectorAll(".inspection-more-menu").forEach((menu) => { menu.remove(); });
@@ -82,7 +84,7 @@
     const body = document.getElementById("standardWorksBody");
     if (!body) return;
     body.innerHTML = rows.length ? rows.map((item) => `<tr>
-      <td title="${esc(item.code)}">${esc(item.code.slice(0, 21))}...</td><td>${esc(item.name)}</td><td>${esc(item.type)}</td><td>${esc(item.mode)}</td><td class="wrap">${esc(item.system || "-")}</td><td class="wrap">${esc(item.category)}</td><td>${esc(item.itemCount)}</td><td>${esc(item.entryCount)}</td><td>${esc(item.creator)}</td><td>${esc(item.createdAt)}</td><td>${esc(item.updater)}</td><td>${esc(item.updatedAt)}</td>
+      <td title="${esc(item.code)}">${esc(item.code.slice(0, 21))}...</td><td>${esc(item.name)}</td><td>${esc(item.type)}</td><td class="wrap">${esc(item.system || "-")}</td><td class="wrap">${esc(item.category)}</td><td>${esc(item.itemCount)}</td><td>${esc(item.entryCount)}</td><td>${esc(item.creator)}</td><td>${esc(item.createdAt)}</td><td>${esc(item.updater)}</td><td>${esc(item.updatedAt)}</td>
       <td class="action-cell"><button class="table-action" type="button" data-inspection-work-action="edit" data-id="${esc(item.id)}">编辑</button><span class="inspection-more"><button class="table-action" type="button" data-inspection-more="${esc(item.id)}">更多</button></span></td>
     </tr>`).join("") : `<tr><td colspan="13"><div class="inspection-empty">暂无匹配的标准作业</div></td></tr>`;
     pagination(document.getElementById("standardWorksPagination"), list.length);
@@ -94,7 +96,7 @@
     const body = document.getElementById("plansBody");
     if (!body) return;
     body.innerHTML = rows.length ? rows.map((item) => `<tr>
-      <td class="check-cell"><input type="checkbox" data-inspection-select="${esc(item.id)}" ${state.selected.has(item.id) ? "checked" : ""} aria-label="选择${esc(item.name)}"></td><td>${esc(item.code)}</td><td>${esc(item.name)}</td><td>${esc(item.project)}</td><td>${levelTag(item.level)}</td><td class="wrap">${esc(item.target)}</td><td>${statusTag(item.cycle, "muted")}</td><td>${item.status === "停用" ? statusTag("停用", "muted") : statusTag("正常", "normal")}</td><td>${esc(item.generateAt)}</td><td>${esc(item.startAt)}</td><td>${esc(item.nextGenerateAt || "-")}</td><td>${esc(item.lastGenerateAt || "-")}</td><td>${esc(item.inspector)}</td><td>${esc(item.owner)}</td><td>${esc(item.createdAt || "-")}</td>
+      <td class="check-cell"><input type="checkbox" data-inspection-select="${esc(item.id)}" ${state.selected.has(item.id) ? "checked" : ""} aria-label="选择${esc(item.name)}"></td><td>${esc(item.code)}</td><td>${esc(item.name)}</td><td>${esc(item.project)}</td><td>${levelTag(item.level)}</td><td class="inspection-target-cell" title="${esc(item.target)}">${esc(item.target)}</td><td>${statusTag(item.cycle, "muted")}</td><td>${item.status === "停用" ? statusTag("停用", "muted") : statusTag("正常", "normal")}</td><td>${esc(item.generateAt)}</td><td>${esc(item.startAt)}</td><td>${esc(item.nextGenerateAt || "-")}</td><td>${esc(item.lastGenerateAt || "-")}</td><td>${esc(item.inspector)}</td><td>${esc(item.owner)}</td><td>${esc(item.createdAt || "-")}</td>
       <td class="action-cell"><button class="table-action" type="button" data-inspection-plan-action="edit" data-id="${esc(item.id)}">编辑</button><span class="inspection-more"><button class="table-action" type="button" data-inspection-more="${esc(item.id)}" data-more-type="plan">更多</button></span></td>
     </tr>`).join("") : `<tr><td colspan="16"><div class="inspection-empty">暂无匹配的巡检计划</div></td></tr>`;
     pagination(document.getElementById("plansPagination"), list.length);
@@ -105,13 +107,21 @@
   function renderTasks() {
     const list = state.tasks.filter((item) => {
       const filters = state.filters;
-      return (!filters.keyword || `${item.code} ${item.name} ${item.planName}`.toLowerCase().includes(filters.keyword.toLowerCase())) && (!filters.code || value(item, "code").includes(filters.code.toLowerCase())) && (!filters.planName || value(item, "planName").includes(filters.planName.toLowerCase()));
+      const startDate = String(item.startedAt || "").slice(0, 10);
+      const endDate = String(item.deadline || "").slice(0, 10);
+      return (!filters.keyword || `${item.code} ${item.name} ${item.planName}`.toLowerCase().includes(filters.keyword.toLowerCase())) && (!filters.code || value(item, "code").includes(filters.code.toLowerCase())) && (!filters.planName || value(item, "planName").includes(filters.planName.toLowerCase())) && (!filters.status || item.status === filters.status) && (!filters.overdue || item.overdue === filters.overdue) && (!filters.startDate || startDate === filters.startDate) && (!filters.endDate || endDate === filters.endDate);
     });
     const { rows } = pageRows(list);
     const body = document.getElementById("tasksBody");
     if (!body) return;
+    const taskActions = (item) => {
+      if (item.status === "待巡检") return item.overdue === "已逾期" ? `<button class="table-action" type="button" data-inspection-task-detail="${esc(item.id)}">详情</button>` : `<button class="table-action" type="button" data-inspection-task-start="${esc(item.id)}">开始</button><span class="inspection-more"><button class="table-action" type="button" data-inspection-task-more="${esc(item.id)}">更多</button></span>`;
+      if (item.status === "巡检中") return `<button class="table-action" type="button" data-inspection-task-detail="${esc(item.id)}">详情</button><button class="table-action" type="button" data-inspection-task-submit="${esc(item.id)}">提交</button>`;
+      if (item.status === "验收中") return `<button class="table-action" type="button" data-inspection-task-detail="${esc(item.id)}">详情</button><button class="table-action" type="button" data-inspection-task-accept="${esc(item.id)}">验收通过</button>`;
+      return `<button class="table-action" type="button" data-inspection-task-detail="${esc(item.id)}">详情</button>`;
+    };
     body.innerHTML = rows.length ? rows.map((item) => `<tr>
-      <td class="check-cell"><input type="checkbox" data-inspection-select="${esc(item.id)}" ${state.selected.has(item.id) ? "checked" : ""} aria-label="选择${esc(item.name)}"></td><td title="${esc(item.code)}">${esc(item.code)}</td><td title="${esc(item.name)}">${esc(item.name)}</td><td>${esc(item.planName)}</td><td>${levelTag(item.level)}</td><td>${esc(item.inspector)}</td><td>${esc(item.owner)}</td><td>${statusTag(item.status, "warning")}</td><td>${statusTag(item.result, "muted")}</td><td>${statusTag(item.overdue, "danger")}</td><td>${item.deviceCount}/${item.itemCount}</td><td>${esc(item.abnormalCount ?? 0)}</td><td>${esc(item.planExecution || "未执行")}</td><td>${esc(item.deadline)}</td><td>${esc(item.startedAt)}</td><td>${esc(item.submittedAt)}</td><td>${esc(item.duration)}</td><td class="action-cell"><button class="table-action" type="button" data-inspection-task-detail="${esc(item.id)}">详情</button></td>
+      <td class="check-cell"><input type="checkbox" data-inspection-select="${esc(item.id)}" ${state.selected.has(item.id) ? "checked" : ""} aria-label="选择${esc(item.name)}"></td><td title="${esc(item.code)}">${esc(item.code)}</td><td title="${esc(item.name)}">${esc(item.name)}</td><td>${esc(item.planName)}</td><td>${levelTag(item.level)}</td><td>${esc(item.inspector)}</td><td>${esc(item.owner)}</td><td>${statusTag(item.status, item.status === "已完成" ? "normal" : item.status === "已关闭" ? "muted" : "warning")}</td><td>${statusTag(item.result, "muted")}</td><td>${statusTag(item.overdue, item.overdue === "未逾期" ? "normal" : "danger")}</td><td>${item.deviceCount}/${item.itemCount}</td><td>${esc(item.abnormalCount ?? 0)}</td><td>${esc(item.plannedAt || "-")}</td><td>${esc(item.deadline)}</td><td>${esc(item.startedAt)}</td><td>${esc(item.submittedAt)}</td><td>${esc(item.duration)}</td><td class="action-cell">${taskActions(item)}</td>
     </tr>`).join("") : `<tr><td colspan="18"><div class="inspection-empty">暂无匹配的巡检任务</div></td></tr>`;
     pagination(document.getElementById("tasksPagination"), list.length);
     const deleteButton = document.querySelector('[data-inspection-action="delete-selected"]');
@@ -140,7 +150,7 @@
   }
 
   function openWorkDrawer(mode, item = {}) {
-    openDrawer({ title: mode === "edit" ? "编辑标准作业" : "新增标准作业", body: workForm(mode, item), footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="work" data-mode="${mode}" data-id="${esc(item.id || "")}">确定</button>` });
+    openConfigModal({ title: mode === "edit" ? "编辑标准作业" : "新增标准作业", body: workForm(mode, item), footer: `<button class="btn btn-secondary" type="button" data-config-modal-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="work" data-mode="${mode}" data-id="${esc(item.id || "")}">确定</button>` });
   }
 
   function openWorkDetail(item) {
@@ -187,12 +197,20 @@
 
   function openItemDrawer(workId, itemId = "", projectId = "") {
     const item = byId(state.inspectionItems, itemId) || {};
-    openDrawer({ title: itemId ? "编辑检查项" : "新增检查项", body: itemForm(item), footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="item" data-work-id="${esc(workId)}" data-project-id="${esc(projectId || item.projectId || "")}" data-id="${esc(itemId)}">确认</button>` });
+    openConfigModal({ title: itemId ? "编辑检查项" : "新增检查项", body: itemForm(item), footer: `<button class="btn btn-secondary" type="button" data-config-modal-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="item" data-work-id="${esc(workId)}" data-project-id="${esc(projectId || item.projectId || "")}" data-id="${esc(itemId)}">确认</button>` });
   }
 
   function openProjectDrawer(workId, projectId = "") {
     const project = byId(state.inspectionProjects, projectId) || {};
-    openDrawer({ title: projectId ? "编辑检查项目" : "新增检查项目", body: projectForm(project), footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="project" data-work-id="${esc(workId)}" data-id="${esc(projectId)}">确认</button>` });
+    openConfigModal({ title: projectId ? "编辑检查项目" : "新增检查项目", body: projectForm(project), footer: `<button class="btn btn-secondary" type="button" data-config-modal-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="project" data-work-id="${esc(workId)}" data-id="${esc(projectId)}">确认</button>` });
+  }
+
+  function openConfigModal({ title, body, footer }) {
+    document.querySelectorAll(".inspection-config-modal-mask").forEach((mask) => mask.remove());
+    const mask = document.createElement("div");
+    mask.className = "inspection-config-modal-mask";
+    mask.innerHTML = `<section class="inspection-config-modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><header><h2>${esc(title)}</h2><button type="button" data-config-modal-close aria-label="关闭"><i class="fa-solid fa-xmark"></i></button></header><main data-config-modal-body>${body}</main><footer>${footer}</footer></section>`;
+    document.body.append(mask);
   }
 
   function planForm(item = {}) {
@@ -207,7 +225,7 @@
     closeDevicePicker();
     closeWorkViewer();
     state.planDeviceIds = [...(item.deviceIds || [])];
-    openDrawer({ title: mode === "edit" ? "编辑巡检计划" : "新增巡检计划", body: planForm(item), footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="plan" data-mode="${mode}" data-id="${esc(item.id || "")}">确定</button>` });
+    openDrawer({ title: mode === "edit" ? "编辑巡检计划" : "新增巡检计划", body: planForm(item).replaceAll("负责人", "验收人"), footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-inspection-save="plan" data-mode="${mode}" data-id="${esc(item.id || "")}">确定</button>` });
     renderPlanDeviceTable();
   }
 
@@ -292,15 +310,47 @@
 
   function taskDetailBody(item, tab = "basic") {
     const devices = (item.deviceIds || []).map((id) => byId(state.devices, id)).filter(Boolean);
-    const tabs = `<div class="inspection-task-tabs"><button type="button" class="${tab === "basic" ? "active" : ""}" data-task-tab="basic" data-id="${esc(item.id)}">基本信息</button><button type="button" class="${tab === "devices" ? "active" : ""}" data-task-tab="devices" data-id="${esc(item.id)}">设备列表</button><button type="button" class="${tab === "abnormal" ? "active" : ""}" data-task-tab="abnormal" data-id="${esc(item.id)}">设备异常</button></div>`;
-    const basic = `<section class="inspection-task-panel ${tab === "basic" ? "" : "hidden"}" data-task-panel="basic"><div class="detail-grid">${[["任务编号", item.code], ["任务状态", statusTag(item.status, "warning")], ["任务名称", item.name], ["所属项目", "光谷科学岛综合管廊一期"], ["关联计划", item.planName], ["巡检等级", levelTag(item.level)], ["巡检人员", item.inspector], ["负责人", item.owner], ["逾期状态", statusTag(item.overdue, "danger")], ["计划执行", item.planExecution || "未执行"], ["任务开始时间", item.plannedAt], ["任务截止时间", item.deadline], ["实际开始时间", item.startedAt], ["结果提交时间", item.submittedAt], ["巡检时长", item.duration], ["设备数量", item.deviceCount], ["异常数量", item.abnormalCount], ["创建时间", "2026-09-09 00:10:17"], ["备注", item.note]].map(([label, content]) => `<div class="info-item"><span class="info-label">${label}</span><span class="info-value">${typeof content === "string" && content.startsWith("<span") ? content : esc(content)}</span></div>`).join("")}</div></section>`;
+    const tabs = `<div class="inspection-task-tabs"><button type="button" class="${tab === "basic" ? "active" : ""}" data-task-tab="basic" data-id="${esc(item.id)}">基本信息</button><button type="button" class="${tab === "devices" ? "active" : ""}" data-task-tab="devices" data-id="${esc(item.id)}">设备列表</button><button type="button" class="${tab === "abnormal" ? "active" : ""}" data-task-tab="abnormal" data-id="${esc(item.id)}">设备异常</button><button type="button" class="${tab === "records" ? "active" : ""}" data-task-tab="records" data-id="${esc(item.id)}">处理记录</button></div>`;
+    const basic = `<section class="inspection-task-panel ${tab === "basic" ? "" : "hidden"}" data-task-panel="basic"><div class="detail-grid">${[["任务编号", item.code], ["任务状态", statusTag(item.status, "warning")], ["任务名称", item.name], ["所属项目", "光谷科学岛综合管廊一期"], ["关联计划", item.planName], ["巡检等级", levelTag(item.level)], ["巡检人员", item.inspector], ["验收人", item.owner], ["逾期状态", statusTag(item.overdue, item.overdue === "未逾期" ? "normal" : "danger")], ["任务开始时间", item.plannedAt], ["任务截止时间", item.deadline], ["实际开始时间", item.startedAt], ["结果提交时间", item.submittedAt], ["巡检时长", item.duration], ["设备数量", item.deviceCount], ["异常数量", item.abnormalCount], ["创建时间", "2026-09-09 00:10:17"], ["备注", item.note]].map(([label, content]) => `<div class="info-item"><span class="info-label">${label}</span><span class="info-value">${typeof content === "string" && content.startsWith("<span") ? content : esc(content)}</span></div>`).join("")}</div></section>`;
     const devicePanel = `<section class="inspection-task-panel ${tab === "devices" ? "" : "hidden"}" data-task-panel="devices"><div class="inspection-table-wrap"><table class="table inspection-detail-table"><thead><tr><th>设备名称</th><th>设备编码</th><th>所属系统</th><th>设备分类</th><th>所属项目</th><th>所属管廊</th><th>所属舱室</th><th>所属区段</th><th>所属管线</th><th>安装位置</th><th>操作</th></tr></thead><tbody>${devices.map((device) => `<tr><td>${esc(device.name)}</td><td>${esc(device.code)}</td><td>${esc(device.system)}</td><td>${esc(device.category)}</td><td>${esc(device.project)}</td><td>${esc(device.corridor)}</td><td>${esc(device.room)}</td><td>${esc(device.section)}</td><td>${esc(device.pipeline)}</td><td>${esc(device.location)}</td><td><button class="table-action" type="button" data-inspection-device-detail="${esc(device.id)}">详情</button><button class="table-action" type="button" data-inspection-device-record="${esc(device.id)}">作业记录</button></td></tr>`).join("") || `<tr><td colspan="11"><div class="inspection-empty">暂无设备</div></td></tr>`}</tbody></table></div></section>`;
-    const abnormalPanel = `<section class="inspection-task-panel ${tab === "abnormal" ? "" : "hidden"}" data-task-panel="abnormal"><div class="inspection-table-wrap"><table class="table inspection-detail-table"><thead><tr><th>设备名称</th><th>异常类型</th><th>处理状态</th><th>备注</th></tr></thead><tbody>${item.abnormalCount ? `<tr><td>${esc(devices[0]?.name || "-")}</td><td>${statusTag("设备状态异常", "danger")}</td><td>${statusTag("待处理", "warning")}</td><td>-</td></tr>` : `<tr><td colspan="4"><div class="inspection-empty">暂无设备异常</div></td></tr>`}</tbody></table></div></section>`;
-    return tabs + basic + devicePanel + abnormalPanel;
+    const abnormalReports = item.abnormalReports || [];
+    const abnormalPanel = `<section class="inspection-task-panel ${tab === "abnormal" ? "" : "hidden"}" data-task-panel="abnormal"><div class="inspection-table-wrap"><table class="table inspection-detail-table inspection-abnormal-table"><thead><tr><th>设备编号</th><th>异常设备</th><th>异常分类</th><th>所属项目</th><th>所属管廊</th><th>所属舱室</th><th>所属区段</th><th>所属管线</th><th>安装位置</th><th>异常描述</th><th>关联作业项</th><th>上报人</th><th>上报时间</th></tr></thead><tbody>${abnormalReports.length ? abnormalReports.map((report) => `<tr><td>${esc(report.deviceCode)}</td><td>${esc(report.deviceName)}</td><td>${statusTag(report.category, "danger")}</td><td>${esc(report.project)}</td><td>${esc(report.corridor)}</td><td>${esc(report.room)}</td><td>${esc(report.section)}</td><td>${esc(report.pipeline)}</td><td>${esc(report.location)}</td><td class="wrap" title="${esc(report.description)}">${esc(report.description)}</td><td>${esc(report.workItem)}</td><td>${esc(report.reporter)}</td><td>${esc(report.reportedAt)}</td></tr>`).join("") : `<tr><td colspan="13"><div class="inspection-empty">暂无设备异常</div></td></tr>`}</tbody></table></div></section>`;
+    const records = item.history?.length ? item.history : [[item.inspector || "系统", "创建巡检任务", item.plannedAt || "2026-09-07 08:56:30"], [item.inspector || "巡检人", "开始执行设备巡检", item.startedAt !== "-" ? item.startedAt : "2026-09-07 09:15:40"], [item.owner || "验收人", item.status === "已完成" ? "验收通过，巡检任务已完成" : "等待提交巡检结果", item.submittedAt !== "-" ? item.submittedAt : "2026-09-07 09:20:18"]];
+    const recordPanel = `<section class="inspection-task-panel ${tab === "records" ? "" : "hidden"}" data-task-panel="records"><div class="inspection-records"><h3>处理记录</h3>${records.map(([person, process, time], index) => `<div class="inspection-record"><span class="inspection-record-dot ${index === records.length - 1 ? "done" : ""}"></span><div><strong>${esc(person)}</strong><p>${esc(process)}</p><time>${esc(time)}</time></div></div>`).join("")}</div></section>`;
+    return tabs + basic + devicePanel + abnormalPanel + recordPanel;
   }
 
   function openTaskDetail(item, tab = "basic") {
     openDrawer({ title: "巡检任务详情", body: taskDetailBody(item, tab), footer: `<button class="btn btn-secondary" type="button" data-drawer-close>关闭</button>` }, "inspection-task-drawer");
+  }
+
+  function openTaskSubmit(item) {
+    if (state.taskSubmitDraft.taskId !== item.id) state.taskSubmitDraft = { taskId: item.id, note: "" };
+    const devices = (item.deviceIds || []).map((id) => byId(state.devices, id)).filter(Boolean);
+    openDrawer({ title: `提交巡检结果 - ${item.name}`, body: `<div class="inspection-submit-summary">任务编码：${esc(item.code)}　巡检人：${esc(item.inspector)}　设备数：${devices.length}　设备异常上报：${item.abnormalCount || 0}</div><div class="inspection-table-wrap"><table class="table inspection-detail-table"><thead><tr><th>设备信息</th><th>分类信息</th><th>标准作业</th><th>操作</th></tr></thead><tbody>${devices.map((device) => `<tr><td><strong>${esc(device.name)}</strong><br><span class="muted">${esc(device.code)}</span></td><td>设备：${esc(device.category)}<br>命中：${esc(device.category)}</td><td>日常巡检</td><td class="inspection-submit-actions"><button class="table-action" type="button" data-task-fill="${esc(device.id)}">${device.recordFilled ? "查看" : "填写"}</button><button class="table-action" type="button" data-task-abnormal="${esc(device.id)}">异常上报</button></td></tr>`).join("")}</tbody></table></div><label class="form-field"><span class="form-label">巡检说明</span><textarea class="form-control textarea" data-task-submit-note maxlength="300" placeholder="请输入">${esc(state.taskSubmitDraft.note)}</textarea></label>`, footer: `<button class="btn btn-secondary" type="button" data-drawer-close>取消</button><button class="btn btn-primary" type="button" data-task-submit-confirm="${esc(item.id)}">确认提交</button>` }, "inspection-task-drawer inspection-submit-drawer");
+  }
+
+  function openTaskAbnormal(device) {
+    const task = byId(state.tasks, state.taskSubmitDraft.taskId);
+    if (!task) return;
+    const work = byId(state.standardWorks, device.workId);
+    const entries = work ? state.inspectionItems.filter((entry) => entry.workId === work.id) : [];
+    document.querySelectorAll(".inspection-abnormal-mask").forEach((mask) => mask.remove());
+    const mask = document.createElement("div");
+    mask.className = "inspection-abnormal-mask";
+    mask.innerHTML = `<section class="inspection-abnormal-modal" role="dialog" aria-modal="true" aria-label="设备异常上报"><header><h2>设备异常上报 - ${esc(device.name)}</h2><button type="button" data-task-abnormal-close aria-label="关闭"><i class="fa-solid fa-xmark"></i></button></header><main><div class="inspection-abnormal-device"><div><span>设备名称</span><strong>${esc(device.name)}</strong></div><div><span>设备编码</span><strong>${esc(device.code)}</strong></div><div><span>设备分类</span><strong>${esc(device.category)}</strong></div><div><span>异常上报</span><strong>${(task.abnormalReports || []).filter((report) => report.deviceId === device.id).length}</strong></div></div><div class="inspection-abnormal-form"><label class="form-field"><span class="form-label form-required">异常分类</span><select class="form-control" data-abnormal-field="category"><option value="">请选择异常分类</option><option>设备故障</option><option>运行异常</option><option>外观异常</option><option>环境异常</option></select></label><label class="form-field"><span class="form-label form-required">异常等级</span><select class="form-control" data-abnormal-field="level"><option value="">请选择异常等级</option><option>一般</option><option>较大</option><option>重大</option></select></label><label class="form-field form-span-2"><span class="form-label form-required">关联检查项条目</span><select class="form-control" data-abnormal-field="workItem"><option value="">请选择关联检查项条目</option>${entries.map((entry) => `<option value="${esc(entry.name)}">${esc(entry.name)}</option>`).join("")}</select></label><label class="form-field form-span-2"><span class="form-label form-required">设备异常描述</span><textarea class="form-control textarea" data-abnormal-field="description" maxlength="500" placeholder="请输入设备异常描述"></textarea><span class="field-count" data-abnormal-count>0 / 500</span></label><div class="form-field form-span-2"><span class="form-label">上传图片</span><label class="inspection-abnormal-upload"><input type="file" data-abnormal-images accept="image/*" multiple><i class="fa-solid fa-plus"></i><span>上传图片</span></label><p class="inspection-upload-tip">支持 JPG、PNG 格式，单张不超过 2MB</p><div class="inspection-upload-files" data-abnormal-files></div></div></div></main><footer><button class="btn btn-secondary" type="button" data-task-abnormal-close>取消</button><button class="btn btn-primary" type="button" data-task-abnormal-save="${esc(device.id)}">上报设备异常</button></footer></section>`;
+    document.body.append(mask);
+  }
+
+  function openTaskFill(device, viewOnly) {
+    const work = byId(state.standardWorks, device.workId);
+    const entries = work ? state.inspectionItems.filter((entry) => entry.workId === work.id).slice(0, 3) : [];
+    const entryCards = entries.map((entry, index) => `<section class="inspection-fill-item"><div class="inspection-fill-item-head"><div><strong>${esc(entry.name)}</strong><span class="inspection-fill-type">${esc(entry.inputType || "单选")}</span></div><span class="inspection-fill-index">${index + 1} / ${entries.length}</span></div>${entry.remark ? `<p class="inspection-fill-help">${esc(entry.remark)}</p>` : ""}<div class="inspection-fill-options"><label><input type="radio" name="fill-${esc(entry.id)}" value="正常" ${viewOnly ? "disabled" : "checked"}> <span>正常</span></label><label><input type="radio" name="fill-${esc(entry.id)}" value="异常" ${viewOnly ? "disabled" : ""}> <span>异常</span></label></div></section>`).join("");
+    document.querySelectorAll(".inspection-fill-mask").forEach((mask) => mask.remove());
+    const mask = document.createElement("div");
+    mask.className = "inspection-fill-mask";
+    mask.innerHTML = `<section class="inspection-fill-modal" role="dialog" aria-modal="true" aria-label="巡检设备"><header class="inspection-fill-modal-head"><h2>巡检设备 - ${esc(device.name)}</h2><button type="button" data-task-fill-close aria-label="关闭"><i class="fa-solid fa-xmark"></i></button></header><main class="inspection-fill-modal-body"><div class="inspection-fill-meta"><div><span>设备名称</span><strong>${esc(device.name)}</strong></div><div><span>设备编码</span><strong>${esc(device.code || "-")}</strong></div><div><span>设备分类</span><strong>${esc(device.category || "-")}</strong></div><div><span>标准作业</span><strong>${esc(work?.name || "日常巡检")}</strong></div></div><div class="inspection-fill-section-head"><h3>基础巡检</h3><span>检查项 ${entries.length}</span></div><div class="inspection-fill-list">${entryCards || `<div class="inspection-empty">暂无检查项</div>`}</div></main><footer class="inspection-fill-modal-foot">${viewOnly ? `<button class="btn btn-secondary" type="button" data-task-fill-close>关闭</button>` : `<button class="btn btn-secondary" type="button" data-task-fill-close>取消</button><button class="btn btn-primary" type="button" data-task-fill-save="${esc(device.id)}">保存检查项</button>`}</footer></section>`;
+    document.body.append(mask);
   }
 
   const closeWorkModal = () => document.querySelectorAll(".inspection-works-mask").forEach((mask) => mask.remove());
@@ -342,13 +392,14 @@
   }
   function readDrawerFields() { return readFields(document.getElementById("drawerBody")); }
   function saveWork(button) {
-    const fields = readDrawerFields();
+    const modal = button.closest(".inspection-config-modal");
+    const fields = readFields(modal?.querySelector("[data-config-modal-body]") || document.getElementById("drawerBody"));
     if (!fields.system || !fields.category || !fields.name) { showToast("请填写所属系统、设备分类和标准作业名称"); return; }
     const mode = document.querySelector('input[name="inspection-work-mode"]:checked')?.value || "顺序作业";
     const item = byId(state.standardWorks, button.dataset.id);
     if (item) Object.assign(item, { ...fields, mode, updatedAt: now(), updater: "当前用户" });
     else state.standardWorks.unshift({ id: `SW-${Date.now()}`, code: `KCDS_INSP_${Date.now()}`, name: fields.name, type: "巡检", mode, system: fields.system, category: fields.category, itemCount: 0, entryCount: 0, creator: "当前用户", createdAt: now(), updater: "当前用户", updatedAt: now(), status: "正常", remark: fields.remark });
-    window.closeAppDrawer(); render(); showToast(item ? "标准作业已更新" : "标准作业已创建");
+    modal?.closest(".inspection-config-modal-mask")?.remove(); render(); showToast(item ? "标准作业已更新" : "标准作业已创建");
   }
   const syncWorkCounts = (workId) => {
     const work = byId(state.standardWorks, workId);
@@ -357,26 +408,28 @@
     work.entryCount = state.inspectionItems.filter((entry) => entry.workId === workId).length;
   };
   function saveProject(button) {
-    const fields = readDrawerFields();
+    const modal = button.closest(".inspection-config-modal");
+    const fields = readFields(modal?.querySelector("[data-config-modal-body]") || document.getElementById("drawerBody"));
     if (!fields["project-name"]) { showToast("请输入检查项目名称"); return; }
     const project = byId(state.inspectionProjects, button.dataset.id);
-    const next = { id: project?.id || `PRJ-${Date.now()}`, workId: button.dataset.workId, order: Number(fields["project-order"] || 0), name: fields["project-name"], status: document.querySelector('input[name="inspection-project-status"]:checked')?.value || "启用", remark: fields["project-remark"] || "" };
+    const next = { id: project?.id || `PRJ-${Date.now()}`, workId: button.dataset.workId, order: Number(fields["project-order"] || 0), name: fields["project-name"], status: modal?.querySelector('input[name="inspection-project-status"]:checked')?.value || "启用", remark: fields["project-remark"] || "" };
     if (project) Object.assign(project, next); else state.inspectionProjects.push(next);
     syncWorkCounts(button.dataset.workId);
-    window.closeAppDrawer(); showToast(project ? "检查项目已更新" : "检查项目已新增");
+    modal?.closest(".inspection-config-modal-mask")?.remove(); showToast(project ? "检查项目已更新" : "检查项目已新增");
     const work = byId(state.standardWorks, button.dataset.workId); if (work) openWorkConfig(work, next.id); render();
   }
   function saveItem(button) {
-    const fields = readDrawerFields();
-    const inputType = document.querySelector('input[name="inspection-item-input-type"]:checked')?.value || "单选";
+    const modal = button.closest(".inspection-config-modal");
+    const fields = readFields(modal?.querySelector("[data-config-modal-body]") || document.getElementById("drawerBody"));
+    const inputType = modal?.querySelector('input[name="inspection-item-input-type"]:checked')?.value || "单选";
     if (!fields["item-name"]) { showToast("请输入条目名称"); return; }
     if (fields["item-order"] === "") { showToast("请输入排序"); return; }
     const options = inputType === "单选" || inputType === "多选" ? (fields["item-options"] || "").split("、").map((entry) => entry.trim()).filter(Boolean) : [];
     const item = byId(state.inspectionItems, button.dataset.id);
-    const next = { id: item?.id || `ITEM-${Date.now()}`, workId: button.dataset.workId, projectId: button.dataset.projectId || item?.projectId || "", order: Number(fields["item-order"] || 0), name: fields["item-name"], required: document.querySelector('input[name="inspection-item-required"]:checked')?.value !== "false", inputType, options, remark: fields["item-remark"] || "", updatedAt: now() };
+    const next = { id: item?.id || `ITEM-${Date.now()}`, workId: button.dataset.workId, projectId: button.dataset.projectId || item?.projectId || "", order: Number(fields["item-order"] || 0), name: fields["item-name"], required: modal?.querySelector('input[name="inspection-item-required"]:checked')?.value !== "false", inputType, options, remark: fields["item-remark"] || "", updatedAt: now() };
     if (item) Object.assign(item, next); else state.inspectionItems.push(next);
     syncWorkCounts(button.dataset.workId);
-    window.closeAppDrawer(); showToast(item ? "检查项已更新" : "检查项已新增");
+    modal?.closest(".inspection-config-modal-mask")?.remove(); showToast(item ? "检查项已更新" : "检查项已新增");
     const work = byId(state.standardWorks, button.dataset.workId); if (work) openWorkConfig(work, next.projectId); render();
   }
   function savePlan(button) {
@@ -630,6 +683,19 @@
     const planAction = event.target.closest("[data-inspection-plan-action]"); if (planAction) { const item = byId(state.plans, planAction.dataset.id); if (item) openPlanDrawer("edit", item); }
     const itemAction = event.target.closest("[data-inspection-item-action]"); if (itemAction) { const work = byId(state.standardWorks, itemAction.dataset.workId); if (!work) return; if (itemAction.dataset.inspectionItemAction === "create") openItemDrawer(work.id, "", itemAction.dataset.projectId); if (itemAction.dataset.inspectionItemAction === "edit") openItemDrawer(work.id, itemAction.dataset.id, itemAction.dataset.projectId); if (itemAction.dataset.inspectionItemAction === "delete") { window.openAppConfirm({ title: "删除检查项", message: "确认删除当前检查项吗？", confirmText: "确认删除", onConfirm: () => { state.inspectionItems = state.inspectionItems.filter((entry) => entry.id !== itemAction.dataset.id); syncWorkCounts(work.id); render(); openWorkConfig(work, itemAction.dataset.projectId); showToast("检查项已删除"); } }); } }
     const task = event.target.closest("[data-inspection-task-detail]"); if (task) { const item = byId(state.tasks, task.dataset.inspectionTaskDetail); if (item) openTaskDetail(item); }
+    const start = event.target.closest("[data-inspection-task-start]"); if (start) { const item = byId(state.tasks, start.dataset.inspectionTaskStart); if (item) window.openAppConfirm({ title: "提示", message: "确认开始巡检?", confirmText: "确定", onConfirm: () => { item.status = "巡检中"; item.startedAt = now(); item.planExecution = "执行中"; render(); showToast("巡检已开始"); } }); }
+    const submit = event.target.closest("[data-inspection-task-submit]"); if (submit) { const item = byId(state.tasks, submit.dataset.inspectionTaskSubmit); if (item) openTaskSubmit(item); }
+    const accept = event.target.closest("[data-inspection-task-accept]"); if (accept) { const item = byId(state.tasks, accept.dataset.inspectionTaskAccept); if (item) window.openAppConfirm({ title: "验收通过", message: "请输入验收意见（选填）", inputPlaceholder: "请输入验收意见", confirmText: "确认", onConfirm: (remark) => { item.status = "已完成"; item.result = "正常"; item.note = remark || item.note; item.submittedAt = now(); item.history = [...(item.history || []), [item.owner || "验收人", remark || "验收通过，巡检结果符合要求", item.submittedAt]]; render(); showToast("任务已完成"); } }); }
+    const moreTask = event.target.closest("[data-inspection-task-more]"); if (moreTask) { hideMoreMenus(); const item = byId(state.tasks, moreTask.dataset.inspectionTaskMore); if (!item) return; const menu = document.createElement("div"); menu.className = "inspection-more-menu"; menu.innerHTML = `<button type="button" data-task-more-action="detail" data-id="${esc(item.id)}">详情</button><button type="button" data-task-more-action="close" data-id="${esc(item.id)}">关闭</button><button type="button" data-task-more-action="delete" data-id="${esc(item.id)}">删除</button>`; document.body.append(menu); const rect = moreTask.getBoundingClientRect(); menu.style.left = `${rect.left}px`; menu.style.top = `${rect.bottom + 4}px`; return; }
+    const taskMoreAction = event.target.closest("[data-task-more-action]"); if (taskMoreAction) { hideMoreMenus(); const item = byId(state.tasks, taskMoreAction.dataset.id); if (!item) return; if (taskMoreAction.dataset.taskMoreAction === "detail") openTaskDetail(item); if (taskMoreAction.dataset.taskMoreAction === "delete") window.openAppConfirm({ title: "删除巡检任务", message: "确认删除该巡检任务吗？", confirmText: "确认删除", onConfirm: () => { state.tasks = state.tasks.filter((entry) => entry.id !== item.id); render(); showToast("任务已删除"); } }); if (taskMoreAction.dataset.taskMoreAction === "close") window.openAppConfirm({ title: "关闭巡检任务", message: "请输入关闭原因", inputPlaceholder: "请输入关闭原因", confirmText: "确认", onConfirm: (reason) => { item.status = "已关闭"; item.note = reason || "已手动关闭"; item.history = [...(item.history || []), [item.owner || "负责人", reason || "巡检任务已关闭", now()]]; render(); showToast("任务已关闭"); } }); }
+    const fill = event.target.closest("[data-task-fill]"); if (fill) { state.taskSubmitDraft.note = document.querySelector("[data-task-submit-note]")?.value.trim() || state.taskSubmitDraft.note; const device = byId(state.devices, fill.dataset.taskFill); if (device) openTaskFill(device, !!device.recordFilled); }
+    const abnormal = event.target.closest("[data-task-abnormal]"); if (abnormal) { state.taskSubmitDraft.note = document.querySelector("[data-task-submit-note]")?.value.trim() || state.taskSubmitDraft.note; const device = byId(state.devices, abnormal.dataset.taskAbnormal); if (device) openTaskAbnormal(device); }
+    if (event.target.closest("[data-task-fill-close]") || event.target.classList?.contains("inspection-fill-mask")) { event.target.closest(".inspection-fill-mask")?.remove(); return; }
+    if (event.target.closest("[data-task-abnormal-close]") || event.target.classList?.contains("inspection-abnormal-mask")) { event.target.closest(".inspection-abnormal-mask")?.remove(); return; }
+    if (event.target.closest("[data-config-modal-close]") || event.target.classList?.contains("inspection-config-modal-mask")) { event.target.closest(".inspection-config-modal-mask")?.remove(); return; }
+    const fillSave = event.target.closest("[data-task-fill-save]"); if (fillSave) { const device = byId(state.devices, fillSave.dataset.taskFillSave); if (device) device.recordFilled = true; document.querySelector(`.drawer [data-task-fill="${fillSave.dataset.taskFillSave}"]`)?.replaceChildren(document.createTextNode("查看")); fillSave.closest(".inspection-fill-mask")?.remove(); showToast("巡检结果已保存"); }
+    const abnormalSave = event.target.closest("[data-task-abnormal-save]"); if (abnormalSave) { const mask = abnormalSave.closest(".inspection-abnormal-mask"); const device = byId(state.devices, abnormalSave.dataset.taskAbnormalSave); const taskItem = byId(state.tasks, state.taskSubmitDraft.taskId); if (!mask || !device || !taskItem) return; const field = (name) => mask.querySelector(`[data-abnormal-field="${name}"]`)?.value.trim() || ""; const category = field("category"); const level = field("level"); const workItem = field("workItem"); const description = field("description"); if (!category || !level || !workItem || !description) { showToast("请完整填写异常分类、等级、关联检查项和异常描述"); return; } const reportedAt = now(); const images = [...(mask.querySelector("[data-abnormal-images]")?.files || [])].map((file) => file.name); taskItem.abnormalReports = [...(taskItem.abnormalReports || []), { id: `ABN-${Date.now()}`, deviceId: device.id, deviceCode: device.code, deviceName: device.name, category, level, project: device.project, corridor: device.corridor, room: device.room, section: device.section, pipeline: device.pipeline, location: device.location, description, workItem, reporter: taskItem.inspector, reportedAt, images }]; taskItem.abnormalCount = taskItem.abnormalReports.length; taskItem.history = [...(taskItem.history || []), [taskItem.inspector || "巡检人", `上报设备异常：${description}`, reportedAt]]; mask.remove(); openTaskSubmit(taskItem); render(); showToast("设备异常已上报"); }
+    const submitConfirm = event.target.closest("[data-task-submit-confirm]"); if (submitConfirm) { const item = byId(state.tasks, submitConfirm.dataset.taskSubmitConfirm); if (item) { const note = document.querySelector("[data-task-submit-note]")?.value.trim() || "已完成设备巡检，结果正常"; item.status = "验收中"; item.submittedAt = now(); item.history = [...(item.history || []), [item.inspector || "巡检人", note, item.submittedAt]]; state.taskSubmitDraft = { taskId: "", note: "" }; window.closeAppDrawer(); render(); showToast("已提交巡检结果，进入验收"); } }
     const taskTab = event.target.closest("[data-task-tab]"); if (taskTab) { const item = byId(state.tasks, taskTab.dataset.id); if (item) openTaskDetail(item, taskTab.dataset.taskTab); }
     if (event.target.closest("[data-inspection-save=work]")) saveWork(event.target.closest("[data-inspection-save=work]"));
     if (event.target.closest("[data-inspection-save=project]")) saveProject(event.target.closest("[data-inspection-save=project]"));
@@ -661,10 +727,19 @@
     if (event.target.matches("[data-inspection-select-all]")) { const list = pageKey === "inspection.plans" ? state.plans : state.tasks; list.forEach((item) => event.target.checked ? state.selected.add(item.id) : state.selected.delete(item.id)); render(); }
   });
   document.addEventListener("input", (event) => {
+    if (event.target.matches('[data-abnormal-field="description"]')) { const count = event.target.closest(".form-field")?.querySelector("[data-abnormal-count]"); if (count) count.textContent = `${event.target.value.length} / 500`; return; }
     if (event.target.matches("[data-person-dept-keyword]")) { state.picker.deptKeyword = event.target.value; renderPersonDeptTree(); return; }
     if (event.target.matches("[data-config-project-search]")) { const keyword = event.target.value.trim().toLowerCase(); document.querySelectorAll("[data-config-project]").forEach((card) => { card.style.display = card.querySelector(".project-name").textContent.toLowerCase().includes(keyword) ? "" : "none"; }); return; }
     const formField = event.target.closest(".form-field");
     if (formField && event.target.matches("[data-inspection-field]") && event.target.maxLength > 0) { const count = formField.querySelector(".field-count"); if (count) count.textContent = `${event.target.value.length} / ${event.target.maxLength}`; }
+  });
+  document.addEventListener("change", (event) => {
+    if (!event.target.matches("[data-abnormal-images]")) return;
+    const files = [...event.target.files];
+    const oversized = files.filter((file) => file.size > 2 * 1024 * 1024);
+    if (oversized.length) { event.target.value = ""; showToast("单张图片不能超过 2MB"); }
+    const list = event.target.closest(".form-field")?.querySelector("[data-abnormal-files]");
+    if (list) list.textContent = oversized.length ? "" : files.map((file) => file.name).join("、");
   });
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;

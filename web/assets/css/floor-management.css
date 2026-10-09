@@ -18,6 +18,7 @@
 .floor-page .upload-box p, .floor-page .upload-box small { margin: 0; }
 .floor-page .upload-box small { font-size: 12px; }
 .floor-page .detail-text { margin: 0; color: var(--text-primary); line-height: 1.7; }
+.floor-page .requirement-fab { left: 24px; bottom: 24px; }
 .floor-page .textarea-count-wrap { position: relative; display: block; }
 .floor-page .textarea-count-wrap .textarea { padding-bottom: 24px; }
 .floor-page .textarea-count-wrap .field-count { position: absolute; right: 12px; bottom: 8px; margin: 0; line-height: 16px; pointer-events: none; }

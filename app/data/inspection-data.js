@@ -78,8 +78,8 @@
   });
 
   const plans = [
-    { id: "PLAN-001", code: "IP202607211453002617", name: "测试计划", project: "光谷科学岛综合管廊一期", level: "中", target: "裙楼3层F3-2区可燃气体报警器、裙楼3层F3-2区可燃气体故障报警器", cycle: "每日", weekDay: "周一", monthDay: 1, generateAt: "00:10:00", startAt: "09:00:00", inspector: "物管员", owner: "张强", status: "正常", finishHours: 24, createdAt: "2026-07-21 14:53:00", lastGenerateAt: "2026-10-01 00:10:04", nextGenerateAt: "2026-10-02 00:10:00", note: "每日生成巡检任务。", deviceIds: ["DEV-001", "DEV-002"] },
-    { id: "PLAN-002", code: "IP202607011808557591", name: "巡检测试计划", project: "光谷科学岛综合管廊一期", level: "中", target: "裙楼3层F3-2区可燃气体报警器", cycle: "每日", weekDay: "周一", monthDay: 1, generateAt: "00:10:00", startAt: "09:00:00", inspector: "潘隆坤", owner: "张强", status: "正常", finishHours: 24, createdAt: "2026-07-01 18:08:55", lastGenerateAt: "2026-10-01 00:10:04", nextGenerateAt: "2026-10-02 00:10:00", note: "重点设备每日巡检。", deviceIds: ["DEV-001"] },
+    { id: "PLAN-001", code: "IP202607211453002617", name: "综合舱气体报警设备日检", project: "光谷科学岛综合管廊一期", level: "中", target: "裙楼3层F3-2区可燃气体报警器、裙楼3层F3-2区可燃气体故障报警器", cycle: "每日", weekDay: "周一", monthDay: 1, generateAt: "00:10:00", startAt: "09:00:00", inspector: "物管员", owner: "张强", status: "正常", finishHours: 24, createdAt: "2026-07-21 14:53:00", lastGenerateAt: "2026-10-01 00:10:04", nextGenerateAt: "2026-10-02 00:10:00", note: "每日生成巡检任务。", deviceIds: ["DEV-001", "DEV-002"] },
+    { id: "PLAN-002", code: "IP202607011808557591", name: "低压配电设备运行巡检", project: "光谷科学岛综合管廊一期", level: "中", target: "裙楼3层F3-2区可燃气体报警器", cycle: "每日", weekDay: "周一", monthDay: 1, generateAt: "00:10:00", startAt: "09:00:00", inspector: "潘隆坤", owner: "张强", status: "正常", finishHours: 24, createdAt: "2026-07-01 18:08:55", lastGenerateAt: "2026-10-01 00:10:04", nextGenerateAt: "2026-10-02 00:10:00", note: "重点设备每日巡检。", deviceIds: ["DEV-001"] },
     { id: "PLAN-003", code: "IP202608051012334501", name: "每周综合巡检计划", project: "光谷科学岛综合管廊一期", level: "高", target: "综合舱A区照明配电箱", cycle: "每周", weekDay: "周一", monthDay: 1, generateAt: "00:10:00", startAt: "09:00:00", inspector: "黄志深", owner: "潘隆坤", status: "正常", finishHours: 8, createdAt: "2026-08-05 10:12:33", lastGenerateAt: "2026-09-28 00:10:02", nextGenerateAt: "2026-10-05 00:10:00", note: "每周一生成综合巡检任务。", deviceIds: ["DEV-004"] },
   ];
 
@@ -96,21 +96,36 @@
       level: plan.level,
       inspector: plan.inspector,
       owner: plan.owner,
-      status: "待巡检",
-      planExecution: "未执行",
-      result: "-",
-      overdue: "已超期",
+      status: ["待巡检", "巡检中", "验收中", "已完成", "已关闭"][index % 5],
+      planExecution: index === 0 ? "未执行" : "执行中",
+      result: index >= 3 ? "正常" : "-",
+      overdue: "未逾期",
       deviceCount,
       itemCount: deviceCount === 2 ? 6 : 3,
       abnormalCount: 0,
       plannedAt: `2026-09-${day} 09:00:00`,
       deadline: `2026-09-${String(Number(day) + 1).padStart(2, "0")} 09:00:00`,
-      startedAt: "-",
-      submittedAt: "-",
-      duration: "-",
-      note: "-",
+      startedAt: index === 0 ? "-" : `2026-09-${day} 09:05:00`,
+      submittedAt: index >= 2 ? `2026-09-${day} 10:15:00` : "-",
+      duration: index >= 2 ? "01:10:00" : "-",
+      note: index === 4 ? "设备维护窗口关闭" : "-",
       deviceIds: plan.deviceIds,
     };
+  });
+
+  tasks.unshift({
+    ...tasks[0],
+    id: "TASK-OVERDUE-001",
+    code: "IT202610020900102001",
+    name: "综合舱气体报警设备补充巡检-202610020900",
+    status: "待巡检",
+    overdue: "已逾期",
+    planExecution: "2026-10-02 09:00:00",
+    plannedAt: "2026-10-02 09:00:00",
+    deadline: "2026-10-03 09:00:00",
+    startedAt: "-",
+    submittedAt: "-",
+    duration: "-",
   });
 
   const departments = [

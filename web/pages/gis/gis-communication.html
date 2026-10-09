@@ -197,7 +197,23 @@ a{color:inherit;text-decoration:none}
 .gis-brand .lg{width:28px;height:28px;border-radius:4px;background:var(--primary);color:#fff;display:grid;place-items:center}
 .gis-brand b{font-size:14px;color:var(--title)}
 .gis-group-title{padding:12px 12px 6px;font-size:12px;color:var(--muted)}
+<style>
+/* 通信广播一屏六模块：标题只保留主标题，内容在卡片内独立滚动。 */
+.gis-communication-grid{height:calc(100vh - 190px);min-height:540px;overflow:hidden!important}
+.gis-communication-grid>div{min-height:0;overflow:hidden}
+.gis-communication-grid>div>.gis-card{min-height:0;overflow:hidden}
+.gis-communication-grid>div>.gis-card .gis-card-body{min-height:0;overflow:hidden}
+.gis-communication-grid .gis-card-sub{display:none}
+.gis-communication-grid .gis-scroll{min-height:0;overflow:auto;scrollbar-width:thin}
+.gis-communication-grid .gis-float-left{overflow:hidden}
+.gis-comm-runtime .gis-comm-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.gis-comm-summary>div{border:1px solid var(--line);padding:6px;text-align:center;border-radius:3px}.gis-comm-summary b{display:block;font-size:18px;color:var(--title)}.gis-comm-summary span{font-size:10px;color:var(--muted)}
+.gis-comm-device-list{overflow:auto;display:flex;flex-direction:column;gap:9px;padding-right:3px}.gis-comm-device-meta,.gis-comm-counts{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.gis-comm-device-meta b{color:var(--title)}.gis-comm-stack{height:8px;display:flex;margin:4px 0;border-radius:4px;overflow:hidden;background:#edf1f7}.gis-comm-stack i{display:block;height:100%}.gis-comm-stack .online{background:#14C9BA}.gis-comm-stack .offline{background:#8A93A0}.gis-comm-stack .alarm{background:#F53F57}.gis-comm-counts .online{color:#0E9E92}.gis-comm-counts .offline{color:#687385}.gis-comm-counts .alarm{color:#F53F57}
+.gis-communication-grid>div:first-child>.gis-card:nth-child(2) h3{font-size:0}.gis-communication-grid>div:first-child>.gis-card:nth-child(2) h3:after{content:'通信设备运行统计';font-size:13px}.gis-communication-grid>div:first-child>.gis-card:nth-child(4) h3{font-size:0}.gis-communication-grid>div:first-child>.gis-card:nth-child(4) h3:after{content:'广播分区统计';font-size:13px}.gis-communication-grid>div:last-child>.gis-card:first-child h3{font-size:0}.gis-communication-grid>div:last-child>.gis-card:first-child h3:after{content:'设备报警';font-size:13px}.gis-communication-grid>div:last-child>.gis-card:nth-child(2) h3{font-size:0}.gis-communication-grid>div:last-child>.gis-card:nth-child(2) h3:after{content:'调度台使用统计';font-size:13px}.gis-communication-grid>div:last-child>.gis-card:nth-child(3) h3{font-size:0}.gis-communication-grid>div:last-child>.gis-card:nth-child(3) h3:after{content:'广播设备巡检';font-size:13px}
+.gis-communication-grid>div:first-child>.gis-card:first-child{display:none}.gis-communication-grid>div:first-child>.gis-card:nth-child(2) .gis-bars{display:none}.gis-communication-grid>div:first-child>.gis-card:nth-child(2) .gis-card-body:after{content:'在线 47 台  ·  离线 5 台  ·  报警 2 台';color:var(--muted);font-size:11px}.gis-communication-grid>div:last-child>.gis-card:nth-child(4){display:none}.gis-communication-grid>div:last-child>.gis-card:nth-child(3) .gis-btn,.gis-communication-grid>div:last-child>.gis-card:nth-child(3) .gis-switch{display:none}
+@media (max-width:1100px){.gis-communication-grid{height:auto;overflow:visible!important}.gis-communication-grid>div{overflow:visible}.gis-communication-grid>div>.gis-card{min-height:190px}}
 </style>
+<style>.gis-communication-grid>div:last-child>.gis-card:nth-child(2) .gis-contact{display:none}.gis-communication-grid>div:last-child>.gis-card:nth-child(2) .gis-card-body:after{content:'今日事件总数 12  ·  未处理 2  ·  已处理 10  ·  今日呼叫 14  ·  平均通话 02:18  ·  应急预案 3';display:block;line-height:2;color:var(--text);font-size:11px}.gis-communication-grid>div:last-child>.gis-card:nth-child(3) .gis-ctl{display:none}.gis-communication-grid>div:last-child>.gis-card:nth-child(3) .gis-card-body:after{content:'今日巡检 12 项  ·  已完成 10 项  ·  待复核 1 项  ·  异常 1 项';display:block;line-height:2;color:var(--text);font-size:11px}</style>
 </head>
 <body data-page-title="通信广播">
 <div class="flex min-h-screen">
@@ -240,7 +256,7 @@ a{color:inherit;text-decoration:none}
       <div class="k-value">12</div>
       <div class="k-sub">分区 / 舱室 / 全线三级</div>
     </article></section>
-<div style="display:grid;grid-template-columns:300px minmax(0,1fr) 340px;gap:16px;align-items:start">
+<div class="gis-communication-grid" style="display:grid;grid-template-columns:300px minmax(0,1fr) 340px;gap:16px;align-items:start">
   <div style="display:flex;flex-direction:column;gap:16px;min-width:0"><section class="gis-card">
     <div class="gis-card-head"><h3>图层控制</h3><span class="rt"><span class="gis-tag muted" id="gisPointCount">0 个点位</span></span></div>
     <div class="gis-card-body"><div class="gis-layers" id="gisLayers"><label class="gis-layer" data-layer="tel"><input type="checkbox" checked><i style="background:#135AFA"></i>应急电话分机<span class="c">48</span></label><label class="gis-layer" data-layer="bcast"><input type="checkbox" checked><i style="background:#F7BA1E"></i>广播分区<span class="c">12</span></label><label class="gis-layer" data-layer="led"><input type="checkbox" checked><i style="background:#9359E3"></i>LED 信息屏<span class="c">4</span></label><label class="gis-layer" data-layer="gate"><input type="checkbox" checked><i style="background:#14C9BA"></i>语音网关<span class="c">2</span></label><label class="gis-layer" data-layer="pipe"><input type="checkbox" checked><i style="background:#8A93A0"></i>出入口<span class="c">8</span></label></div>

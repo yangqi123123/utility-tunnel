@@ -127,7 +127,7 @@
 
   <script src="../../assets/vendor/leaflet/leaflet.js"></script>
   <script src="../../../app/components/base-map.js"></script>
-  <script src="../../../app/config/menu.js?v=nav-home-1"></script>
+  <script src="../../../app/config/menu.js?v=nav-hide-1"></script>
 <script src="../../../app/data/system-types.js"></script>
 <script src="../../../app/data/device-categories.js"></script>
 <script src="../../../app/data/device-monitor-data.js"></script>
@@ -430,7 +430,7 @@
     screen += "</div>";
     return '<div class="dm-live-video"><div class="video-feed" data-dm-feed="' + esc(d.id) + '">'
       + '<div class="video-feed-title"><span>' + esc(d.name) + '</span><span class="dm-feed-status is-' + esc(d.status) + '">' + statusText + "</span></div>"
-      + screen + "</div>" + videoMetaHtml(d) + "</div>";
+      + screen + "</div></div>";
   }
 
   function videoPtzHtml(d, statusText) {
@@ -646,6 +646,11 @@
     state.period = "today";
     state.chartMetrics = device.metrics.map(function (m, i) { return i; }).slice(0, 2);
     if (!state.chartMetrics.length) state.chartMetrics = [0];
+    var modal = document.querySelector(".dm-modal");
+    var historyTab = document.querySelector('[data-dm-tab="history"]');
+    var video = isVideoDevice(device);
+    if (modal) modal.classList.toggle("is-video", video);
+    if (historyTab) historyTab.hidden = video;
     el("dmModalMask").classList.add("is-open");
     document.body.style.overflow = "hidden";
     renderInfo();
@@ -657,9 +662,14 @@
     closeVideoPtz();
     document.querySelectorAll(".video-feed.is-fullscreen").forEach(function (feed) { feed.classList.remove("is-fullscreen"); });
     el("dmModalMask").classList.remove("is-open");
+    var modal = document.querySelector(".dm-modal");
+    var historyTab = document.querySelector('[data-dm-tab="history"]');
+    if (modal) modal.classList.remove("is-video");
+    if (historyTab) historyTab.hidden = false;
     document.body.style.overflow = "";
   }
   function setTab(tab) {
+    if (tab === "history" && isVideoDevice(state.current)) tab = "info";
     state.tab = tab;
     document.querySelectorAll("[data-dm-tab]").forEach(function (b) { b.classList.toggle("is-active", b.dataset.dmTab === tab); });
     document.querySelectorAll("[data-dm-panel]").forEach(function (p) { p.hidden = p.dataset.dmPanel !== tab; });
