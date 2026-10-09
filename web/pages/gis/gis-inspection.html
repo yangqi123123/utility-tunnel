@@ -229,7 +229,7 @@ a{color:inherit;text-decoration:none}
       <div class="inspection-grid middle-grid"><section data-inspection-module="zones" class="gis-card"><div class="gis-card-head"><h3>分区巡检统计</h3><span class="rt"><span class="gis-tag" id="zoneCount">21 区</span></span></div><div class="gis-card-body"><div id="zonesBody" class="inspection-zone-grid"></div></div></section><section data-inspection-module="analysis" class="gis-card"><div class="gis-card-head"><h3>巡检状态分析</h3><div id="analysisPeriods" class="gis-switch"><b class="on" data-period="day">今日</b><b data-period="month">本月</b><b data-period="year">本年</b></div></div><div class="gis-card-body" id="analysisBody"></div></section></div>
       <section data-inspection-module="devices" class="gis-card"><div class="gis-card-head"><h3>设备巡检</h3><span class="rt"><span class="gis-tag danger" id="deviceOverdue">已逾期 0</span></span></div><div class="gis-card-body"><div id="deviceSummary" class="inspection-summary"></div><div class="inspection-filters"><select id="deviceStatus" class="gis-btn"><option value="">全部状态</option><option>待巡检</option><option>巡检中</option><option>验收中</option><option>已完成</option><option>已关闭</option></select><select id="deviceSystem" class="gis-btn"><option value="">全部系统</option></select><select id="deviceZone" class="gis-btn"><option value="">全部分区</option></select></div><div class="gis-scroll"><table class="gis-table" id="deviceTable"><thead><tr><th>任务</th><th>系统</th><th>设备</th><th>分区</th><th>计划执行</th><th>负责人</th><th>状态</th><th>逾期状态</th></tr></thead><tbody></tbody></table></div><div id="devicePager" class="inspection-pager"></div></div></section>
       </div>
-  <div style="display:none"><section class="gis-card">
+  <div id="legacy-inspection-content" aria-hidden="true"><section class="gis-card">
     <div class="gis-card-head"><h3>图层控制</h3><span class="rt"><span class="gis-tag muted" id="gisPointCount">0 个点位</span></span></div>
     <div class="gis-card-body"><div class="gis-layers" id="gisLayers"><label class="gis-layer" data-layer="pt"><input type="checkbox" checked><i style="background:#135AFA"></i>巡查点<span class="c">24</span></label><label class="gis-layer" data-layer="track"><input type="checkbox" checked><i style="background:#14C9BA"></i>人员实时位置<span class="c">4</span></label><label class="gis-layer" data-layer="zone"><input type="checkbox" checked><i style="background:#F7BA1E"></i>待巡分区<span class="c">8</span></label><label class="gis-layer" data-layer="pipe"><input type="checkbox" checked><i style="background:#8A93A0"></i>设备点位<span class="c">86</span></label></div>
       <div class="gis-hint"><b>提示</b> · 勾选/取消图层可控制地图点位显隐；点击态势带分区可定位到该防火分区。</div></div>
@@ -312,6 +312,13 @@ a{color:inherit;text-decoration:none}
 </aside>
 <div class="gis-toast" id="gisToast"></div>
 
+<style>
+#legacy-inspection-content{display:none!important}
+body>.flex>div:nth-child(n+3){display:none!important}
+.inspection-dashboard #overviewBody{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+@media(max-width:900px){.inspection-dashboard #overviewBody{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:560px){.inspection-dashboard #overviewBody{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
 <script>
 (function(){
   var systems=['视频','消防','入侵','电力','环境','巡更','通信','井盖','门禁','火灾'];
