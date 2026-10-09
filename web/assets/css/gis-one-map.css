@@ -318,7 +318,8 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 #gisPanel3 .gis-security-donut b { color:#0e9e92; font-size:11px; }
 #gisPanel3 .gis-security-donut.offline .gis-security-donut-ring { background:conic-gradient(#8fa7c0 0 2.8%, #e8edf5 2.8% 100%); }
 #gisPanel3 .gis-security-donut.offline b { color:#687385; }
-#gisPanel3 .gis-security-global-video { margin-left:auto; height:25px; padding:0 8px; font-size:10px; }
+#gisPanel3 .gis-security-global-video { margin-left:auto; display:inline-flex; align-items:center; gap:5px; height:25px; padding:0 8px; border:1px solid var(--primary); border-radius:3px; color:var(--primary); background:#fff; cursor:pointer; font-size:10px; }
+#gisPanel3 .gis-security-global-video:hover { color:#fff; background:var(--primary); }
 #gisPanel3 .gis-security-alarm-list { height:100%; overflow:auto; scrollbar-width:thin; scrollbar-color:#cbd4e1 transparent; }
 #gisPanel3 .gis-security-alarm { display:grid; grid-template-columns:24px minmax(0,1fr) auto; align-items:center; gap:6px; min-height:39px; padding:5px 2px; border-bottom:1px solid var(--divider); }
 #gisPanel3 .gis-security-alarm > i { width:22px; height:22px; display:grid; place-items:center; border-radius:3px; color:var(--primary); background:var(--primary-bg); font-size:9px; }
