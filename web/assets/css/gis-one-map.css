@@ -252,7 +252,7 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 /* 安防监控：视频、门禁、告警与关键区域监控。 */
 #gisPanel3 .gis-security-rail { display:grid; gap:8px; overflow:hidden !important; }
 #gisPanel3 .gis-float-left.gis-security-rail { grid-template-rows:160px minmax(0,1fr); }
-#gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:170px 174px minmax(0,1fr); }
+#gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:204px 164px minmax(0,1fr); }
 #gisPanel3 .gis-security-card { min-height:0; display:flex; flex-direction:column; overflow:hidden; }
 #gisPanel3 .gis-security-card .gis-card-head { flex:0 0 38px; min-height:38px; padding:0 10px; }
 #gisPanel3 .gis-security-card .gis-card-body { flex:1; min-height:0; overflow:hidden; padding:8px; gap:7px; }
@@ -309,7 +309,7 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 #gisPanel3 .gis-security-video-stat-cards .fault { border-color:#f3b7be; background:#fff7f8; }
 #gisPanel3 .gis-security-video-stat-cards .fault strong { color:#f53f57; }
 #gisPanel3 .gis-security-video-stat-cards small { font-size:10px; }
-#gisPanel3 .gis-security-video-donuts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:12px; min-height:0; }
+#gisPanel3 .gis-security-video-donuts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:12px; min-height:108px; }
 #gisPanel3 .gis-security-donut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; color:#50565d; font-size:10px; }
 #gisPanel3 .gis-security-donut-ring { width:76px; height:76px; display:grid; place-items:center; border-radius:50%; position:relative; background:conic-gradient(#14c9ba 0 97.2%, #e8edf5 97.2% 100%); }
 #gisPanel3 .gis-security-donut-ring::after { content:""; position:absolute; inset:11px; border-radius:50%; background:#fff; border:1px solid #dfe6f0; }
@@ -352,7 +352,7 @@ body[data-menu-key="gis"] .main { overflow:hidden; }
 body.gis-access-modal-open { overflow:hidden; }
 @media (max-height:760px) and (min-width:761px) {
   #gisPanel3 .gis-float-left.gis-security-rail { grid-template-rows:146px minmax(0,1fr); }
-  #gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:156px 152px minmax(0,1fr); }
+  #gisPanel3 .gis-float-right.gis-security-rail { grid-template-rows:190px 146px minmax(0,1fr); }
 }
 @media (max-width:760px) {
   #gisPanel3 .gis-stage { position:relative; min-height:1150px; }
@@ -525,7 +525,7 @@ body.gis-access-modal-open { overflow:hidden; }
 #gisPanel2 .gis-fire-chart-tooltip strong { display:block; }
 #gisPanel2 .gis-fire-chart-tooltip b { color:var(--title); font-size:10px; }
 #gisPanel2 .gis-fire-chart-tooltip strong { margin-top:3px; color:#C77900; }
-#gisPanel2 .gis-fire-alarm .gis-card-body { display:grid; grid-template-rows:38px minmax(0,1fr); gap:7px; }
+#gisPanel2 .gis-fire-alarm .gis-card-body { display:grid; grid-template-rows:38px minmax(0,1fr); gap:12px; }
 #gisPanel2 .gis-fire-alarm .gis-alarm-item { min-height:52px; padding:5px; grid-template-columns:24px minmax(0,1fr) auto; gap:6px; }
 #gisPanel2 .gis-fire-alarm .gis-alarm-item .lv { width:24px; height:24px; font-size:9px; }
 #gisPanel2 .gis-fire-alarm .gis-alarm-item .t { font-size:10px; }
