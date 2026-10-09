@@ -27,6 +27,12 @@ test("security tab renders requested modules and camera metrics", async () => {
   }
   assert.match(html, /data-security-access-records/);
   assert.match(html, /pedestrian-record\.html\?embedded=1/);
+  assert.match(html, /gis-security-video-stat-cards/);
+  assert.equal((html.match(/gis-security-donut /g) || []).length, 2);
+  assert.match(html, /data-security-global-video/);
+  assert.match(html, /#gisPanel0 \[data-gis-global-video\]/);
+  assert.equal((html.match(/accessRecords=\[/g) || []).length, 1);
+  assert.equal((html.match(/\['/g) || []).filter((value) => value === "['").length >= 7, true);
 });
 
 test("security titles remove subtitle text and remain panel scoped", async () => {

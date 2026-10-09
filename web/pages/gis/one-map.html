@@ -2351,7 +2351,11 @@
   var accessRecords=[
     ['孙笑宇','2025-01-09 15:46:42','人脸识别','1号楼-MK-18','1号楼'],
     ['保洁','2025-01-09 15:46:12','刷卡','1F-高区闸机2','电梯间2通道'],
-    ['张建国','2025-01-09 15:44:44','刷卡','B2F-MKZ-01','生活水泵房东南侧']
+    ['张建国','2025-01-09 15:44:44','刷卡','B2F-MKZ-01','生活水泵房东南侧'],
+    ['李伟','2025-01-09 15:42:18','二维码','B1F-MKZ-03','B1层设备机房'],
+    ['王海涛','2025-01-09 15:39:06','人脸识别','1号楼-MK-12','1号楼西侧入口'],
+    ['陈晓','2025-01-09 15:35:51','刷卡','F0103-MK-06','电力舱 F0103'],
+    ['巡检手台-08','2025-01-09 15:31:27','蓝牙凭证','F0201-MK-02','燃气舱 F0201']
   ];
   function cameraMetric(row){return '<div class="gis-security-camera-metric '+row[3]+'"><span><i class="fa-solid '+row[0]+'" aria-hidden="true"></i></span><div><em>'+row[1]+'</em><strong>'+row[2]+'</strong></div></div>';}
   function accessRecord(row){return '<div class="gis-security-record"><div class="gis-security-record-main"><b>'+row[0]+'</b><time>'+row[1]+'</time></div><div class="gis-security-record-meta"><span title="'+row[2]+'"><i class="fa-solid fa-id-card" aria-hidden="true"></i>'+row[2]+'</span><span title="'+row[3]+'"><i class="fa-solid fa-door-open" aria-hidden="true"></i>'+row[3]+'</span><span title="'+row[4]+'"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>'+row[4]+'</span></div></div>';}
@@ -2380,9 +2384,11 @@
     <section class="gis-card gis-security-card gis-security-video-overview">
       <div class="gis-card-head"><h3>视频监控系统</h3></div>
       <div class="gis-card-body">
-        <div class="gis-security-system-stats"><div><span>设备总数</span><strong>433</strong></div><div class="online"><span>在线</span><strong>421</strong></div><div class="offline"><span>离线</span><strong>12</strong></div><div class="warn"><span>异常</span><strong>3</strong></div></div>
-        <div class="gis-security-system-bar"><i style="width:97.2%"></i></div>
-        <div class="gis-security-system-note"><span><i class="ok"></i>在线率 97.2%</span><span>录像存储正常</span></div>
+        <div class="gis-security-video-stat-cards"><div><span>设备总数</span><strong>433</strong></div><div class="fault"><span>设备故障率</span><strong>2.8<small>%</small></strong></div></div>
+        <div class="gis-security-video-donuts">
+          <div class="gis-security-donut online"><div class="gis-security-donut-ring"><strong>421</strong></div><span>在线 <b>97.2%</b></span></div>
+          <div class="gis-security-donut offline"><div class="gis-security-donut-ring"><strong>12</strong></div><span>离线 <b>2.8%</b></span></div>
+        </div>
       </div>
     </section>
     <section class="gis-card gis-security-card gis-security-alarms">
@@ -2394,7 +2400,7 @@
       </div></div>
     </section>
     <section class="gis-card gis-security-card gis-security-key-video">
-      <div class="gis-card-head"><h3>关键区域监控</h3></div>
+      <div class="gis-card-head"><h3>关键区域监控</h3><button type="button" class="gis-home-global-video gis-security-global-video" data-security-global-video><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>全局监控</button></div>
       <div class="gis-card-body"><div class="gis-security-video-grid">${[
         ['综合舱 F0102','14:26:05'],['电力舱 F0103','14:26:03'],['水信舱 F0301','14:25:58'],['出入口 K1+280','14:26:01']
       ].map(function(row){return videoFeed(row[0],row[1]);}).join('')}</div></div>
@@ -2405,6 +2411,8 @@
   function closeAccess(){modal.hidden=true;document.body.classList.remove('gis-access-modal-open');}
   function openAccess(){modal.hidden=false;document.body.classList.add('gis-access-modal-open');}
   panel.querySelector('[data-security-access-records]').addEventListener('click',openAccess);
+  var globalVideoButton=panel.querySelector('[data-security-global-video]');
+  if(globalVideoButton){globalVideoButton.addEventListener('click',function(){var homeVideoButton=document.querySelector('#gisPanel0 [data-gis-global-video]');if(homeVideoButton)homeVideoButton.click();});}
   modal.addEventListener('click',function(event){if(event.target===modal||event.target.closest('[data-security-access-close]'))closeAccess();});
   document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!modal.hidden)closeAccess();});
 })();
