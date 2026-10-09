@@ -2089,5 +2089,325 @@
   show(0);
 })();
 </script>
+<script>
+(function(){
+  var panel=document.getElementById('gisPanel0');
+  if(!panel||panel.dataset.homeEnhanced==='true')return;
+  var left=panel.querySelector('.gis-float-left'),right=panel.querySelector('.gis-float-right');
+  if(!left||!right)return;
+  panel.dataset.homeEnhanced='true';
+  var envSource=left.querySelectorAll('.gis-card')[2];
+  var envTable=envSource?envSource.querySelector('.gis-card-body').innerHTML:'';
+  var subsystems=[
+    ['视频','fa-video',112,2,4],['消防','fa-fire',86,1,3],['入侵','fa-shield-halved',74,2,2],['电力','fa-bolt',248,3,5],['环境','fa-leaf',176,4,3],
+    ['巡更','fa-person-walking',48,1,2],['通信','fa-tower-broadcast',92,2,2],['井盖','fa-road-spikes',136,2,4],['门禁','fa-door-open',64,1,2],['火灾','fa-triangle-exclamation',24,1,1]
+  ];
+  var periods={
+    day:{labels:Array.from({length:24},function(_,i){return String(i).padStart(2,'0')+':00';}),trend:[2,1,0,2,4,1,2,5,4,2,1,3,2,1,4,5,7,4,3,1,0,2,2,3],levels:{alarm:2,warn:6,remind:9}},
+    month:{labels:Array.from({length:31},function(_,i){return String(i+1);}),trend:[8,12,6,15,11,18,14,9,16,20,17,13,22,18,16,24,21,19,26,20,18,25,28,22,19,23,27,25,30,26,32],levels:{alarm:18,warn:76,remind:118}},
+    year:{labels:Array.from({length:12},function(_,i){return String(i+1)+'月';}),trend:[88,102,96,124,138,116,152,145,168,156,182,174],levels:{alarm:132,warn:684,remind:928}}
+  };
+  function metric(icon,label,value,kind){return '<div class="gis-home-metric '+(kind||'')+'"><span class="gis-home-metric-icon"><i class="fa-solid '+icon+'" aria-hidden="true"></i></span><span class="gis-home-metric-label">'+label+'</span><strong>'+value+'</strong></div>';}
+  function subsystem(row){var total=row[2]+row[3]+row[4],online=Math.round(row[2]/total*100),offline=Math.round(row[3]/total*100);return '<div class="gis-home-system-row"><div class="gis-home-system-top"><span class="gis-home-system-name"><i class="fa-solid '+row[1]+'" aria-hidden="true"></i>'+row[0]+'</span><strong>'+total+'</strong></div><div class="gis-home-system-meta"><span class="online">在线 '+row[2]+'</span><span class="offline">离线 '+row[3]+'</span><span class="warn">预警 '+row[4]+'</span></div><div class="gis-home-system-track" aria-label="'+row[0]+'状态比例"><i class="online" style="width:'+online+'%"></i><i class="offline" style="width:'+offline+'%"></i><i class="warn" style="flex:1"></i></div></div>';}
+  left.classList.add('gis-home-float');
+  left.innerHTML='<section class="gis-card gis-home-card gis-home-device-card"><div class="gis-card-head"><h3>设备概览</h3></div><div class="gis-card-body gis-home-card-body"><div class="gis-home-metrics">'+metric('fa-server','设备总数','1,286','total')+metric('fa-circle-check','在线','1,058','online')+metric('fa-circle-xmark','离线','72','offline')+metric('fa-triangle-exclamation','预警','156','warn')+'</div></div></section>'+
+    '<section class="gis-card gis-home-card gis-home-system-card"><div class="gis-card-head"><h3>运行状态总览</h3></div><div class="gis-card-body gis-home-card-body"><div class="gis-home-system-list">'+subsystems.map(subsystem).join('')+'</div></div></section>'+
+    '<section class="gis-card gis-home-card"><div class="gis-card-head"><h3>环境参数总览</h3></div><div class="gis-card-body gis-home-card-body">'+envTable+'</div></section>';
+  function ringSvg(values,colors,total){
+    var radius=42,circ=2*Math.PI*radius,offset=0,parts=['<svg class="gis-home-ring-svg" viewBox="0 0 120 120" role="img" aria-label="报警级别分布">','<circle cx="60" cy="60" r="42" fill="none" stroke="#edf1f7" stroke-width="14"/>'];
+    values.forEach(function(value,i){var len=total?circ*value/total:0;parts.push('<circle cx="60" cy="60" r="42" fill="none" stroke="'+colors[i]+'" stroke-width="14" stroke-dasharray="'+len.toFixed(2)+' '+(circ-len).toFixed(2)+'" stroke-dashoffset="'+(-offset).toFixed(2)+'" transform="rotate(-90 60 60)"/>');offset+=len;});
+    parts.push('</svg>');return parts.join('');
+  }
+  function ringLegend(values,labels,colors){return values.map(function(value,i){var total=values.reduce(function(a,b){return a+b;},0),percent=total?((value/total)*100).toFixed(1):'0.0';return '<div class="gis-home-legend-row"><i style="background:'+colors[i]+'"></i><span>'+labels[i]+'</span><b>'+value+' <small>'+percent+'%</small></b></div>';}).join('');}
+  function renderRing(hostId,legendId,values,labels,colors,totalLabel){var total=values.reduce(function(a,b){return a+b;},0),host=document.getElementById(hostId),legend=document.getElementById(legendId);if(host)host.innerHTML=ringSvg(values,colors,total)+'<div class="gis-home-ring-center"><strong>'+total+'</strong><span>'+totalLabel+'</span></div>';if(legend)legend.innerHTML=ringLegend(values,labels,colors);}
+  function renderTrend(period){
+    var host=document.getElementById('gisTrendChart0'),data=periods[period],width=620,height=174,leftPad=38,rightPad=10,topPad=12,bottomPad=34,plotW=width-leftPad-rightPad,plotH=height-topPad-bottomPad,max=Math.max.apply(null,data.trend.concat([8])),parts=['<svg class="gis-home-trend-svg" viewBox="0 0 '+width+' '+height+'" preserveAspectRatio="none" role="img" aria-label="报警数量趋势">'];
+    for(var i=0;i<=4;i++){var y=topPad+plotH-(plotH*i/4),label=Math.round(max*i/4);parts.push('<line x1="'+leftPad+'" y1="'+y.toFixed(1)+'" x2="'+(width-rightPad)+'" y2="'+y.toFixed(1)+'" class="grid"/><text x="'+(leftPad-7)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" class="axis-label">'+label+'</text>');}
+    var points=data.trend.map(function(value,index){var x=leftPad+(data.trend.length===1?0:plotW*index/(data.trend.length-1)),y=topPad+plotH-(value/max*plotH);return [x,y];});
+    parts.push('<polyline class="trend-line" points="'+points.map(function(point){return point[0].toFixed(1)+','+point[1].toFixed(1);}).join(' ')+'"/>');
+    points.forEach(function(point){parts.push('<circle class="trend-point" cx="'+point[0].toFixed(1)+'" cy="'+point[1].toFixed(1)+'" r="2.6"/>');});
+    var step=period==='day'?4:period==='month'?5:1;data.labels.forEach(function(label,index){if(index%step!==0&&index!==data.labels.length-1)return;var x=leftPad+(data.labels.length===1?0:plotW*index/(data.labels.length-1));parts.push('<text x="'+x.toFixed(1)+'" y="'+(height-9)+'" text-anchor="middle" class="axis-label">'+label+'</text>');});
+    parts.push('<text x="10" y="14" class="unit-label">单位：次</text></svg><div class="gis-home-trend-tooltip" hidden></div>');
+    if(host){host.innerHTML=parts.join('');var tooltip=host.querySelector('.gis-home-trend-tooltip');host.querySelectorAll('.trend-point').forEach(function(point,index){point.addEventListener('mouseenter',function(){var rect=host.getBoundingClientRect(),x=Number(point.getAttribute('cx'))/width*rect.width,y=Number(point.getAttribute('cy'))/height*rect.height;tooltip.innerHTML='<strong>'+data.labels[index]+'</strong><span>报警数量 <b>'+data.trend[index]+'</b> 次</span><small>'+ (period==='day'?'今日':period==='month'?'本月':'本年') +'趋势</small>';tooltip.style.left=Math.max(6,Math.min(rect.width-126,x-58))+'px';tooltip.style.top=Math.max(4,y-54)+'px';tooltip.hidden=false;});point.addEventListener('mouseleave',function(){tooltip.hidden=true;});});}
+  }
+  right.classList.add('gis-home-float');
+  right.innerHTML='<section class="gis-card gis-home-card gis-home-trend-card"><div class="gis-card-head"><h3>报警趋势</h3><div class="gis-home-periods" role="group" aria-label="报警趋势时间范围"><button type="button" class="active" data-gis-period="day">今日</button><button type="button" data-gis-period="month">本月</button><button type="button" data-gis-period="year">本年</button></div></div><div class="gis-card-body gis-home-card-body"><div class="gis-home-chart-top"><div class="gis-home-ring" id="gisTrendRing0"></div><div class="gis-home-legend" id="gisTrendLegend0"></div></div><div class="gis-home-trend-chart" id="gisTrendChart0"></div></div></section>'+
+    '<section class="gis-card gis-home-card"><div class="gis-card-head"><h3>报警状态统计</h3></div><div class="gis-card-body gis-home-card-body"><div class="gis-home-status-wrap"><div class="gis-home-ring" id="gisStatusRing0"></div><div class="gis-home-legend" id="gisStatusLegend0"></div></div></div></section>'+
+    '<section class="gis-card gis-home-card gis-home-video-card"><div class="gis-card-head"><h3>视频监控</h3><button class="gis-home-global-video" type="button" data-gis-global-video><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>全局监控</button></div><div class="gis-card-body gis-home-card-body"><div class="gis-home-video-grid">'+['综合舱 F0102','电力舱 F0103','水信舱 F0301','出入口 K1+280'].map(function(name,index){return '<div class="gis-home-video-feed"><div class="gis-home-video-title"><span>'+name+'</span><b>在线</b></div><div class="gis-home-video-screen"><img src="../../assets/images/access-gate.jpg" alt="'+name+'监控画面"><span>LIVE · 14:26:05</span></div></div>';}).join('')+'</div></div></section>';
+  document.body.insertAdjacentHTML('beforeend','<div class="gis-video-modal" id="gisVideoModal" hidden><div class="gis-video-modal-panel" role="dialog" aria-modal="true" aria-labelledby="gisVideoModalTitle"><div class="gis-video-modal-head"><h2 id="gisVideoModalTitle">全局监控</h2><button type="button" class="gis-video-modal-close" data-gis-video-close aria-label="关闭全局监控"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><iframe title="全局视频监控" src="../monitoring/video-monitor.html?embedded=1"></iframe></div></div>');
+  renderRing('gisTrendRing0','gisTrendLegend0',[periods.day.levels.alarm,periods.day.levels.warn,periods.day.levels.remind],['告警','预警','提醒'],['#F53F57','#F7BA1E','#2BB7E0'],'今日报警');
+  renderRing('gisStatusRing0','gisStatusLegend0',[6,3,2],['未处理','处理中','已处理'],['#F53F57','#F7BA1E','#14C9BA'],'报警状态');
+  renderTrend('day');
+  panel.querySelectorAll('[data-gis-period]').forEach(function(button){button.addEventListener('click',function(){var period=button.dataset.gisPeriod,data=periods[period];panel.querySelectorAll('[data-gis-period]').forEach(function(item){item.classList.toggle('active',item===button);});renderRing('gisTrendRing0','gisTrendLegend0',[data.levels.alarm,data.levels.warn,data.levels.remind],['告警','预警','提醒'],['#F53F57','#F7BA1E','#2BB7E0'],period==='day'?'今日报警':period==='month'?'本月报警':'本年报警');renderTrend(period);});});
+  var modal=document.getElementById('gisVideoModal'),frame=modal.querySelector('iframe');
+  function closeVideo(){modal.hidden=true;modal.classList.remove('open');document.body.classList.remove('gis-video-modal-open');}
+  function openVideo(){modal.hidden=false;modal.classList.add('open');document.body.classList.add('gis-video-modal-open');}
+  panel.querySelector('[data-gis-global-video]').addEventListener('click',openVideo);
+  modal.addEventListener('click',function(event){if(event.target===modal||event.target.closest('[data-gis-video-close]'))closeVideo();});
+  document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!modal.hidden)closeVideo();});
+})();
+</script>
+<script>
+(function(){
+  var panel=document.getElementById('gisPanel1');
+  if(!panel||panel.dataset.environmentEnhanced==='true')return;
+  var left=panel.querySelector('.gis-float-left'),right=panel.querySelector('.gis-float-right');
+  if(!left||!right)return;
+  panel.dataset.environmentEnhanced='true';
+  left.classList.add('gis-env-rail');right.classList.add('gis-env-rail');
+  Array.prototype.forEach.call(left.querySelectorAll('.gis-card'),function(card,index){card.classList.add('gis-env-card');if(index===1)card.classList.add('gis-env-matrix');});
+  var rightCards=right.querySelectorAll('.gis-card');
+  Array.prototype.forEach.call(rightCards,function(card){card.classList.add('gis-env-card');});
+  if(rightCards[0])rightCards[0].classList.add('gis-env-device');
+  if(rightCards[2]){
+    rightCards[2].classList.add('gis-env-alarm');
+    var alarmSummary=rightCards[2].querySelector('.gis-card-body > div:first-child');
+    if(alarmSummary)alarmSummary.classList.add('gis-env-alarm-summary');
+  }
+  var matrix=left.querySelector('.gis-env-matrix .gis-table');
+  if(matrix){
+    var head=matrix.querySelector('thead tr');
+    if(head){var th=document.createElement('th');th.textContent='硫化氢';head.insertBefore(th,head.lastElementChild);}
+    matrix.querySelectorAll('tbody tr').forEach(function(row,index){var td=document.createElement('td');td.textContent=index===2?'2':index===6?'1':'1';if(index===2)td.className='a';row.insertBefore(td,row.lastElementChild);});
+  }
+  var leftTrend=left.querySelectorAll('.gis-env-card')[2];
+  if(leftTrend){
+    var trendBody=leftTrend.querySelector('.gis-card-body');
+    if(trendBody){
+      var trends=[['温度 ℃','#F7BA1E',[23,23.4,24,24.6,25.2,25.8,26.4]],['湿度 %','#135AFA',[70,71,72,73,74,76,78]],['氧气 %','#14C9BA',[19.8,19.9,20,20.1,20.2,20.4,20.6]],['甲烷 %LEL','#F53F57',[8,10,14,21,29,36,42]],['硫化氢 ppm','#9359E3',[1,1,1.2,1.5,1.7,1.9,2]],['水位 m','#2BB7E0',[.3,.35,.4,.42,.48,.55,.6]]];
+      var svgParts=['<svg viewBox="0 0 600 142" preserveAspectRatio="none" aria-label="环境参数六指标趋势">'];
+      [0,1,2,3].forEach(function(i){var y=16+i*30;svgParts.push('<line x1="28" y1="'+y+'" x2="592" y2="'+y+'" stroke="#EDF1F7"/>');});
+      trends.forEach(function(series,seriesIndex){var values=series[2],min=Math.min.apply(null,values),max=Math.max.apply(null,values),range=max-min||1,points=values.map(function(v,i){var x=28+i*564/6,y=106-(v-min)/range*76;return [x,y];});svgParts.push('<polyline points="'+points.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ')+'" fill="none" stroke="'+series[1]+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>');points.forEach(function(p,i){svgParts.push('<circle class="gis-env-trend-point" data-trend-series="'+seriesIndex+'" data-trend-index="'+i+'" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="2.4" stroke="'+series[1]+'"/>');});});
+      ['00:00','04:00','08:00','12:00','16:00','20:00','24:00'].forEach(function(label,i){svgParts.push('<text x="'+(28+i*94)+'" y="132" font-size="10" fill="#86909C" text-anchor="'+(i===0?'start':i===6?'end':'middle')+'">'+label+'</text>');});
+      svgParts.push('</svg>');
+      trendBody.innerHTML='<div class="gis-env-left-trend"><div class="gis-legend">'+trends.map(function(s){return '<span><i style="background:'+s[1]+'"></i>'+s[0]+'</span>';}).join('')+'</div>'+svgParts.join('')+'<div class="gis-env-left-tooltip" hidden></div></div>';
+      var leftTooltip=trendBody.querySelector('.gis-env-left-tooltip'),leftTrendBox=trendBody.querySelector('.gis-env-left-trend');
+      trendBody.querySelectorAll('.gis-env-trend-point').forEach(function(point){point.addEventListener('mouseenter',function(){var si=Number(point.dataset.trendSeries),ii=Number(point.dataset.trendIndex),rect=leftTrendBox.getBoundingClientRect(),svg=point.ownerSVGElement,svgRect=svg.getBoundingClientRect(),x=Number(point.getAttribute('cx')),y=Number(point.getAttribute('cy')),value=trends[si][2][ii];leftTooltip.innerHTML='<b>'+trends[si][0]+' · '+['00:00','04:00','08:00','12:00','16:00','20:00','24:00'][ii]+'</b><span><i style="background:'+trends[si][1]+'"></i>'+value+(si===0?' ℃':si===1||si===2?' %':si===3?' %LEL':si===4?' ppm':' m')+'</span>';leftTooltip.style.left=(x/600*svgRect.width+svgRect.left-rect.left)+'px';leftTooltip.style.top=(y/142*svgRect.height+svgRect.top-rect.top)+'px';leftTooltip.hidden=false;});point.addEventListener('mouseleave',function(){leftTooltip.hidden=true;});});
+    }
+  }
+  panel.querySelectorAll('.gis-card-sub').forEach(function(item){item.remove();});
+  if(rightCards[2]){
+    var alarmTag=rightCards[2].querySelector('.gis-card-head .rt');
+    if(alarmTag)alarmTag.remove();
+  }
+  var runtime=rightCards[1];
+  if(!runtime)return;
+  runtime.classList.add('gis-env-runtime');
+  runtime.querySelector('.gis-card-head .rt').outerHTML='<div class="gis-env-periods" role="group" aria-label="运行监测时间范围"><button type="button" class="active" data-env-period="day">今日</button><button type="button" data-env-period="month">本月</button><button type="button" data-env-period="year">本年</button></div>';
+  runtime.querySelector('.gis-card-body').innerHTML='<div class="gis-env-chart" id="gisEnvRuntimeChart"><div class="gis-env-tooltip" hidden></div></div>';
+  var data={
+    day:{labels:Array.from({length:24},function(_,i){return i+'时';}),online:[94,95,95,96,96,95,94,93,95,96,97,96,95,94,96,97,98,97,96,95,94,96,97,96]},
+    month:{labels:Array.from({length:31},function(_,i){return (i+1)+'日';}),online:[95,96,94,93,95,96,97,96,95,94,96,97,98,97,96,95,94,95,96,97,96,95,97,98,96,95,94,96,97,96,95]},
+    year:{labels:Array.from({length:12},function(_,i){return (i+1)+'月';}),online:[94,95,96,95,97,96,98,97,96,95,97,98]}
+  };
+  Object.keys(data).forEach(function(key){data[key].offline=data[key].online.map(function(v,i){return Math.max(1,Math.round((100-v)*.7+(i%2)));});data[key].fault=data[key].online.map(function(v,i){return Math.max(0,100-v-data[key].offline[i]);});});
+  function render(period){
+    var host=document.getElementById('gisEnvRuntimeChart'),tooltip=host.querySelector('.gis-env-tooltip'),set=data[period],w=620,h=170,l=40,r=10,t=20,b=30,pw=w-l-r,ph=h-t-b,parts=['<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" role="img" aria-label="设备运行率趋势">'];
+    [0,25,50,75,100].forEach(function(v){var y=t+ph-(v/100*ph);parts.push('<line class="gis-env-grid" x1="'+l+'" y1="'+y+'" x2="'+(w-r)+'" y2="'+y+'"/><text class="gis-env-axis" x="'+(l-7)+'" y="'+(y+3)+'" text-anchor="end">'+v+'</text>');});
+    var pts=set.online.map(function(v,i){return [l+pw*i/(set.online.length-1),t+ph-(v/100*ph)];});
+    parts.push('<polyline class="gis-env-line" points="'+pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ')+'"/>');
+    pts.forEach(function(p,i){parts.push('<circle class="gis-env-point" data-env-index="'+i+'" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="2.8"/>');});
+    var step=period==='day'?4:period==='month'?5:1;
+    set.labels.forEach(function(label,i){if(i%step&&i!==set.labels.length-1)return;var x=l+pw*i/(set.labels.length-1);parts.push('<text class="gis-env-axis" x="'+x.toFixed(1)+'" y="'+(h-8)+'" text-anchor="middle">'+label+'</text>');});
+    parts.push('<text class="gis-env-unit" x="4" y="12">单位（％）</text></svg>');
+    host.querySelector('svg')?.remove();host.insertAdjacentHTML('afterbegin',parts.join(''));
+    host.querySelectorAll('[data-env-index]').forEach(function(point){point.addEventListener('mouseenter',function(){var i=Number(point.dataset.envIndex),rect=host.getBoundingClientRect(),svgX=Number(point.getAttribute('cx')),svgY=Number(point.getAttribute('cy'));tooltip.innerHTML='<b>'+set.labels[i]+'</b><span><i style="background:#14C9BA"></i>在线 '+set.online[i]+'%</span><br><span><i style="background:#8A93A0"></i>离线 '+set.offline[i]+'%</span><br><span><i style="background:#F53F57"></i>故障率 '+set.fault[i]+'%</span>';tooltip.style.left=(svgX/w*rect.width)+'px';tooltip.style.top=(svgY/h*rect.height)+'px';tooltip.hidden=false;});point.addEventListener('mouseleave',function(){tooltip.hidden=true;});});
+  }
+  runtime.querySelectorAll('[data-env-period]').forEach(function(button){button.addEventListener('click',function(){runtime.querySelectorAll('[data-env-period]').forEach(function(item){item.classList.toggle('active',item===button);});render(button.dataset.envPeriod);});});
+  render('day');
+})();
+</script>
+<script>
+/* fire dashboard enhancement */
+(function(){
+  var panel=document.getElementById('gisPanel2');
+  if(!panel||panel.dataset.fireEnhanced==='true')return;
+  var left=panel.querySelector('.gis-float-left'),right=panel.querySelector('.gis-float-right');
+  if(!left||!right)return;
+  panel.dataset.fireEnhanced='true';
+  left.classList.add('gis-fire-rail');
+  right.classList.add('gis-fire-rail');
+  left.innerHTML=`
+    <section class="gis-card gis-fire-card gis-fire-runtime">
+      <div class="gis-card-head"><h3>消防设备运行统计</h3></div>
+      <div class="gis-card-body">
+        <div class="gis-fire-summary">
+          <div class="gis-mini"><div class="n"><i class="dot"></i>在线</div><strong>463</strong></div>
+          <div class="gis-mini"><div class="n"><i class="dot offline"></i>离线</div><strong>5</strong></div>
+          <div class="gis-mini bad"><div class="n"><i class="dot"></i>报警</div><strong>5</strong></div>
+        </div>
+        <div class="gis-fire-device-list">
+          <div class="gis-fire-device-row"><div class="gis-fire-device-meta"><span>感烟 / 感温探测器</span><b>168</b></div><div class="gis-fire-stack" aria-label="在线 164，离线 2，报警 2"><i class="online" style="width:97.62%"></i><i class="offline" style="width:1.19%"></i><i class="alarm" style="width:1.19%"></i></div><div class="gis-fire-device-counts"><span>在线 164</span><span>离线 2</span><span>报警 2</span></div></div>
+          <div class="gis-fire-device-row"><div class="gis-fire-device-meta"><span>手动报警按钮</span><b>24</b></div><div class="gis-fire-stack" aria-label="在线 23，离线 0，报警 1"><i class="online" style="width:95.83%"></i><i class="offline" style="width:0"></i><i class="alarm" style="width:4.17%"></i></div><div class="gis-fire-device-counts"><span>在线 23</span><span>离线 0</span><span>报警 1</span></div></div>
+          <div class="gis-fire-device-row"><div class="gis-fire-device-meta"><span>消火栓 / 灭火器</span><b>120</b></div><div class="gis-fire-stack" aria-label="在线 117，离线 2，报警 1"><i class="online" style="width:97.5%"></i><i class="offline" style="width:1.67%"></i><i class="alarm" style="width:.83%"></i></div><div class="gis-fire-device-counts"><span>在线 117</span><span>离线 2</span><span>报警 1</span></div></div>
+          <div class="gis-fire-device-row"><div class="gis-fire-device-meta"><span>防火门</span><b>20</b></div><div class="gis-fire-stack" aria-label="在线 19，离线 0，报警 1"><i class="online" style="width:95%"></i><i class="offline" style="width:0"></i><i class="alarm" style="width:5%"></i></div><div class="gis-fire-device-counts"><span>在线 19</span><span>离线 0</span><span>报警 1</span></div></div>
+          <div class="gis-fire-device-row"><div class="gis-fire-device-meta"><span>应急照明</span><b>160</b></div><div class="gis-fire-stack" aria-label="在线 159，离线 1，报警 0"><i class="online" style="width:99.38%"></i><i class="offline" style="width:.62%"></i><i class="alarm" style="width:0"></i></div><div class="gis-fire-device-counts"><span>在线 159</span><span>离线 1</span><span>报警 0</span></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="gis-card gis-fire-card gis-fire-ledger">
+      <div class="gis-card-head"><h3>消防设施台账</h3><span class="rt"><span class="gis-tag warn">到期提醒 2</span></span></div>
+      <div class="gis-card-body"><div class="gis-scroll"><table class="gis-table"><thead><tr><th>设施</th><th>位置</th><th>数量</th><th>有效期</th></tr></thead><tbody>
+        <tr><td>灭火器 MFZ/ABC4</td><td>综合舱 F0101</td><td class="n">24 具</td><td class="ok">2027-03</td></tr>
+        <tr><td>灭火器 MFZ/ABC4</td><td>电力舱 F0103</td><td class="n">24 具</td><td class="w">2026-10</td></tr>
+        <tr><td>室内消火栓</td><td>全线均布</td><td class="n">24 套</td><td class="ok">2027-06</td></tr>
+        <tr><td>消防水带 25m</td><td>出入口箱</td><td class="n">24 盘</td><td class="bad">2026-09</td></tr>
+        <tr><td>感温光纤</td><td>电力舱全线</td><td class="n">2.1 km</td><td class="ok">—</td></tr>
+        <tr><td>防火门</td><td>各分区隔墙</td><td class="n">20 樘</td><td class="ok">2027-01</td></tr>
+      </tbody></table></div></div>
+    </section>
+    <section class="gis-card gis-fire-card gis-fire-zones">
+      <div class="gis-card-head"><h3>分区消防保障状态</h3><span class="rt"><span class="gis-tag">21 区</span></span></div>
+      <div class="gis-card-body"><div class="gis-mini-grid">
+        <div class="gis-mini gis-fire-zone"><div class="n"><i class="dot"></i>F0101 防火分区</div><div class="gis-fire-zone-stats"><span>待巡检 <b>0</b></span><span>设备异常 <b>1</b></span><span>应急事件 <b>0</b></span><span>逾期巡检 <b>0</b></span></div></div>
+        <div class="gis-mini gis-fire-zone overdue"><div class="n"><i class="dot"></i>F0102 防火分区</div><div class="gis-fire-zone-stats"><span>待巡检 <b>2</b></span><span>设备异常 <b>1</b></span><span>应急事件 <b>0</b></span><span>逾期巡检 <b>1</b></span></div></div>
+        <div class="gis-mini gis-fire-zone"><div class="n"><i class="dot"></i>F0103 防火分区</div><div class="gis-fire-zone-stats"><span>待巡检 <b>2</b></span><span>设备异常 <b>0</b></span><span>应急事件 <b>1</b></span><span>逾期巡检 <b>0</b></span></div></div>
+        <div class="gis-mini gis-fire-zone"><div class="n"><i class="dot"></i>F0104 防火分区</div><div class="gis-fire-zone-stats"><span>待巡检 <b>0</b></span><span>设备异常 <b>0</b></span><span>应急事件 <b>0</b></span><span>逾期巡检 <b>0</b></span></div></div>
+        <div class="gis-mini gis-fire-zone overdue"><div class="n"><i class="dot"></i>F0201 防火分区</div><div class="gis-fire-zone-stats"><span>待巡检 <b>1</b></span><span>设备异常 <b>0</b></span><span>应急事件 <b>0</b></span><span>逾期巡检 <b>1</b></span></div></div>
+        <div class="gis-mini gis-fire-zone"><div class="n"><i class="dot"></i>F0202 防火分区</div><div class="gis-fire-zone-stats"><span>待巡检 <b>0</b></span><span>设备异常 <b>0</b></span><span>应急事件 <b>0</b></span><span>逾期巡检 <b>0</b></span></div></div>
+      </div></div>
+    </section>`;
+  right.innerHTML=`
+    <section class="gis-card gis-fire-card gis-fire-inspection">
+      <div class="gis-card-head"><h3>消防设备巡检</h3><span class="rt"><span class="gis-tag danger">已逾期 2</span></span></div>
+      <div class="gis-card-body"><div class="gis-fire-inspection-summary"><span>本月任务 <b>36</b></span><span>待巡检 <b>6</b></span><span>巡检中 <b>3</b></span><span>验收中 <b>2</b></span><span class="ok">已完成 <b>22</b></span><span>已关闭 <b>3</b></span><span class="bad">已逾期 <b>2</b></span></div><div class="gis-scroll"><table class="gis-table"><thead><tr><th>任务</th><th>设备</th><th>计划执行</th><th>状态</th><th>逾期状态</th></tr></thead><tbody>
+        <tr><td>XF-XJ-1021</td><td>F0102 灭火器</td><td>10-06</td><td>待巡检</td><td class="bad">已逾期</td></tr>
+        <tr><td>XF-XJ-1024</td><td>F0201 防火门</td><td>10-09</td><td class="w">巡检中</td><td class="ok">正常</td></tr>
+        <tr><td>XF-XJ-1028</td><td>F0104 消火栓</td><td>10-10</td><td class="w">验收中</td><td class="ok">正常</td></tr>
+        <tr><td>XF-XJ-1017</td><td>F0101 应急照明</td><td>10-08</td><td class="ok">已完成</td><td class="ok">正常</td></tr>
+        <tr><td>XF-XJ-1014</td><td>F0202 手报按钮</td><td>10-05</td><td>已关闭</td><td class="ok">正常</td></tr>
+      </tbody></table></div></div>
+    </section>
+    <section class="gis-card gis-fire-card gis-fire-analysis">
+      <div class="gis-card-head"><h3>消防设备巡检状态分析</h3><div class="gis-fire-periods" role="group" aria-label="巡检状态分析时间范围"><button type="button" class="active" data-fire-period="day">今日</button><button type="button" data-fire-period="month">本月</button><button type="button" data-fire-period="year">本年</button></div></div>
+      <div class="gis-card-body"><div class="gis-fire-chart" id="gisFireInspectionChart"><div class="gis-fire-chart-tooltip" hidden></div></div></div>
+    </section>
+    <section class="gis-card gis-fire-card gis-fire-alarm">
+      <div class="gis-card-head"><h3>设备报警</h3><span class="rt"><span class="gis-tag danger">未处理 3</span></span></div>
+      <div class="gis-card-body">
+        <div class="gis-fire-alarm-summary"><div class="gis-mini bad"><div class="n"><i class="dot"></i>报警总数</div><strong>5</strong></div><div class="gis-mini warn"><div class="n"><i class="dot"></i>未处理</div><strong>3</strong></div><div class="gis-mini"><div class="n"><i class="dot"></i>已处理</div><strong>2</strong></div></div>
+        <div class="gis-alarm">
+          <div class="gis-alarm-item l3"><span class="lv">Ⅲ</span><span><span class="t">F0102 防火门长时未闭合</span><span class="m">防火门 WLYL-F0102-FD03 · 14:26:08</span></span><span class="st"><span class="gis-tag danger">未处理</span></span></div>
+          <div class="gis-alarm-item l2"><span class="lv">Ⅱ</span><span><span class="t">F0103 应急照明电源故障</span><span class="m">应急照明 WLYL-F0103-EL05 · 13:52:07</span></span><span class="st"><span class="gis-tag warn">未处理</span></span></div>
+          <div class="gis-alarm-item l2"><span class="lv">Ⅱ</span><span><span class="t">F0201 消火栓箱门异常开启</span><span class="m">消火栓 WLYL-F0201-HY06 · 11:18:40</span></span><span class="st"><span class="gis-tag warn">未处理</span></span></div>
+          <div class="gis-alarm-item l1"><span class="lv">Ⅰ</span><span><span class="t">F0101 灭火器箱位移</span><span class="m">灭火器箱 WLYL-F0101-FE02 · 09:15:00</span></span><span class="st"><span class="gis-tag ok">已处理</span></span></div>
+        </div>
+      </div>
+    </section>`;
+  var fireInspectionPeriods={
+    day:[
+      {zone:'F0101',pending:1,inspecting:0,accepting:0,completed:2,closed:0},{zone:'F0102',pending:2,inspecting:1,accepting:0,completed:1,closed:0},{zone:'F0103',pending:1,inspecting:0,accepting:1,completed:1,closed:0},{zone:'F0104',pending:0,inspecting:1,accepting:0,completed:2,closed:0},{zone:'F0201',pending:2,inspecting:0,accepting:1,completed:0,closed:1},{zone:'F0202',pending:0,inspecting:0,accepting:0,completed:2,closed:0}
+    ],
+    month:[
+      {zone:'F0101',pending:3,inspecting:1,accepting:1,completed:12,closed:1},{zone:'F0102',pending:4,inspecting:2,accepting:1,completed:10,closed:0},{zone:'F0103',pending:2,inspecting:2,accepting:2,completed:11,closed:1},{zone:'F0104',pending:1,inspecting:1,accepting:1,completed:14,closed:0},{zone:'F0201',pending:5,inspecting:1,accepting:1,completed:8,closed:2},{zone:'F0202',pending:2,inspecting:1,accepting:0,completed:13,closed:0}
+    ],
+    year:[
+      {zone:'F0101',pending:8,inspecting:3,accepting:2,completed:126,closed:4},{zone:'F0102',pending:10,inspecting:4,accepting:3,completed:118,closed:5},{zone:'F0103',pending:7,inspecting:3,accepting:4,completed:121,closed:3},{zone:'F0104',pending:5,inspecting:2,accepting:2,completed:132,closed:2},{zone:'F0201',pending:12,inspecting:5,accepting:3,completed:104,closed:8},{zone:'F0202',pending:6,inspecting:2,accepting:2,completed:128,closed:3}
+    ]
+  };
+  var fireSeries=[['pending','待巡检','#2F6BDF'],['inspecting','巡检中','#38BDF8'],['accepting','验收中','#22C7B8'],['completed','已完成','#4F7AE7'],['closed','已关闭','#19B6A5']];
+  function renderFireInspectionChart(period){
+    var host=document.getElementById('gisFireInspectionChart'),tooltip=host&&host.querySelector('.gis-fire-chart-tooltip'),data=fireInspectionPeriods[period];
+    if(!host||!tooltip||!data)return;
+    var w=620,h=220,l=34,r=34,t=38,b=30,pw=w-l-r,ph=h-t-b,max=Math.max.apply(null,data.reduce(function(all,row){return all.concat(fireSeries.map(function(series){return row[series[0]];}));},[1])),groupW=pw/data.length,barW=Math.min(12,(groupW-14)/fireSeries.length),parts=['<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" role="img" aria-label="消防设备巡检状态分析">'];
+    fireSeries.forEach(function(series,index){parts.push('<rect x="'+(18+index*102)+'" y="8" width="8" height="8" rx="1" fill="'+series[2]+'"/><text x="'+(30+index*102)+'" y="16" class="legend">'+series[1]+'</text>');});
+    parts.push('<line x1="528" y1="12" x2="546" y2="12" class="rate-line"/><text x="551" y="16" class="legend">完成率</text>');
+    for(var grid=0;grid<=4;grid++){var gy=t+ph-ph*grid/4,count=Math.round(max*grid/4);parts.push('<line x1="'+l+'" y1="'+gy+'" x2="'+(w-r)+'" y2="'+gy+'" class="grid"/><text x="'+(l-6)+'" y="'+(gy+3)+'" text-anchor="end" class="axis">'+count+'</text><text x="'+(w-r+6)+'" y="'+(gy+3)+'" class="axis">'+(grid*25)+'%</text>');}
+    var ratePoints=[];
+    data.forEach(function(row,index){
+      var center=l+groupW*(index+.5),start=center-(barW*fireSeries.length)/2,total=row.pending+row.inspecting+row.accepting+row.completed+row.closed,denominator=total-row.closed,rate=denominator?row.completed/denominator*100:null;
+      fireSeries.forEach(function(series,seriesIndex){var value=row[series[0]],height=value/max*ph,x=start+seriesIndex*barW;parts.push('<rect x="'+x.toFixed(1)+'" y="'+(t+ph-height).toFixed(1)+'" width="'+Math.max(2,barW-1).toFixed(1)+'" height="'+height.toFixed(1)+'" rx="1" fill="'+series[2]+'"/>');});
+      parts.push('<text x="'+center.toFixed(1)+'" y="'+(h-9)+'" text-anchor="middle" class="axis zone">'+row.zone+'</text>');
+      if(rate!==null)ratePoints.push([center,t+ph-rate/100*ph,index,rate]);
+      parts.push('<rect class="hit" data-fire-zone-index="'+index+'" x="'+(l+groupW*index).toFixed(1)+'" y="'+t+'" width="'+groupW.toFixed(1)+'" height="'+ph+'" fill="transparent"/>');
+    });
+    if(ratePoints.length){parts.push('<polyline class="rate-line" points="'+ratePoints.map(function(point){return point[0].toFixed(1)+','+point[1].toFixed(1);}).join(' ')+'"/>');ratePoints.forEach(function(point){parts.push('<circle class="rate-point" cx="'+point[0].toFixed(1)+'" cy="'+point[1].toFixed(1)+'" r="3"/>');});}
+    parts.push('</svg>');
+    host.querySelector('svg')?.remove();host.insertAdjacentHTML('afterbegin',parts.join(''));
+    host.querySelectorAll('[data-fire-zone-index]').forEach(function(hit){hit.addEventListener('mouseenter',function(){var index=Number(hit.dataset.fireZoneIndex),row=data[index],total=row.pending+row.inspecting+row.accepting+row.completed+row.closed,denominator=total-row.closed,rate=denominator?(row.completed/denominator*100).toFixed(1)+'%':'—',rect=host.getBoundingClientRect(),svgX=l+groupW*(index+.5);tooltip.innerHTML='<b>'+row.zone+' 防火分区</b><span>待巡检 '+row.pending+'</span><span>巡检中 '+row.inspecting+'</span><span>验收中 '+row.accepting+'</span><span>已完成 '+row.completed+'</span><span>已关闭 '+row.closed+'</span><strong>完成率 '+rate+'</strong>';tooltip.style.left=Math.min(rect.width-66,Math.max(66,svgX/w*rect.width))+'px';tooltip.style.top='50%';tooltip.hidden=false;});hit.addEventListener('mouseleave',function(){tooltip.hidden=true;});});
+  }
+  panel.querySelectorAll('[data-fire-period]').forEach(function(button){button.addEventListener('click',function(){panel.querySelectorAll('[data-fire-period]').forEach(function(item){item.classList.toggle('active',item===button);});renderFireInspectionChart(button.dataset.firePeriod);});});
+  renderFireInspectionChart('day');
+})();
+</script>
+<script>
+/* security dashboard enhancement */
+(function(){
+  var panel=document.getElementById('gisPanel3');
+  if(!panel||panel.dataset.securityEnhanced==='true')return;
+  var left=panel.querySelector('.gis-float-left'),right=panel.querySelector('.gis-float-right');
+  if(!left||!right)return;
+  panel.dataset.securityEnhanced='true';
+  left.classList.add('gis-security-rail');
+  right.classList.add('gis-security-rail');
+  panel.querySelectorAll('.gis-card-sub').forEach(function(item){item.remove();});
+
+  var cameras=[
+    ['fa-video','摄像机总数','433','total'],
+    ['fa-camera','枪式摄像机','132','bullet'],
+    ['fa-camera-retro','半球摄像机','290','dome'],
+    ['fa-bullseye','球型摄像机','11','ptz']
+  ];
+  var accessRecords=[
+    ['孙笑宇','2025-01-09 15:46:42','人脸识别','1号楼-MK-18','1号楼'],
+    ['保洁','2025-01-09 15:46:12','刷卡','1F-高区闸机2','电梯间2通道'],
+    ['张建国','2025-01-09 15:44:44','刷卡','B2F-MKZ-01','生活水泵房东南侧']
+  ];
+  function cameraMetric(row){return '<div class="gis-security-camera-metric '+row[3]+'"><span><i class="fa-solid '+row[0]+'" aria-hidden="true"></i></span><div><em>'+row[1]+'</em><strong>'+row[2]+'</strong></div></div>';}
+  function accessRecord(row){return '<div class="gis-security-record"><div class="gis-security-record-main"><b>'+row[0]+'</b><time>'+row[1]+'</time></div><div class="gis-security-record-meta"><span title="'+row[2]+'"><i class="fa-solid fa-id-card" aria-hidden="true"></i>'+row[2]+'</span><span title="'+row[3]+'"><i class="fa-solid fa-door-open" aria-hidden="true"></i>'+row[3]+'</span><span title="'+row[4]+'"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>'+row[4]+'</span></div></div>';}
+  function videoFeed(name,time){return '<div class="gis-security-video-feed"><div class="gis-security-video-title"><span>'+name+'</span><b><i></i>在线</b></div><div class="gis-security-video-screen"><img src="../../assets/images/access-gate.jpg" alt="'+name+'监控画面"><span>LIVE · '+time+'</span></div></div>';}
+
+  left.innerHTML=`
+    <section class="gis-card gis-security-card gis-security-camera-card">
+      <div class="gis-card-head"><h3>视频设备概览</h3></div>
+      <div class="gis-card-body"><div class="gis-security-camera-metrics">${cameras.map(cameraMetric).join('')}</div></div>
+    </section>
+    <section class="gis-card gis-security-card gis-security-access-card">
+      <div class="gis-card-head"><h3>门禁系统</h3><button type="button" class="gis-security-record-button" data-security-access-records><i class="fa-solid fa-list" aria-hidden="true"></i>通行记录</button></div>
+      <div class="gis-card-body">
+        <div class="gis-security-access-summary">
+          <div><span>设备总数</span><strong>198</strong></div>
+          <div class="fault"><span>设备故障率</span><strong>0<small>%</small></strong></div>
+          <div class="online"><span>在线</span><strong>198</strong></div>
+          <div class="offline"><span>离线</span><strong>0</strong></div>
+        </div>
+        <div class="gis-security-section-title"><h4>通行记录</h4><span>最近通行</span></div>
+        <div class="gis-security-record-list">${accessRecords.map(accessRecord).join('')}</div>
+      </div>
+    </section>`;
+
+  right.innerHTML=`
+    <section class="gis-card gis-security-card gis-security-video-overview">
+      <div class="gis-card-head"><h3>视频监控系统</h3></div>
+      <div class="gis-card-body">
+        <div class="gis-security-system-stats"><div><span>设备总数</span><strong>433</strong></div><div class="online"><span>在线</span><strong>421</strong></div><div class="offline"><span>离线</span><strong>12</strong></div><div class="warn"><span>异常</span><strong>3</strong></div></div>
+        <div class="gis-security-system-bar"><i style="width:97.2%"></i></div>
+        <div class="gis-security-system-note"><span><i class="ok"></i>在线率 97.2%</span><span>录像存储正常</span></div>
+      </div>
+    </section>
+    <section class="gis-card gis-security-card gis-security-alarms">
+      <div class="gis-card-head"><h3>系统告警记录</h3></div>
+      <div class="gis-card-body"><div class="gis-security-alarm-list">
+        <div class="gis-security-alarm danger"><i class="fa-solid fa-video-slash" aria-hidden="true"></i><span><b>摄像机视频丢失</b><em>CAM-C04-02 · 水信舱 F0301</em></span><time>14:26</time></div>
+        <div class="gis-security-alarm warn"><i class="fa-solid fa-door-open" aria-hidden="true"></i><span><b>门禁长时间开启</b><em>MK-F0102-03 · 综合舱入口</em></span><time>13:52</time></div>
+        <div class="gis-security-alarm"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span><b>周界入侵预警</b><em>防区 ZONE-08 · K1+280</em></span><time>11:18</time></div>
+      </div></div>
+    </section>
+    <section class="gis-card gis-security-card gis-security-key-video">
+      <div class="gis-card-head"><h3>关键区域监控</h3></div>
+      <div class="gis-card-body"><div class="gis-security-video-grid">${[
+        ['综合舱 F0102','14:26:05'],['电力舱 F0103','14:26:03'],['水信舱 F0301','14:25:58'],['出入口 K1+280','14:26:01']
+      ].map(function(row){return videoFeed(row[0],row[1]);}).join('')}</div></div>
+    </section>`;
+
+  document.body.insertAdjacentHTML('beforeend','<div class="gis-access-modal" id="gisAccessModal" hidden><div class="gis-access-modal-panel" role="dialog" aria-modal="true" aria-labelledby="gisAccessModalTitle"><div class="gis-access-modal-head"><h2 id="gisAccessModalTitle">人行通行记录</h2><button type="button" class="gis-access-modal-close" data-security-access-close aria-label="关闭通行记录"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><iframe title="人行通行记录" src="../monitoring/pedestrian-record.html?embedded=1"></iframe></div></div>');
+  var modal=document.getElementById('gisAccessModal');
+  function closeAccess(){modal.hidden=true;document.body.classList.remove('gis-access-modal-open');}
+  function openAccess(){modal.hidden=false;document.body.classList.add('gis-access-modal-open');}
+  panel.querySelector('[data-security-access-records]').addEventListener('click',openAccess);
+  modal.addEventListener('click',function(event){if(event.target===modal||event.target.closest('[data-security-access-close]'))closeAccess();});
+  document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!modal.hidden)closeAccess();});
+})();
+</script>
 </body>
 </html>

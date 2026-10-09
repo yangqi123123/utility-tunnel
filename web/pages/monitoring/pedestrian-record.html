@@ -7,6 +7,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
   <link rel="stylesheet" href="../../assets/css/monitoring.css">
+  <style>
+    .pedestrian-record-embedded .app-shell {
+      display: block;
+      min-height: 100vh;
+    }
+    .pedestrian-record-embedded #app-sidebar,
+    .pedestrian-record-embedded #app-header {
+      display: none;
+    }
+    .pedestrian-record-embedded .main {
+      min-height: 100vh;
+      padding: 16px;
+      overflow: auto;
+    }
+    .pedestrian-record-embedded .screen-frame {
+      max-width: none;
+    }
+  </style>
+  <script>
+    if (new URLSearchParams(window.location.search).get("embedded") === "1") {
+      document.documentElement.classList.add("pedestrian-record-embedded");
+    }
+  </script>
 </head>
 <body class="monitoring-page" data-menu-key="smart-monitoring.pedestrian" data-page-section="智能监测" data-page-title="人行通行记录">
   <div class="app-shell">
