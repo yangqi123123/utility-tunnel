@@ -6,8 +6,62 @@
   <title>GIS 一张图 - 科学岛管廊监控中心</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/tob-ui.css">
+  <link rel="stylesheet" href="../../assets/css/home-monitor.css?v=5">
+  <link rel="stylesheet" href="../../assets/css/monitoring.css">
   <link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="../../assets/css/gis-one-map.css?v=5">
+<style>
+#gisPanel4 .gis-fire-inspection .gis-card-head .gis-tag{font-size:0}#gisPanel4 .gis-fire-inspection .gis-card-head .gis-tag:after{content:'已逾期 1';font-size:9px}#gisPanel4 .gis-fire-inspection-summary .bad{font-size:0}#gisPanel4 .gis-fire-inspection-summary .bad:before{content:'已逾期';font-size:7px;display:block}#gisPanel4 .gis-fire-inspection-summary .bad b{font-size:11px}#gisPanel4 .gis-fire-alarm .gis-fire-alarm-summary{margin-bottom:12px}
+/* 通信广播面板（真实入口 gisPanel4） */
+#gisPanel4 .gis-card-sub{display:none}
+#gisPanel4 .gis-stage{height:calc(100vh - 180px);min-height:620px}
+#gisPanel4 .gis-float{height:100%;overflow:hidden}
+#gisPanel4 .gis-float-left,#gisPanel4 .gis-float-right{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:8px}
+#gisPanel4 .gis-float .gis-card{min-height:0;overflow:hidden}
+#gisPanel4 .gis-float .gis-card-body{min-height:0;overflow:hidden;padding:8px}
+#gisPanel4 .gis-float .gis-scroll{overflow:auto;min-height:0}
+#gisPanel4 .gis-float-left>.gis-card:first-child h3,#gisPanel4 .gis-float-left>.gis-card:nth-child(2) h3,#gisPanel4 .gis-float-left>.gis-card:nth-child(3) h3,#gisPanel4 .gis-float-right>.gis-card:first-child h3,#gisPanel4 .gis-float-right>.gis-card:nth-child(2) h3,#gisPanel4 .gis-float-right>.gis-card:nth-child(3) h3{font-size:0}
+#gisPanel4 .gis-float-left>.gis-card:first-child h3:after{content:'通信设备运行统计';font-size:13px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) h3:after{content:'广播分区统计';font-size:13px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(3) h3:after{content:'呼叫记录';font-size:13px}
+#gisPanel4 .gis-float-right>.gis-card:first-child h3:after{content:'调度台使用统计';font-size:13px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) h3:after{content:'广播设备巡检';font-size:13px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(3) h3:after{content:'设备报警';font-size:13px}
+#gisPanel4 .gis-float-left>.gis-card:first-child .gis-bars{display:none}
+#gisPanel4 .gis-float-left>.gis-card:first-child .gis-card-body:after{content:'在线 47 台   离线 5 台   报警 2 台';display:block;margin-top:10px;color:var(--muted);font-size:11px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) .gis-card-body:before{content:'综合舱 F0101   2 台\A综合舱 F0102   2 台\A电力舱 F0103   3 台\A电力舱 F0104   3 台\A燃气舱 F0201   2 台';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-contact{display:none}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-btn{display:none}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-card-body:after{content:'今日事件总数 12  ·  未处理 2  ·  已处理 10\A今日呼叫次数 14  ·  平均通话时长 02:18\A应急预案 3 个';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(3) .gis-ctl{display:none}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(3) .gis-card-body:after{content:'今日巡检 12 项  ·  已完成 10 项\A待复核 1 项  ·  异常 1 项';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(4){display:none}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(1) .gis-bars{display:none}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(1) .gis-card-body:after{content:'应急电话分机  在线 44  离线 2  报警 2\A广播终端      在线 10  离线 2  报警 0\A语音网关      在线 2   离线 0  报警 0';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) .gis-card-body>*{display:none}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) .gis-card-body:after{content:'综合舱 F0101    2 台\A综合舱 F0102    2 台\A电力舱 F0103    3 台\A电力舱 F0104    3 台\A燃气舱 F0201    2 台\A水信舱 F0301    2 台';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) h3:after{content:'广播分区统计';font-size:13px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(3) .gis-card-body>*{display:none}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(3) .gis-card-body:after{content:'14:22:41  K2+400  电力舱 F0104  02:14  报警\A13:56:06  K1+120  综合舱 F0101  01:02  正常\A13:20:33  K3+560  燃气舱 F0202  03:41  报警\A12:44:18  K0+600  综合舱 F0101  00:48  正常';white-space:pre;display:block;line-height:2;color:var(--text);font-size:10px}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(3) h3:after{content:'呼叫记录';font-size:13px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(1) h3:after{content:'调度台使用统计';font-size:13px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(1) .gis-contact,#gisPanel4 .gis-float-right>.gis-card:nth-child(1) .gis-btn{display:none}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(1) .gis-mini-grid{display:none}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(1) .gis-card-body:after{content:'今日事件总数 12  ·  未处理 2  ·  已处理 10\A今日呼叫次数 14  ·  平均通话时长 02:18\A应急预案 3 个';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) h3:after{content:'广播设备巡检';font-size:13px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-ctl,#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-btn{display:none}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-card-body:after{content:'今日巡检 12 项  ·  已完成 10 项\A待复核 1 项  ·  异常 1 项';white-space:pre;display:block;line-height:2;color:var(--text);font-size:11px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(3) .gis-card-body:before{content:'报警总数 2  ·  未处理 1  ·  已确认 1';display:block;color:var(--text);font-size:11px;margin-bottom:8px}
+#gisPanel4 .gis-float .gis-card-body:after{background:#FCFDFF;border:1px solid var(--line);border-radius:3px;padding:10px 12px;box-sizing:border-box}
+#gisPanel4 .gis-float-left>.gis-card:first-child .gis-card-body:after{display:block;line-height:2.1;background:transparent;border:0;padding:4px 2px;color:var(--text)}
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) .gis-card-body:after,#gisPanel4 .gis-float-left>.gis-card:nth-child(3) .gis-card-body:after{background:#fff;line-height:2.15;border-color:var(--divider);font-size:11px}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(1) .gis-card-body:after,#gisPanel4 .gis-float-right>.gis-card:nth-child(2) .gis-card-body:after{background:#FCFDFF;line-height:2.2;border-color:var(--divider)}
+#gisPanel4 .gis-float-right>.gis-card:nth-child(3) .gis-card-body:before{background:#FFF7F7;border:1px solid rgba(245,63,87,.18);border-radius:3px;padding:8px 10px;color:var(--danger)}
+#gisPanel4 .gis-float-left>.gis-card:first-child .gis-mini{padding:8px 6px;border-radius:3px}
+#gisPanel4 .gis-float-left>.gis-card:first-child .gis-mini .n{font-size:10px;white-space:nowrap}
+#gisPanel4 .gis-float-left>.gis-card:first-child .gis-mini>div:last-child{font-size:18px!important}
+@media(max-height:760px) and (min-width:761px){#gisPanel4 .gis-stage{height:calc(100vh - 160px);min-height:540px}}
+</style>
 </head>
 <body data-menu-key="gis" data-page-section="科学岛管廊监控中心" data-page-title="GIS一张图">
 <div class="app-shell">
@@ -659,10 +713,26 @@
 </aside>
 <div class="gis-toast" id="gisToast"></div>
 
+<div class="dm-modal-mask" id="gisDeviceModalMask">
+  <section class="dm-modal gis-device-modal" role="dialog" aria-modal="true" aria-labelledby="gisDeviceModalTitle">
+    <header class="dm-modal-head"><h2 id="gisDeviceModalTitle">设备详情</h2><button class="dm-modal-close" type="button" data-gis-device-close aria-label="关闭">×</button></header>
+    <div class="dm-modal-tabs" role="tablist">
+      <button class="dm-modal-tab is-active" type="button" role="tab" data-gis-device-tab="info">设备信息</button>
+      <button class="dm-modal-tab" type="button" role="tab" data-gis-device-tab="live">实时数据</button>
+      <button class="dm-modal-tab" type="button" role="tab" data-gis-device-tab="history">历史数据</button>
+    </div>
+    <div class="dm-modal-body"><div data-gis-device-panel="info"></div><div data-gis-device-panel="live" hidden></div><div data-gis-device-panel="history" hidden></div></div>
+  </section>
+</div>
+
 <script src="../../../app/config/menu.js?v=gis-3"></script>
 <script src="../../../app/components/sidebar.js?v=gis-3"></script>
 <script src="../../../app/components/header.js?v=gis-3"></script>
+<script src="../../../app/data/system-types.js"></script>
+<script src="../../../app/data/device-categories.js"></script>
+<script src="../../../app/data/device-monitor-data.js"></script>
 <script>
+(function(){const p=document.querySelector('#gisPanel9');if(!p)return;const left=p.querySelector('.gis-float-left');const rank=left&&left.children[2];if(!rank)return;const spaces=[['防火分区',6],['出入口',5],['通风口',4],['吊装口',3],['消防口',2]],systems=[['视频',8],['消防',6],['入侵',5],['电力',4],['环境',3],['巡更',2],['通信',2],['井盖',2],['门禁',1],['火灾',1]];const draw=a=>rank.querySelector('.gis-card-body').innerHTML='<div class="rank-chart">'+a.map(x=>`<div class="rank-item"><b>${x[0]}</b><span><i style="width:${x[1]/a[0][1]*100}%"></i></span><strong>${x[1]}</strong></div>`).join('')+'</div>';rank.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>{rank.querySelectorAll('[data-rank]').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.rank==='space'?spaces:systems)});draw(spaces);})();
 (function(){
   var root=document.documentElement;
   var pageToggleSelector='[data-sidebar-toggle]';
@@ -692,6 +762,26 @@
     if(event.target.closest('[data-gis-sidebar-return]')) setPageSidebar(false);
   },true);
   document.addEventListener('DOMContentLoaded',function(){ setPageSidebar(true); });
+})();
+</script>
+<script>
+(function(){
+  var p=document.getElementById('gisPanel5'); if(!p) return;
+  var left=p.querySelector('.gis-float-left'), right=p.querySelector('.gis-float-right');
+  var ups=left&&left.children[1];
+  if(ups){
+    var body=ups.querySelector('.gis-card-body');
+    var head=body&&body.querySelector('.power-ups-head'); if(head) head.remove();
+    var table=body&&body.querySelector('.power-ups-table');
+    if(table) table.innerHTML='<div><span>设备名称</span><span>设备状态</span><span>操作</span></div><div><span>长一体化配电UPS</span><em>在线</em><a>查看</a></div><div><span>2# UPS 配电柜</span><em style="color:#8794a5">离线</em><a>查看</a></div><div><span>UPS 电池组 A</span><em style="color:#e3a52a">预警</em><a>查看</a></div><div><span>旁路静态开关</span><em>在线</em><a>查看</a></div>';
+  }
+  p.querySelectorAll('.power-chart').forEach(function(svg){
+    ['100','75','50','25','0'].forEach(function(v,i){var t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x','5');t.setAttribute('y',String(22+i*30));t.textContent=v;svg.insertBefore(t,svg.firstChild);});
+    var wrap=svg.parentElement; wrap.style.position='relative'; var tip=document.createElement('div'); tip.className='power-chart-tip'; tip.innerHTML='<div class="tip-time">时间 12:00</div><div><i class="tip-dot temp"></i>温度 <b>22.4 ℃</b></div><div><i class="tip-dot humid"></i>湿度 <b>58 %</b></div><div><i class="tip-dot phase-c"></i>C相 <b>396 V</b></div>'; wrap.appendChild(tip);
+    svg.addEventListener('mousemove',function(e){var r=svg.getBoundingClientRect(); tip.style.left=Math.max(8,Math.min(r.width-145,e.clientX-r.left+8))+'px';tip.style.top=Math.max(8,e.clientY-r.top-8)+'px';tip.style.display='block';}); svg.addEventListener('mouseleave',function(){tip.style.display='none';});
+  });
+  var homeAlarm=document.querySelector('#gisPanel0 .gis-float-right .gis-card:last-child'); var target=right&&right.children[2];
+  if(homeAlarm&&target){target.innerHTML=homeAlarm.innerHTML;}
 })();
 </script>
 <script src="../../assets/vendor/leaflet/leaflet.js"></script>
@@ -744,7 +834,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -881,7 +971,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1018,7 +1108,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1155,7 +1245,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1243,6 +1333,31 @@
   }
 })();
 </script>
+<style>
+#gisPanel4 .gis-card h3{font-size:13px!important}#gisPanel4 .gis-card h3:after,#gisPanel4 .gis-card-body:after,#gisPanel4 .gis-card-body:before{content:none!important}
+#gisPanel4 .gis-fire-card{min-height:0;display:flex;flex-direction:column;overflow:hidden}#gisPanel4 .gis-fire-card .gis-card-head{flex:0 0 38px;min-height:38px;padding:0 10px}#gisPanel4 .gis-fire-card .gis-card-body{flex:1;min-height:0;overflow:hidden;padding:8px 9px;gap:7px}
+#gisPanel4 .gis-fire-summary,#gisPanel4 .gis-fire-alarm-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}#gisPanel4 .gis-fire-summary .gis-mini,#gisPanel4 .gis-fire-alarm-summary .gis-mini{padding:5px 6px}#gisPanel4 .gis-fire-summary strong,#gisPanel4 .gis-fire-alarm-summary strong{display:block;margin-top:2px;color:var(--title);font-size:16px}
+#gisPanel4 .gis-fire-device-list{display:flex;flex-direction:column;gap:7px;min-height:0;overflow:auto;padding-right:3px}#gisPanel4 .gis-fire-device-meta{display:flex;justify-content:space-between;font-size:9px}#gisPanel4 .gis-fire-stack{height:7px;display:flex;overflow:hidden;margin-top:3px;border-radius:3px;background:#edf1f7}#gisPanel4 .gis-fire-stack i{height:100%}#gisPanel4 .gis-fire-stack .online{background:#14C9BA}#gisPanel4 .gis-fire-stack .offline{background:#8A93A0}#gisPanel4 .gis-fire-stack .alarm{background:#F53F57}#gisPanel4 .gis-fire-device-counts{display:flex;gap:9px;margin-top:2px;color:var(--muted);font-size:8px}
+#gisPanel4 .gis-fire-runtime .gis-card-body{display:grid;grid-template-rows:38px minmax(0,1fr);gap:8px}#gisPanel4 .gis-fire-zones .gis-mini-grid{height:100%;overflow:auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}#gisPanel4 .gis-fire-zone{padding:7px;background:#fff}#gisPanel4 .gis-fire-zone-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 6px;margin-top:5px;color:var(--muted);font-size:8px}#gisPanel4 .gis-fire-zone-stats span{display:flex;justify-content:space-between}#gisPanel4 .gis-fire-zone.overdue{border-color:rgba(245,63,87,.42);background:rgba(245,63,87,.06)}
+#gisPanel4 .gis-fire-inspection .gis-card-body{display:grid;grid-template-rows:34px minmax(0,1fr);gap:6px}#gisPanel4 .gis-fire-inspection-summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px}#gisPanel4 .gis-fire-inspection-summary span{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:3px;color:var(--muted);font-size:7px}#gisPanel4 .gis-fire-inspection-summary b{color:var(--title);font-size:11px}#gisPanel4 .gis-fire-inspection .gis-scroll,#gisPanel4 .gis-fire-alarm .gis-alarm{height:100%;overflow:auto}#gisPanel4 .gis-fire-inspection .gis-table{font-size:9px}#gisPanel4 .gis-fire-inspection .gis-table th,#gisPanel4 .gis-fire-inspection .gis-table td{padding:5px 6px}
+#gisPanel4 .comm-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;height:100%}#gisPanel4 .comm-metric{display:grid;justify-items:center;align-content:center;gap:3px;border:1px solid var(--line);border-radius:4px;background:#fff}#gisPanel4 .comm-metric i{color:var(--primary)}#gisPanel4 .comm-metric b{font-size:16px;color:var(--title)}#gisPanel4 .comm-metric span{font-size:8px;color:var(--muted)}
+#gisPanel4 .comm-call-list{height:100%;overflow:auto}#gisPanel4 .comm-call-list .gis-table{font-size:9px}#gisPanel4 .comm-call-list .gis-table th,#gisPanel4 .comm-call-list .gis-table td{padding:6px}
+#gisPanel4 .gis-fire-alarm .gis-card-body{display:grid;grid-template-rows:38px minmax(0,1fr);gap:7px}#gisPanel4 .gis-fire-alarm .gis-alarm-item{padding:5px;grid-template-columns:24px minmax(0,1fr) auto;gap:6px}#gisPanel4 .gis-fire-alarm .gis-alarm-item .lv{width:24px;height:24px;font-size:9px}#gisPanel4 .gis-fire-alarm .gis-alarm-item .t{font-size:10px}#gisPanel4 .gis-fire-alarm .gis-alarm-item .m{font-size:9px}
+<style>
+#gisPanel4 .gis-float-left>.gis-card:nth-child(2) .gis-card-body>*{display:block!important}#gisPanel4 .gis-float-left>.gis-card:nth-child(2) .gis-card-body>.gis-mini-grid{display:grid!important}#gisPanel4 .gis-float-left>.gis-card:nth-child(3) .gis-card-body>*{display:block!important}#gisPanel4 .gis-float-left>.gis-card:nth-child(3) .gis-card-body>.comm-call-list{display:block!important}#gisPanel4 .gis-fire-inspection .gis-card-head .gis-tag{font-size:9px}#gisPanel4 .gis-fire-inspection-summary .bad b{color:var(--danger)}#gisPanel4 .gis-fire-inspection .gis-table th:last-child{font-size:0}#gisPanel4 .gis-fire-inspection .gis-table th:last-child:after{content:'逾期状态';font-size:9px}#gisPanel4 .gis-fire-alarm .gis-fire-alarm-summary{margin-bottom:12px}#gisPanel4 .gis-fire-alarm .gis-alarm{gap:8px}#gisPanel4 .gis-fire-alarm .gis-alarm-item{font-size:9px}
+</style>
+<script>
+(function(){var panel=document.getElementById('gisPanel4');if(!panel)return;var style=document.createElement('style');style.textContent='#gisPanel4 .gis-fire-runtime .gis-fire-device-list{margin-top:12px}#gisPanel4 .gis-fire-alarm .gis-alarm{margin-top:12px}#gisPanel4 .gis-fire-inspection .gis-card-head .gis-tag{font-size:0}#gisPanel4 .gis-fire-inspection .gis-card-head .gis-tag:after{content:"已逾期";font-size:9px}#gisPanel4 .gis-fire-inspection-summary .bad{font-size:0}#gisPanel4 .gis-fire-inspection-summary .bad:before{content:"已逾期";font-size:7px;display:block}#gisPanel4 .gis-fire-inspection .gis-table td:nth-child(5){color:#0E9E92}#gisPanel4 .gis-fire-inspection .gis-table td:nth-child(5).bad{color:#F53F57}';document.head.appendChild(style);var left=panel.querySelector('.gis-float-left'),right=panel.querySelector('.gis-float-right');
+left.innerHTML=`<section class="gis-card gis-fire-card gis-fire-runtime"><div class="gis-card-head"><h3>通信设备运行统计</h3></div><div class="gis-card-body"><div class="gis-fire-summary"><div class="gis-mini"><div class="n"><i class="dot"></i>在线</div><strong>58</strong></div><div class="gis-mini"><div class="n"><i class="dot offline" style="background:#8A93A0"></i>离线</div><strong>3</strong></div><div class="gis-mini bad"><div class="n"><i class="dot"></i>报警</div><strong>2</strong></div></div><div class="gis-fire-device-list">${[['应急电话分机',44,2,2],['广播终端',10,1,0],['语音网关',2,0,0],['LED 信息屏',2,0,0]].map(function(x){var t=x[1]+x[2]+x[3];return '<div class="gis-fire-device-row"><div class="gis-fire-device-meta"><span>'+x[0]+'</span><b>'+t+'</b></div><div class="gis-fire-stack"><i class="online" style="width:'+(x[1]/t*100)+'%"></i><i class="offline" style="width:'+(x[2]/t*100)+'%"></i><i class="alarm" style="width:'+(x[3]/t*100)+'%"></i></div><div class="gis-fire-device-counts"><span>在线 '+x[1]+'</span><span>离线 '+x[2]+'</span><span>报警 '+x[3]+'</span></div></div>'}).join('')}</div></div></section>
+<section class="gis-card gis-fire-card gis-fire-zones"><div class="gis-card-head"><h3>广播分区统计</h3><span class="rt"><span class="gis-tag">6 区</span></span></div><div class="gis-card-body"><div class="gis-mini-grid">${[['综合舱 F0101',2,2,0],['综合舱 F0102',2,2,0],['电力舱 F0103',3,2,1],['电力舱 F0104',3,2,1],['燃气舱 F0201',2,2,0],['水信舱 F0301',2,2,0]].map(function(x){return '<div class="gis-mini gis-fire-zone '+(x[3]?'overdue':'')+'"><div class="n"><i class="dot"></i>'+x[0]+'</div><div class="gis-fire-zone-stats"><span>设备数量 <b>'+x[1]+'</b></span><span>在线 <b>'+x[2]+'</b></span><span>离线 <b>'+(x[1]-x[2])+'</b></span><span>报警 <b>'+x[3]+'</b></span></div></div>'}).join('')}</div></div></section>
+<section class="gis-card gis-fire-card"><div class="gis-card-head"><h3>呼叫记录</h3></div><div class="gis-card-body"><div class="comm-call-list"><table class="gis-table"><thead><tr><th>主叫人</th><th>被叫人</th><th>通话时间</th><th>时长</th></tr></thead><tbody><tr><td>F0104 分机</td><td>中心值班室</td><td>14:22:41</td><td>02:14</td></tr><tr><td>中心值班室</td><td>F0101 分机</td><td>13:56:06</td><td>01:02</td></tr><tr><td>F0202 分机</td><td>管廊运维班</td><td>13:20:33</td><td>03:41</td></tr><tr><td>中心值班室</td><td>F0103 分机</td><td>10:31:55</td><td>01:33</td></tr></tbody></table></div></div></section>`;
+right.innerHTML=`<section class="gis-card gis-fire-card"><div class="gis-card-head"><h3>调度台使用统计</h3></div><div class="gis-card-body"><div class="comm-metrics"><div class="comm-metric"><i class="fa-solid fa-list-check"></i><b>12</b><span>今日事件总数</span></div><div class="comm-metric"><i class="fa-solid fa-clock" style="color:#F53F57"></i><b>2</b><span>事件未处理</span></div><div class="comm-metric"><i class="fa-solid fa-circle-check" style="color:#14C9BA"></i><b>10</b><span>事件已处理</span></div><div class="comm-metric"><i class="fa-solid fa-phone"></i><b>14</b><span>今日呼叫次数</span></div><div class="comm-metric"><i class="fa-solid fa-stopwatch"></i><b>02:18</b><span>平均通话时长</span></div><div class="comm-metric"><i class="fa-solid fa-file-shield"></i><b>3</b><span>应急预案</span></div></div></div></section>
+<section class="gis-card gis-fire-card gis-fire-inspection"><div class="gis-card-head"><h3>广播设备巡检</h3><span class="rt"><span class="gis-tag danger">异常 1</span></span></div><div class="gis-card-body"><div class="gis-fire-inspection-summary"><span>本月任务<b>24</b></span><span>待巡检<b>4</b></span><span>巡检中<b>2</b></span><span>验收中<b>1</b></span><span class="ok">已完成<b>17</b></span><span class="bad">异常<b>1</b></span></div><div class="gis-scroll"><table class="gis-table"><thead><tr><th>任务</th><th>设备</th><th>计划执行</th><th>状态</th></tr></thead><tbody><tr><td>TX-XJ-1021</td><td>F0104 广播终端</td><td>10-09</td><td class="bad">异常</td></tr><tr><td>TX-XJ-1024</td><td>F0201 应急电话</td><td>10-09</td><td class="w">巡检中</td></tr><tr><td>TX-XJ-1017</td><td>F0101 语音网关</td><td>10-08</td><td class="ok">已完成</td></tr></tbody></table></div></div></section>
+<section class="gis-card gis-fire-card gis-fire-alarm"><div class="gis-card-head"><h3>设备报警</h3><span class="rt"><span class="gis-tag danger">未处理 2</span></span></div><div class="gis-card-body"><div class="gis-fire-alarm-summary"><div class="gis-mini bad"><div class="n"><i class="dot"></i>报警总数</div><strong>4</strong></div><div class="gis-mini warn"><div class="n"><i class="dot"></i>未处理</div><strong>2</strong></div><div class="gis-mini"><div class="n"><i class="dot"></i>已处理</div><strong>2</strong></div></div><div class="gis-alarm"><div class="gis-alarm-item l3"><span class="lv">Ⅲ</span><span><span class="t">F0104 应急电话通信中断</span><span class="m">电话 WLYL-F0104-TEL02 · 14:26:08</span></span><span class="st"><span class="gis-tag danger">未处理</span></span></div><div class="gis-alarm-item l2"><span class="lv">Ⅱ</span><span><span class="t">F0103 广播终端离线</span><span class="m">广播 WLYL-F0103-PA01 · 13:52:07</span></span><span class="st"><span class="gis-tag warn">未处理</span></span></div><div class="gis-alarm-item l1"><span class="lv">Ⅰ</span><span><span class="t">F0101 语音网关心跳恢复</span><span class="m">网关 WLYL-F0101-GW01 · 09:15:00</span></span><span class="st"><span class="gis-tag ok">已处理</span></span></div></div></div></section>`;})();
+</script>
+<script>(function(){var p=document.getElementById('gisPanel4');if(!p)return;var ins=p.querySelector('.gis-fire-inspection');if(ins){var tag=ins.querySelector('.gis-card-head .gis-tag');if(tag)tag.textContent='已逾期';var last=ins.querySelector('.gis-fire-inspection-summary .bad');if(last)last.innerHTML='已逾期 <b>1</b>';var t=ins.querySelector('table');if(t){var h=t.querySelector('thead tr');if(h&&!h.querySelector('[data-overdue]')){var th=document.createElement('th');th.textContent='逾期状态';th.dataset.overdue='1';h.appendChild(th);}t.querySelectorAll('tbody tr').forEach(function(r,i){var s=r.cells[3];if(s){var d=document.createElement('td');d.textContent=i===0?'已逾期':'未逾期';d.className=i===0?'bad':'ok';r.appendChild(d);s.textContent=i===0?'待巡检':i===1?'巡检中':'已完成';}});}}})();</script>
+<style>#gisPanel4 .gis-fire-inspection .gis-card-head .gis-tag:after{content:none!important}</style>
+<script>(function(){var t=document.querySelector('#gisPanel4 .gis-fire-inspection table tbody');if(t&&!t.querySelector('[data-extra-inspection]')){t.insertAdjacentHTML('beforeend','<tr data-extra-inspection="1"><td>TX-XJ-1019</td><td>F0301 广播终端</td><td>10-10</td><td class="w">验收中</td><td class="ok">未逾期</td></tr><tr data-extra-inspection="1"><td>TX-XJ-1008</td><td>F0102 应急电话</td><td>10-06</td><td>已关闭</td><td class="ok">未逾期</td></tr>');}})();</script>
 <!-- 通信广播 -->
 <script>
 (function(){
@@ -1292,7 +1407,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1429,7 +1544,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1566,7 +1681,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1703,7 +1818,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1840,7 +1955,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -1977,7 +2092,7 @@
       var icon=L.divIcon({className:'gis-marker-wrap',html:'<span class="gis-marker '+(p.status==='alarm'?'alarm':p.status==='warn'?'warn':p.status==='offline'?'offline':p.status==='ok'?'ok':'')+'" style="--c:'+l.color+'"><i class="fa-solid '+(l.icon||'fa-location-dot')+'"></i></span>',iconSize:[24,24],iconAnchor:[12,12]});
       var mk=L.marker(pos,{icon:icon,riseOnHover:true,keyboard:false});
       mk.bindTooltip(p.name,{direction:'top',offset:[0,-14],className:'gis-tip',opacity:1});
-      mk.on('click',function(){openDetail(p);});
+      mk.on('click',function(){openDeviceDetail(p);});
       mk.addTo(groups[p.layer]);n++;
     });
     var el=scope.querySelector('#gisPointCount'+suffix);if(el)el.textContent=n+' 个点位';
@@ -2087,6 +2202,21 @@
     (function(idx){tabs[idx].addEventListener('click',function(){show(idx);});})(i);
   }
   show(0);
+})();
+</script>
+<script>
+(function(){
+  var D=window.DEVICE_MONITOR_DATA||{}, devices=D.devices||[], mask=document.getElementById('gisDeviceModalMask'), modal=mask&&mask.querySelector('.gis-device-modal'), current=null, active='info';
+  var esc=function(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var fields=[['所属系统','system'],['设备分类','type'],['所属项目','project'],['所属管廊','corridor'],['所属舱室','room'],['所属区段','section'],['所属管线','pipeline'],['设备品牌','brand'],['设备型号','model'],['设备名称','name'],['设备编码','code'],['安装位置','location'],['供应商','vendor'],['供应商联系方式','supplierPhone'],['生产厂家','manufacturer'],['出厂日期','manufactureDate'],['到货日期','deliveryDate'],['安装日期','installDate'],['验收日期','acceptDate'],['报废日期','scrapDate'],['厂家编码','factoryCode'],['CAD编码','cadCode'],['来源模块','sourceModule'],['服务范围','service'],['备注','remark'],['是否智能化','smart'],['第三方编码','thirdPartyCode'],['设备坐标','coordinate'],['创建时间','createdAt']];
+  function findDevice(point){var q=(point&&point.name||'').toLowerCase(),hit=devices.find(function(d){return q&&((d.name||'').toLowerCase().indexOf(q)>=0||(d.code||'').toLowerCase().indexOf(q)>=0);});if(hit)return hit;var layer=point&&point.layer;var pool=layer==='cam'?devices.filter(function(d){return d.video;}):layer==='env'?devices.filter(function(d){return d.system==='环境监测';}):layer==='lid'?devices.filter(function(d){return d.system==='智能井盖';}):layer==='gate'?devices.filter(function(d){return d.system==='门禁系统'||d.system==='安全防范系统';}):devices;return pool[0]||devices[0];}
+  function renderInfo(){var host=mask.querySelector('[data-gis-device-panel="info"]');host.innerHTML='<div class="dm-info-grid">'+fields.map(function(pair){return '<div class="info-item"><span class="info-label">'+pair[0]+'</span><span class="info-value">'+(esc(current[pair[1]])||'-')+'</span></div>';}).join('')+'</div>';}
+  function renderLive(){var host=mask.querySelector('[data-gis-device-panel="live"]'),metrics=current.metrics||[];host.innerHTML=current.video?'<div class="dm-live-video"><div class="video-feed"><div class="video-feed-title"><span>'+esc(current.name)+'</span><span class="dm-feed-status is-'+esc(current.status)+'">'+(current.status==='offline'?'离线':current.status==='warn'?'预警':'在线')+'</span></div><div class="video-screen'+(current.status==='offline'?' is-offline':'')+'"><img src="../../assets/images/access-gate.jpg" alt="'+esc(current.name)+'实时监控画面"><span class="video-live-time">LIVE '+esc(D.reportTime||'')+'</span></div></div></div>':'<div class="dm-live-grid">'+metrics.map(function(m){return '<div class="dm-live-card"><span class="dm-live-name">'+esc(m.name)+'</span><div class="dm-live-value">'+Number(m.value).toFixed(m.decimals||0)+'<span class="dm-live-unit">'+esc(m.unit||'')+'</span></div><span class="dm-live-time">'+esc(D.reportTime||'')+'</span></div>';}).join('')+'</div>';}
+  function renderHistory(){var host=mask.querySelector('[data-gis-device-panel="history"]');host.innerHTML='<h3 class="dm-block-title">历史数据</h3><div class="dm-history-table-wrap"><table class="dm-table dm-history-table"><thead><tr><th>数据接收时间</th>'+((current.metrics||[]).map(function(m){return '<th>'+esc(m.name)+'</th>';}).join(''))+'</tr></thead><tbody>'+((D.historyOf?D.historyOf(current):[]).map(function(row){return '<tr><td>'+esc(row.time)+'</td>'+row.values.map(function(v,i){return '<td>'+Number(v).toFixed((current.metrics[i]||{}).decimals||0)+'</td>';}).join('')+'</tr>';}).join(''))+'</tbody></table></div>';}
+  function setTab(tab){if(tab==='history'&&current&&current.video)tab='info';active=tab;mask.querySelectorAll('[data-gis-device-tab]').forEach(function(b){b.classList.toggle('is-active',b.dataset.gisDeviceTab===tab);});mask.querySelectorAll('[data-gis-device-panel]').forEach(function(p){p.hidden=p.dataset.gisDevicePanel!==tab;});}
+  window.openDeviceDetail=function(point){if(!mask)return;current=findDevice(point);if(!current)return;var historyTab=mask.querySelector('[data-gis-device-tab="history"]');mask.querySelector('#gisDeviceModalTitle').textContent='设备详情';mask.querySelector('.gis-device-modal').classList.toggle('is-video',!!current.video);if(historyTab)historyTab.hidden=!!current.video;renderInfo();renderLive();renderHistory();setTab('info');mask.classList.add('is-open');document.body.style.overflow='hidden';};
+  function close(){if(!mask)return;mask.classList.remove('is-open');mask.querySelector('.gis-device-modal').classList.remove('is-video');var historyTab=mask.querySelector('[data-gis-device-tab="history"]');if(historyTab)historyTab.hidden=false;document.body.style.overflow='';}
+  if(mask){mask.addEventListener('click',function(e){if(e.target===mask||e.target.closest('[data-gis-device-close]'))close();});mask.querySelectorAll('[data-gis-device-tab]').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.gisDeviceTab);});});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mask.classList.contains('is-open'))close();});}
 })();
 </script>
 <script>
@@ -2418,4 +2548,114 @@
 })();
 </script>
 </body>
+<script>
+// 设备监测 Tab：按产品要求重绘左右六块看板，地图与点位逻辑保持不变。
+(function(){
+  const tab=document.querySelector('[data-gis-tab="9"]');
+  if(!tab)return;
+  const render=()=>{
+    const panel=document.querySelector('#gisPanel9');
+    const left=panel?.querySelector('.gis-float-left'),right=panel?.querySelector('.gis-float-right');
+    if(!left||!right)return;
+    left.innerHTML=`<section class="gis-card device-overview"><div class="gis-card-head"><h3>设备状态总览</h3><span class="gis-card-sub">/ 监测设备 1,286 台</span></div><div class="gis-card-body"><div class="gis-mini-grid six"><div class="gis-mini"><div class="n"><i class="dot"></i>设备总数</div><div class="v">1,286<small>台</small></div></div><div class="gis-mini mid"><div class="n"><i class="dot"></i>在线</div><div class="v">1,058<small>台</small></div></div><div class="gis-mini bad"><div class="n"><i class="dot"></i>离线</div><div class="v">32<small>台</small></div></div><div class="gis-mini warn"><div class="n"><i class="dot"></i>预警</div><div class="v">156<small>台</small></div></div><div class="gis-mini mid"><div class="n"><i class="dot"></i>在线率</div><div class="v">98.6<small>%</small></div></div><div class="gis-mini warn"><div class="n"><i class="dot"></i>待巡检</div><div class="v">28<small>台</small></div></div></div></div></section><section class="gis-card"><div class="gis-card-head"><h3>设备运行状态统计</h3><span class="gis-card-sub">/ 运行状态总览</span></div><div class="gis-card-body"><div class="run-summary"><div><b>1,286</b><span>设备总数</span></div><p><em class="run"></em>运行中 <strong>750</strong><i style="width:76%"></i></p><p><em class="standby"></em>待机 <strong>320</strong><i style="width:42%"></i></p><p><em class="inspect"></em>检修中 <strong>168</strong><i style="width:22%"></i></p><p><em class="fault"></em>故障 <strong>48</strong><i style="width:7%"></i></p></div></div></section><section class="gis-card"><div class="gis-card-head"><h3>设备预警排名</h3><span class="gis-card-sub">/ 近 24 小时</span></div><div class="gis-card-body"><div class="alarm-rank"><p><b>甲烷探测器</b><i style="width:100%"></i><strong>8</strong></p><p><b>集水井水位传感器</b><i style="width:75%"></i><strong>6</strong></p><p><b>智能井盖位移传感器</b><i style="width:50%"></i><strong>4</strong></p><p><b>排水泵控制柜</b><i style="width:38%"></i><strong>3</strong></p><p><b>视频监控摄像机</b><i style="width:25%"></i><strong>2</strong></p></div></div></section>`;
+    right.innerHTML=`<section class="gis-card"><div class="gis-card-head"><h3>设备异常状态分析</h3><span class="gis-card-sub">/ 异常设备分布</span></div><div class="gis-card-body"><div class="alarm-rank abnormal"><p><b>环境传感器</b><i style="width:100%"></i><strong>24</strong></p><p><b>消防设备</b><i style="width:79%"></i><strong>19</strong></p><p><b>机电设备</b><i style="width:63%"></i><strong>15</strong></p><p><b>安防设备</b><i style="width:42%"></i><strong>10</strong></p><p><b>通信设备</b><i style="width:17%"></i><strong>4</strong></p></div></div></section><section class="gis-card"><div class="gis-card-head"><h3>设备报警状态</h3><span class="gis-card-sub">/ 当前报警总数</span></div><div class="gis-card-body"><div class="alarm-status"><div class="alarm-donut"><b>33</b><span>报警总数</span></div><div class="alarm-legend"><p><i class="unhandled"></i><b>未处理</b><strong>18 个</strong><em>54.55%</em></p><p><i class="handling"></i><b>处理中</b><strong>9 个</strong><em>27.27%</em></p><p><i class="handled"></i><b>已处理</b><strong>6 个</strong><em>18.18%</em></p></div></div></div></section><section class="gis-card"><div class="gis-card-head"><h3>报警系统分布</h3><span class="gis-card-sub">/ 十大子系统</span></div><div class="gis-card-body"><div class="system-distribution">${[['视频','6'],['消防','5'],['入侵','4'],['电力','4'],['环境','3'],['巡更','3'],['通信','3'],['井盖','2'],['门禁','2'],['火灾','1']].map((x,i)=>`<div><i class="sd${i}">${['▣','♨','◉','ϟ','⌁','✧','⌁','○','⌑','△'][i]}</i><b>${x[0]}</b><strong>${x[1]}</strong></div>`).join('')}</div></div></section>`;
+  };
+  render();
+  document.querySelectorAll('[data-gis-tab]').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.gisTab==='9')setTimeout(render,0)}));
+})();
+</script>
+<style>
+#gisPanel5 .gis-stage{position:absolute;inset:0;display:block;height:auto;min-height:0;overflow:hidden}
+#gisPanel5 .gis-map-stage{position:absolute;inset:0;min-width:0;min-height:0}
+#gisPanel5 .gis-map-stage .gis-map{position:absolute;inset:0}
+#gisPanel5 .gis-float{position:absolute!important;top:12px;bottom:12px;width:300px;display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:10px;min-height:0;overflow:hidden;z-index:1000!important;visibility:visible!important;pointer-events:auto}
+#gisPanel5 .gis-float-left{left:12px}#gisPanel5 .gis-float-right{right:12px}
+#gisPanel5 .gis-float .gis-card{min-height:0;overflow:hidden;background:#fff;border:1px solid #d8e1ec;border-radius:5px;box-shadow:0 4px 16px rgba(39,67,99,.08)}
+#gisPanel5 .gis-float .gis-card-head{height:38px;min-height:38px;padding:0 12px}.gis-panel-power-head h3{font-size:14px}
+#gisPanel5 .gis-float .gis-card-sub,#gisPanel5 .gis-float .rt{display:none}
+#gisPanel5 .gis-float .gis-card-body{min-height:0;overflow:hidden;padding:10px 12px}
+#gisPanel5 .power-device-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}.power-device-kpis div{padding:5px 2px;text-align:center;background:#f4f8fc;border:1px solid #e3eaf2;border-radius:3px}.power-device-kpis b{display:block;font:700 20px/21px 'DIN Alternate',Arial}.power-device-kpis span{font-size:10px;color:#75879b}.power-device-list{height:calc(100% - 69px);overflow:auto}.power-device-row{padding:6px 0 7px;border-bottom:1px solid #edf2f7}.power-device-row>div:first-child{display:flex;justify-content:space-between;font-size:11px;color:#3c5269;margin-bottom:4px}.power-track{height:7px;display:flex;overflow:hidden;border-radius:4px;background:#edf1f5}.power-track i{height:100%}.power-track .on{background:#15c4b1}.power-track .off{background:#9aa5b2}.power-track .al{background:#ec5865}.power-meta{display:flex;justify-content:space-between;margin-top:3px;font-size:9px}.power-meta .on{color:#16b9aa}.power-meta .off{color:#8794a5}.power-meta .al{color:#ef5c68}
+#gisPanel5 .power-ups-head{display:flex;justify-content:space-between;padding-bottom:7px;color:#496078;font-size:11px}.power-ups-head b{display:block;font:700 21px/22px 'DIN Alternate',Arial;color:#193c61}.power-ups-head small{font-size:10px}.power-ups-head strong{display:block;color:#12ae9e;font-size:17px;text-align:right}.power-ups-metrics{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid #edf2f7;margin:0 -12px}.power-ups-metrics div{text-align:center;padding:7px 2px;border-right:1px solid #edf2f7}.power-ups-metrics div:last-child{border:0}.power-ups-metrics span{display:block;font-size:9px;color:#8291a1}.power-ups-metrics b{font:700 16px/19px 'DIN Alternate',Arial;color:#193c61}.power-ups-table{font-size:9px;margin-top:5px}.power-ups-table div{display:grid;grid-template-columns:1fr 45px 30px;padding:5px 0;border-bottom:1px solid #edf2f7;color:#718398}.power-ups-table em{color:#13af9e;font-style:normal}.power-ups-table a{color:#2c77c5}
+#gisPanel5 .power-chart-legend{display:flex;justify-content:flex-end;gap:10px;font-size:9px;color:#718398}.power-chart-legend span:before{content:'';display:inline-block;width:13px;height:3px;background:#f29b63;margin-right:3px;vertical-align:middle}.power-chart-legend .blue:before{background:#5aa8e8}.power-chart-legend .purple:before{background:#a67ce0}.power-chart{width:100%;height:calc(100% - 17px)}.power-chart .grid{stroke:#e5edf5;stroke-width:1;stroke-dasharray:4 4}.power-chart text{fill:#8797a9;font-size:9px}.power-chart .a{fill:none;stroke:#f29b63;stroke-width:2}.power-chart .b{fill:none;stroke:#5aa8e8;stroke-width:2}.power-chart .c{fill:none;stroke:#a67ce0;stroke-width:2}.power-chart-tip{display:none;position:absolute;z-index:4;min-width:138px;padding:6px 8px;border:1px solid #cbd8e6;border-radius:3px;background:rgba(255,255,255,.97);box-shadow:0 5px 14px rgba(26,28,31,.16);color:#415a72;font-size:9px;pointer-events:none;white-space:nowrap}
+#gisPanel5 .power-alarm{display:grid;grid-template-columns:20px minmax(0,1fr) 32px;gap:6px;padding:7px 0;border-bottom:1px solid #edf2f7;align-items:center}.power-alarm i{font-size:14px}.power-alarm b,.power-alarm span,.power-alarm small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.power-alarm b{font-size:10px;color:#344c63}.power-alarm span{font-size:9px;color:#647a90}.power-alarm small{font-size:8px;color:#99a7b5}.power-alarm button{border:0;background:none;color:#2c77c5;font-size:9px}
+@media(max-width:1000px){#gisPanel5 .gis-float{width:250px}}
+</style>
+<script>
+(function(){
+  var p=document.getElementById('gisPanel5'); if(!p) return;
+  var left=p.querySelector('.gis-float-left'), right=p.querySelector('.gis-float-right'); if(!left||!right) return;
+  left.innerHTML='<section class="gis-card"><div class="gis-card-head"><h3>电力设备运行统计</h3></div><div class="gis-card-body"><div class="power-device-kpis"><div><b style="color:#16b9aa">18</b><span>在线</span></div><div><b style="color:#8794a5">2</b><span>离线</span></div><div><b style="color:#ef5c68">1</b><span>报警</span></div></div><div class="power-device-list">'+[['UPS电源',8,6,1,1],['配电柜',7,6,1,0],['照明配电箱',4,3,1,0],['电缆温度监测',2,2,0,0],['智能电表',4,3,1,0]].map(function(r){var t=r[1],on=r[2],off=r[3],al=r[4];return '<div class="power-device-row"><div><span>'+r[0]+'</span><b>'+t+'</b></div><div class="power-track"><i class="on" style="width:'+(on/t*100)+'%"></i><i class="off" style="width:'+(off/t*100)+'%"></i><i class="al" style="width:'+(al/t*100)+'%"></i></div><div class="power-meta"><span class="on">在线 '+on+'</span><span class="off">离线 '+off+'</span><span class="al">报警 '+al+'</span></div></div>'}).join('')+'</div></div></section><section class="gis-card"><div class="gis-card-head"><h3>UPS监测</h3></div><div class="gis-card-body"><div class="power-ups-head"><div>长一体化蓄电UPS<b>40<small> kVA</small></b></div><div>健康度<strong>98%</strong></div></div><div class="power-ups-metrics"><div><span>A相(KVA)</span><b>1.03</b></div><div><span>B相(KVA)</span><b>1.07</b></div><div><span>C相(KVA)</span><b>1.01</b></div></div><div class="power-ups-table"><div><span>设备名称</span><span>设备状态</span><span>操作</span></div><div><span>长一体化配电UPS</span><em>在线</em><a>查看</a></div></div></div></section><section class="gis-card"><div class="gis-card-head"><h3>近24h环境指数变化趋势</h3></div><div class="gis-card-body"><div class="power-chart-legend"><span>温度</span><span class="blue">湿度</span></div><svg class="power-chart" viewBox="0 0 420 150" preserveAspectRatio="none"><path class="grid" d="M32 20H410M32 60H410M32 100H410M32 140H410"/><path class="a" d="M32 70L80 66L128 72L176 55L224 62L272 58L320 68L368 52L410 60"/><path class="b" d="M32 105L80 98L128 110L176 96L224 102L272 88L320 97L368 84L410 92"/><text x="30" y="148">00:00</text><text x="215" y="148">12:00</text><text x="400" y="148">24:00</text></svg></div></section>';
+  right.innerHTML='<section class="gis-card"><div class="gis-card-head"><h3>近24hUPS电压变化趋势</h3></div><div class="gis-card-body"><div class="power-chart-legend"><span>A相电压</span><span class="blue">B相电压</span><span class="purple">C相电压</span></div><svg class="power-chart" viewBox="0 0 420 150" preserveAspectRatio="none"><path class="grid" d="M32 20H410M32 60H410M32 100H410M32 140H410"/><path class="a" d="M32 62L80 58L128 65L176 50L224 55L272 52L320 60L368 48L410 54"/><path class="b" d="M32 70L80 66L128 72L176 57L224 62L272 60L320 68L368 56L410 62"/><path class="c" d="M32 78L80 76L128 80L176 66L224 70L272 68L320 76L368 64L410 70"/><text x="30" y="148">00:00</text><text x="215" y="148">12:00</text><text x="400" y="148">24:00</text></svg></div></section><section class="gis-card"><div class="gis-card-head"><h3>近24hUPS电流变化趋势</h3></div><div class="gis-card-body"><div class="power-chart-legend"><span>A相电流</span><span class="blue">B相电流</span><span class="purple">C相电流</span></div><svg class="power-chart" viewBox="0 0 420 150" preserveAspectRatio="none"><path class="grid" d="M32 20H410M32 60H410M32 100H410M32 140H410"/><path class="a" d="M32 90L80 82L128 94L176 72L224 80L272 76L320 88L368 70L410 78"/><path class="b" d="M32 102L80 96L128 108L176 84L224 92L272 88L320 100L368 82L410 90"/><path class="c" d="M32 112L80 106L128 118L176 96L224 102L272 98L320 110L368 92L410 100"/><text x="30" y="148">00:00</text><text x="215" y="148">12:00</text><text x="400" y="148">24:00</text></svg></div></section><section class="gis-card"><div class="gis-card-head"><h3>设备报警</h3><span style="color:#e45b68;font-size:10px">1 条未处理</span></div><div class="gis-card-body"><div class="power-alarm"><i style="color:#eb5968">⚠</i><div><b>K12 电力舱配电柜</b><span>剩余电流越限 · 512mA</span><small>14:02:18 · F0104</small></div><button>处置</button></div><div class="power-alarm"><i style="color:#e3a52a">●</i><div><b>UPS 电池组</b><span>电池容量偏低 · 78%</span><small>09:40:00 · 监控中心机房</small></div><button>查看</button></div><div class="power-alarm"><i style="color:#18b7a6">✓</i><div><b>配电柜 K08</b><span>通讯中断已恢复</span><small>昨日 23:10 · F0102</small></div><button>记录</button></div></div></section>';
+})();
+</script>
+<script>
+(function(){
+  var p=document.getElementById('gisPanel5'); if(!p) return;
+  var left=p.querySelector('.gis-float-left'), right=p.querySelector('.gis-float-right');
+  var ups=left&&left.children[1];
+  if(ups){
+    var body=ups.querySelector('.gis-card-body'), head=body&&body.querySelector('.power-ups-head'); if(head) head.remove();
+    var table=body&&body.querySelector('.power-ups-table');
+    if(table) table.innerHTML='<div><span>设备名称</span><span>设备状态</span><span>操作</span></div><div><span>长一体化配电UPS</span><em>在线</em><a>查看</a></div><div><span>2# UPS 配电柜</span><em style="color:#8794a5">离线</em><a>查看</a></div><div><span>UPS 电池组 A</span><em style="color:#e3a52a">预警</em><a>查看</a></div><div><span>旁路静态开关</span><em>在线</em><a>查看</a></div><div><span>输入配电单元</span><em style="color:#e3a52a">预警</em><a>查看</a></div>';
+  }
+  p.querySelectorAll('.power-chart').forEach(function(svg){
+    if(svg.dataset.ready) return; svg.dataset.ready='1';
+    ['100','75','50','25','0'].forEach(function(v,i){var t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x','5');t.setAttribute('y',String(22+i*30));t.textContent=v;svg.insertBefore(t,svg.firstChild);});
+    var wrap=svg.parentElement; wrap.style.position='relative'; var tip=document.createElement('div'); tip.className='power-chart-tip'; tip.innerHTML='<div class="tip-time">时间 12:00</div><div><i class="tip-dot temp"></i>温度 <b>22.4 ℃</b></div><div><i class="tip-dot humid"></i>湿度 <b>58 %</b></div><div><i class="tip-dot phase-c"></i>C相 <b>396 V</b></div>'; wrap.appendChild(tip);
+    svg.addEventListener('mousemove',function(e){var r=svg.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(r.width-145,e.clientX-r.left+8))+'px';tip.style.top=Math.max(8,e.clientY-r.top-8)+'px';tip.style.display='block';}); svg.addEventListener('mouseleave',function(){tip.style.display='none';});
+  });
+  var homeAlarm=document.querySelector('#gisPanel0 .gis-float-right .gis-card:last-child'), target=right&&right.children[2]; if(homeAlarm&&target) target.innerHTML=homeAlarm.innerHTML;
+})();
+</script>
+<style>#gisPanel5 .power-chart-tip .tip-time{padding-bottom:4px;margin-bottom:3px;border-bottom:1px solid #e5edf5;color:#51687e;font-weight:600}#gisPanel5 .power-chart-tip>div:not(.tip-time){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 0;line-height:14px}#gisPanel5 .power-chart-tip b{color:#1c3e5d;font-weight:700}#gisPanel5 .tip-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;background:#f29b63}#gisPanel5 .tip-dot.humid{background:#5aa8e8}#gisPanel5 .tip-dot.phase-c{background:#a67ce0}</style>
+<script>(function(){var p=document.getElementById('gisPanel5');var src=document.querySelector('#gisPanel1 .gis-float-right .gis-card:nth-child(3)');if(!p||!src)return;var cards=p.querySelectorAll('.gis-float-right .gis-card');var target=cards[cards.length-1];if(target)target.innerHTML=src.innerHTML;})();</script>
+<style>
+#gisPanel6 .inspection-v2 .gis-card{margin-bottom:10px}#gisPanel6 .inspection-v2 .gis-card-head{min-height:38px;padding:0 12px}#gisPanel6 .inspection-v2 .gis-card-head h3{font-size:13px}#gisPanel6 .inspection-v2 .gis-card-body{padding:10px}#gisPanel6 .inspection-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#gisPanel6 .inspection-kpi{border:1px solid #e5eaf3;padding:7px;border-radius:3px;background:#fff}#gisPanel6 .inspection-kpi b{display:block;color:#1a1c1f;font-size:18px;margin-top:3px}#gisPanel6 .inspection-kpi span{font-size:11px;color:#86909c}#gisPanel6 .inspection-kpi.danger b{color:#f53f57}#gisPanel6 .inspection-kpi.ok b{color:#0e9e92}#gisPanel6 .inspection-system-row{padding:7px 0;border-bottom:1px solid #edf1f7;cursor:pointer;font-size:11px}.inspection-system-row .line{display:flex;justify-content:space-between;color:#1a1c1f}.inspection-system-row .meta{color:#86909c;margin-top:3px}.inspection-system-row i{display:block;height:4px;background:#14c9ba;border-radius:2px;margin-top:5px}.inspection-zone-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}.inspection-zone-item{border:1px solid #e5eaf3;padding:7px;border-radius:3px;font-size:11px}.inspection-zone-item.bad{border-color:#f5a3ad;background:#fff6f7}.inspection-zone-item b{display:block;color:#1a1c1f;margin-bottom:3px}.inspection-zone-item span{color:#86909c}.inspection-task-table{width:100%;border-collapse:collapse;font-size:11px}.inspection-task-table th,.inspection-task-table td{padding:6px 4px;border-bottom:1px solid #edf1f7;text-align:left;white-space:nowrap}.inspection-task-table th{color:#86909c;font-weight:500}.inspection-task-table td{color:#50565d}.inspection-task-table .ok{color:#0e9e92}.inspection-task-table .bad{color:#f53f57}.inspection-rate-v2{display:flex;align-items:center;gap:12px}.inspection-rate-v2 strong{font-size:28px;color:#135afa}.inspection-rate-v2 span{display:block;color:#86909c;font-size:11px}.inspection-chart-v2{width:100%;height:116px}.inspection-legend-v2{font-size:10px;color:#86909c;margin-bottom:4px}.inspection-legend-v2 i{display:inline-block;width:8px;height:8px;background:#4f7ae7;margin-right:3px}.inspection-filter-v2{display:flex;gap:5px;margin-bottom:6px}.inspection-filter-v2 select{height:26px;border:1px solid #e5eaf3;color:#50565d;font-size:11px;min-width:0;flex:1}
+</style>
+<script>
+(function(){
+  var p=document.getElementById('gisPanel6');if(!p)return;var left=p.querySelector('.gis-float-left'),right=p.querySelector('.gis-float-right');
+  var systems=['视频','消防','入侵','电力','环境','巡更','通信','井盖','门禁','火灾'];
+  function card(title,body,cls){return '<section class="gis-card inspection-v2 '+(cls||'')+'"><div class="gis-card-head"><h3>'+title+'</h3></div><div class="gis-card-body">'+body+'</div></section>';}
+  function render(){
+    left.innerHTML=card('巡检概况','<div class="inspection-kpis"><div class="inspection-kpi"><span>任务总数</span><b>30</b></div><div class="inspection-kpi ok"><span>完成任务</span><b>22</b></div><div class="inspection-kpi danger"><span>逾期任务</span><b>2</b></div><div class="inspection-kpi ok"><span>完成率</span><b>73%</b></div><div class="inspection-kpi danger"><span>已逾期</span><b>7%</b></div><div class="inspection-kpi"><span>未逾期</span><b>93%</b></div></div>','overview')+card('系统巡检统计',systems.map(function(s,i){var total=3+(i%3),done=Math.max(1,total-(i%3+1)),over=i%4===0?1:0;return '<div class="inspection-system-row" data-inspection-system="'+s+'"><div class="line"><b>'+s+'</b><strong>'+total+'</strong></div><div class="meta">待巡 '+Math.max(0,total-done-over)+'　已完成 '+done+'　已逾期 '+over+'</div><i style="width:'+Math.round(done/total*100)+'%"></i></div>';}).join(''),'systems')+card('分区巡检统计','<div class="inspection-zone-list">'+['F0101','F0102','F0103','F0104','F0201','F0202'].map(function(z,i){return '<div class="inspection-zone-item '+(i===1||i===4?'bad':'')+'"><b>'+z+' 防火分区</b><span>待巡 '+(i%3)+'　完成 '+(3+i%3)+'<br>异常 '+(i===1?1:0)+'　逾期 '+(i===4?1:0)+'</span></div>';}).join('')+'</div>','zones');
+    right.innerHTML=card('设备巡检时效','<div class="inspection-rate-v2"><strong>87%</strong><div><span>设备巡检完成率</span><span>已巡检 26 件 · 未巡检 4 件</span><span style="color:#f53f57">已逾期 2 件</span></div></div><div style="border-top:1px solid #edf1f7;margin-top:8px;padding-top:8px;font-size:11px;color:#86909c">平均处理时效 <b style="color:#1a1c1f;float:right">3.1 h</b></div>','efficiency')+card('设备巡检','<div class="inspection-filter-v2"><select><option>全部系统</option>'+systems.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select><select><option>全部状态</option><option>待巡检</option><option>巡检中</option><option>已完成</option></select></div><div style="max-height:190px;overflow:auto"><table class="inspection-task-table"><thead><tr><th>任务</th><th>设备</th><th>状态</th><th>逾期</th></tr></thead><tbody>'+['XF-XJ-1021','XF-XJ-1024','DL-XJ-0088','HJ-XJ-3012','MJ-XJ-1080'].map(function(id,i){return '<tr><td>'+id+'</td><td>'+['F0102 灭火器','F0201 防火门','PMP01 排水泵','环境传感器','CAM-C04'][i]+'</td><td class="'+(i===0?'bad':i===1?'':'ok')+'">'+['待巡检','巡检中','验收中','已完成','已关闭'][i]+'</td><td class="'+(i===0?'bad':'ok')+'">'+(i===0?'已逾期':'正常')+'</td></tr>';}).join('')+'</tbody></table></div>','devices')+card('巡检状态分析','<div class="inspection-legend-v2"><i></i>已完成　<span style="color:#f7ba1e">●</span> 待巡检　<span style="color:#f53f57">●</span> 已逾期</div><svg class="inspection-chart-v2" viewBox="0 0 300 116" preserveAspectRatio="none"><path d="M8 92H292M8 62H292M8 32H292" stroke="#edf1f7"/><polyline points="12,80 68,60 124,72 180,38 236,52 288,24" fill="none" stroke="#4f7ae7" stroke-width="3"/><polyline points="12,98 68,92 124,94 180,78 236,84 288,70" fill="none" stroke="#f7ba1e" stroke-width="2"/></svg>','analysis');
+  }
+  render();document.querySelectorAll('[data-gis-tab="6"]').forEach(function(b){b.addEventListener('click',function(){setTimeout(render,30);});});
+})();
+</script>
+<style>#gisPanel5 .gis-float-right .gis-card:last-child .gis-card-body{padding:9px 10px;overflow:hidden}#gisPanel5 .gis-float-right .gis-card:last-child .gis-card-body>div:first-child{gap:6px!important;margin-bottom:9px!important}#gisPanel5 .gis-float-right .gis-card:last-child .gis-mini{min-width:0;padding:7px 8px;border-radius:3px}#gisPanel5 .gis-float-right .gis-card:last-child .gis-mini .n{display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:10px;line-height:14px}#gisPanel5 .gis-float-right .gis-card:last-child .gis-mini .n .dot{flex:0 0 8px}#gisPanel5 .gis-float-right .gis-card:last-child .gis-mini>div:last-child{margin-top:4px!important;font-size:17px!important;line-height:20px!important}#gisPanel5 .gis-float-right .gis-card:last-child .gis-alarm{height:calc(100% - 72px);overflow:auto;padding-right:3px}#gisPanel5 .gis-float-right .gis-card:last-child .gis-alarm-item{min-height:50px;padding:6px 5px;grid-template-columns:28px minmax(0,1fr) auto;gap:7px;border-left-width:3px}#gisPanel5 .gis-float-right .gis-card:last-child .gis-alarm-item .lv{width:28px;height:28px;font-size:10px}#gisPanel5 .gis-float-right .gis-card:last-child .gis-alarm-item .t{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#gisPanel5 .gis-float-right .gis-card:last-child .gis-alarm-item .m{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#gisPanel5 .gis-float-right .gis-card:last-child .gis-alarm-item .st .gis-tag{height:22px;padding:0 7px;font-size:10px}</style>
 </html>
+<script>
+(function(){
+  const p=document.querySelector('#gisPanel9');if(!p)return;const left=p.querySelector('.gis-float-left'),right=p.querySelector('.gis-float-right');
+  function update(){
+    const rank=left?.children[2];if(rank){const spaces=[['防火分区 F01',6],['通风口 K1+280',5],['出入口 K2+400',4],['吊装口 K3+120',3],['消防口 F0104',2]],systems=[['视频',8],['消防',6],['入侵',5],['电力',4],['环境',3],['巡更',2],['通信',2],['井盖',2],['门禁',1],['火灾',1]];const draw=a=>rank.querySelector('.gis-card-body').innerHTML='<div class="rank-chart">'+a.map(x=>`<div class="rank-item"><b>${x[0]}</b><span><i style="width:${x[1]/a[0][1]*100}%"></i></span><strong>${x[1]}</strong></div>`).join('')+'</div>';draw(spaces);rank.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>{rank.querySelectorAll('[data-rank]').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.rank==='space'?spaces:systems)})}
+    const card=right?.children[0];if(card){const body=card.querySelector('.gis-card-body');card.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{card.querySelectorAll('[data-period]').forEach(x=>x.classList.toggle('on',x===b));drawChart(b.dataset.period)});function drawChart(k){const sets={day:{x:['00:00','06:00','12:00','18:00','24:00'],pending:[2,4,3,5,4],done:[3,6,7,8,10],rate:[45,52,65,72,80]},month:{x:['1日','7日','14日','21日','28日'],pending:[18,25,20,31,24],done:[42,58,73,90,112],rate:[54,62,70,76,82]},year:{x:['1月','4月','7月','10月','12月'],pending:[62,80,74,95,88],done:[180,240,315,390,460],rate:[63,68,74,81,86]}}[k];const W=420,H=160,px=i=>35+i*(W-55)/(sets.x.length-1),py=v=>135-v/Math.max(...sets.done)*105;const line=arr=>arr.map((v,i)=>(i?'L':'M')+px(i)+' '+py(v)).join(' ');body.innerHTML=`<div class="analysis-chart real"><div class="analysis-legend"><span class="pending">待处理</span><span class="done">已完成</span><span class="rate">完成率</span></div><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path class="grid" d="M35 30H410M35 65H410M35 100H410M35 135H410"/><path d="M35 135V30" class="axis"/><path d="M35 135H410" class="axis"/><path d="${line(sets.pending)}" class="pending-line"/><path d="${line(sets.done)}" class="done-line"/><path d="${sets.rate.map((v,i)=>(i?'L':'M')+px(i)+' '+(135-v*1.05)).join(' ')}" class="rate-line"/>${sets.x.map((x,i)=>`<text x="${px(i)}" y="153" text-anchor="middle">${x}</text>`).join('')}</svg><div class="analysis-tooltip" id="analysisTip"></div></div>`;body.querySelectorAll('path').forEach(path=>path.addEventListener('mousemove',e=>{const tip=body.querySelector('#analysisTip');if(tip){tip.style.display='block';tip.style.left=(e.offsetX+10)+'px';tip.style.top=(e.offsetY-20)+'px';tip.innerHTML='待处理：'+sets.pending[0]+'<br>已完成：'+sets.done[0]+'<br>完成率：'+sets.rate[0]+'%'}}));}drawChart(k||'day')}
+  }
+  update();const fixRank=()=>{const r=left?.children[2];if(!r)return;const a=[['防火分区',6],['出入口',5],['通风口',4],['吊装口',3],['消防口',2]];r.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>{const d=b.dataset.rank==='space'?a:[['视频',8],['消防',6],['入侵',5],['电力',4],['环境',3],['巡更',2],['通信',2],['井盖',2],['门禁',1],['火灾',1]];r.querySelector('.gis-card-body').innerHTML='<div class="rank-chart">'+d.map(x=>`<div class="rank-item"><b>${x[0]}</b><span><i style="width:${x[1]/d[0][1]*100}%"></i></span><strong>${x[1]}</strong></div>`).join('')+'</div>';r.querySelectorAll('[data-rank]').forEach(x=>x.classList.toggle('on',x===b))});};fixRank();document.querySelectorAll('[data-gis-tab]').forEach(b=>b.addEventListener('click',()=>b.dataset.gisTab==='9'&&setTimeout(()=>{update();fixRank()},30)));
+})();
+</script>
+<script>
+(function(){
+  const p=document.querySelector('#gisPanel9'); if(!p)return;
+  const left=p.querySelector('.gis-float-left'), right=p.querySelector('.gis-float-right');
+  const subs=()=>p.querySelectorAll('.gis-card-sub').forEach(x=>x.remove());
+  function enhance(){
+    subs();
+    const run=left?.children[1];
+    if(run){run.querySelector('.gis-card-head h3').textContent='设备运行状态统计';run.querySelector('.gis-card-body').innerHTML='<div class="home-run-list">'+[['视频','118','112','4'],['消防','90','86','3'],['入侵','78','74','2'],['电力','256','244','8'],['环境','168','160','5'],['巡更','64','61','2']].map((r,i)=>`<div class="home-run"><div class="home-run-title"><span class="home-dot d${i}"></span><b>${r[0]}</b><strong>${r[1]}</strong></div><div class="home-run-meta"><span>在线 ${r[2]}</span><span>离线 ${+r[1]-+r[2]}</span><span>预警 ${r[3]}</span></div><div class="home-run-track"><i style="width:${(+r[2]/+r[1])*100}%"></i></div></div>`).join('')+'</div>'}
+    const rank=left?.children[2];
+    if(rank){rank.querySelector('.gis-card-head').innerHTML='<h3>设备预警排名</h3><div class="rank-tabs"><button class="on" data-rank="space">空间</button><button data-rank="system">系统</button></div>';const body=rank.querySelector('.gis-card-body');const spaces=[['1号楼1F',6],['2号楼3F',4],['3号楼2F',3],['4号楼5F',2],['5号楼1F',1]], systems=[['视频',8],['消防',6],['入侵',5],['电力',4],['环境',3],['巡更',2],['通信',2],['井盖',2],['门禁',1],['火灾',1]];const draw=(arr)=>body.innerHTML='<div class="rank-chart">'+arr.map((r,i)=>`<div class="rank-item"><b>${r[0]}</b><span><i style="width:${r[1]/arr[0][1]*100}%"></i></span><strong>${r[1]}</strong></div>`).join('')+'</div>';draw(spaces);rank.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>{rank.querySelectorAll('[data-rank]').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.rank==='space'?spaces:systems)})}
+    const abnormal=right?.children[0];
+    if(abnormal){abnormal.querySelector('.gis-card-head').innerHTML='<h3>设备异常状态分析</h3><div class="analysis-tabs"><button class="on" data-period="day">今日</button><button data-period="month">本月</button><button data-period="year">本年</button></div>';const body=abnormal.querySelector('.gis-card-body');const sets={day:[6,4,3,2],month:[24,18,15,10],year:[88,72,61,45]};const draw=(key)=>{const d=sets[key], max=Math.max(...d);body.innerHTML='<div class="analysis-chart"><div class="analysis-legend"><span class="pending">待处理</span><span class="done">已完成</span><span class="rate">完成率</span></div><div class="analysis-bars">'+d.map((v,i)=>`<div class="analysis-col" data-tip="待处理 ${v} · 已完成 ${v*3} · 完成率 ${Math.round(v*3/(v*4)*100)}%"><i style="height:${v/max*100}%"></i><b style="height:${Math.min(92,v*2.2)}%"></b><em style="bottom:${Math.min(90,v*2.1)}%"></em><span>${['视频','消防','电力','环境'][i]}</span></div>`).join('')+'</div></div>'};draw('day');abnormal.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{abnormal.querySelectorAll('[data-period]').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.period)})}
+  }
+  enhance();document.querySelectorAll('[data-gis-tab]').forEach(b=>b.addEventListener('click',()=>b.dataset.gisTab==='9'&&setTimeout(enhance,20)));
+})();
+</script>
+<script>
+setTimeout(function(){var p=document.querySelector('#gisPanel9');if(!p)return;var left=p.querySelector('.gis-float-left'),rank=left&&left.children[2];if(rank){var a=[['防火分区',6],['出入口',5],['通风口',4],['吊装口',3],['消防口',2]],s=[['视频',8],['消防',6],['入侵',5],['电力',4],['环境',3],['巡更',2],['通信',2],['井盖',2],['门禁',1],['火灾',1]],draw=function(d){rank.querySelector('.gis-card-body').innerHTML='<div class="rank-chart">'+d.map(function(x){return '<div class="rank-item"><b>'+x[0]+'</b><span><i style="width:'+(x[1]/d[0][1]*100)+'%"></i></span><strong>'+x[1]+'</strong></div>';}).join('')+'</div>';};rank.querySelectorAll('[data-rank]').forEach(function(b){b.onclick=function(){rank.querySelectorAll('[data-rank]').forEach(function(x){x.classList.toggle('on',x===b);});draw(b.dataset.rank==='space'?a:s);};});draw(a);}},500);
+</script>
+<script>
+setTimeout(function(){var p=document.querySelector('#gisPanel9'),c=p&&p.querySelector('.gis-float-right')?.children[0];if(!c)return;var b=c.querySelector('.gis-card-body');function chart(k){var x=k==='month'?['1日','7日','14日','21日','28日']:k==='year'?['1月','4月','7月','10月','12月']:['00:00','06:00','12:00','18:00','24:00'];b.innerHTML='<div class="analysis-chart real"><div class="analysis-legend"><span>待处理</span><span>已完成</span><span>完成率</span></div><svg viewBox="0 0 420 160" preserveAspectRatio="none"><path class="grid" d="M35 30H410M35 65H410M35 100H410M35 135H410"/><path class="axis" d="M35 135V30M35 135H410"/><path class="done-line" d="M35 125L128 95L222 105L316 70L410 82"/><path class="pending-line" d="M35 112L128 120L222 114L316 108L410 115"/>${x.map(function(t,i){return '<text x="'+(35+i*93.75)+'" y="153" text-anchor="middle">'+t+'</text>';}).join('')}</svg><div class="analysis-tooltip">待处理：4<br>已完成：10<br>完成率：71%</div></div>';b.querySelectorAll('[data-period]').forEach(function(){});}chart('day');c.querySelectorAll('[data-period]').forEach(function(t){t.onclick=function(){c.querySelectorAll('[data-period]').forEach(function(x){x.classList.toggle('on',x===t);});chart(t.dataset.period);};});},700);
+</script>
