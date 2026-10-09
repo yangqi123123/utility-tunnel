@@ -197,10 +197,89 @@ a{color:inherit;text-decoration:none}
 .gis-brand .lg{width:28px;height:28px;border-radius:4px;background:var(--primary);color:#fff;display:grid;place-items:center}
 .gis-brand b{font-size:14px;color:var(--title)}
 .gis-group-title{padding:12px 12px 6px;font-size:12px;color:var(--muted)}
+
+/* 环境监控一屏看板 */
+.gis-env-body{overflow:hidden}
+.gis-env-shell{height:100vh;min-height:0}
+.gis-env-main{display:flex;flex:1;min-height:0;flex-direction:column;gap:10px;padding:12px;overflow:hidden}
+.gis-env-page-head{display:flex;align-items:center;min-height:34px;gap:12px;flex:0 0 auto}
+.gis-env-page-head h1{font-size:19px}
+.gis-env-page-head p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.gis-env-dashboard{--env-gap:10px;display:grid;grid-template-columns:278px minmax(360px,1fr) 320px;gap:var(--env-gap);flex:1;min-height:0;overflow:hidden}
+.gis-env-column{display:grid;gap:var(--env-gap);min-width:0;min-height:0;overflow:hidden}
+.gis-env-left{grid-template-rows:168px 214px minmax(0,1fr)}
+.gis-env-center{grid-template-rows:minmax(0,1fr)}
+.gis-env-right{grid-template-rows:132px 248px minmax(0,1fr)}
+.gis-env-dashboard .gis-card{min-height:0;overflow:hidden;box-shadow:0 4px 16px rgba(28,52,91,.08)}
+.gis-env-dashboard .gis-card-head{min-height:38px;padding:0 12px;flex:0 0 38px}
+.gis-env-dashboard .gis-card-body{padding:10px;gap:8px;overflow:hidden}
+.gis-env-dashboard .gis-card-head h3{font-size:13px}
+.gis-env-metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;height:100%}
+.gis-env-metric{position:relative;padding:9px 8px;border:1px solid var(--line);border-radius:3px;background:#fbfcff;overflow:hidden}
+.gis-env-metric::after{content:"";position:absolute;right:-13px;bottom:-17px;width:42px;height:42px;border:8px solid rgba(19,90,250,.05);border-radius:50%}
+.gis-env-metric.warn{background:#fffaf0;border-color:rgba(247,186,30,.38)}
+.gis-env-metric.danger{background:#fff6f7;border-color:rgba(245,63,87,.38)}
+.gis-env-metric-label{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:11px;white-space:nowrap}
+.gis-env-metric-label i{width:12px;text-align:center;color:var(--primary)}
+.gis-env-metric strong{display:block;margin-top:7px;color:var(--title);font-size:17px;line-height:1;font-weight:700}
+.gis-env-metric.warn strong{color:#b8860b}.gis-env-metric.danger strong{color:var(--danger)}
+.gis-env-metric small{margin-left:2px;color:var(--muted);font-size:10px;font-weight:500}
+.gis-env-matrix-scroll{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#c9d2e3 transparent}
+.gis-env-matrix-scroll::-webkit-scrollbar,.gis-env-alarm-scroll::-webkit-scrollbar{width:5px}
+.gis-env-matrix-scroll::-webkit-scrollbar-thumb,.gis-env-alarm-scroll::-webkit-scrollbar-thumb{background:#c9d2e3;border-radius:3px}
+.gis-env-matrix-scroll .gis-table{table-layout:fixed}
+.gis-env-matrix-scroll .gis-table th,.gis-env-matrix-scroll .gis-table td{padding:6px 5px;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.gis-env-matrix-scroll .gis-table th:first-child,.gis-env-matrix-scroll .gis-table td:first-child{text-align:left;width:92px}
+.gis-env-pump-layout{display:grid;grid-template-columns:68px minmax(0,1fr);gap:9px;height:100%;min-height:0}
+.gis-env-water{position:relative;min-height:0;border:1px solid var(--line);border-radius:3px;background:linear-gradient(to top,rgba(19,90,250,.14),#fff);overflow:hidden}
+.gis-env-water-fill{position:absolute;inset:auto 0 0;height:50%;background:rgba(19,90,250,.32)}
+.gis-env-water-level{position:absolute;inset:0;display:grid;place-items:center;color:var(--title);font-size:15px;font-weight:700}
+.gis-env-pumps{display:flex;flex-direction:column;gap:7px;min-width:0}
+.gis-env-pump{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:7px;align-items:center;padding:7px;border:1px solid var(--line);border-radius:3px;background:#fff}
+.gis-env-pump i{width:26px;height:26px;display:grid;place-items:center;border-radius:3px;background:var(--primary-bg);color:var(--primary)}
+.gis-env-pump b{display:block;color:var(--title);font-size:12px}.gis-env-pump small{display:block;margin-top:2px;color:var(--muted);font-size:10px}
+.gis-env-state{display:inline-flex;align-items:center;gap:4px;color:#0e9e92;font-size:11px;white-space:nowrap}.gis-env-state::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.gis-env-state.off{color:#7c8796}
+.gis-env-map-card .gis-card-body{position:relative;display:flex;min-height:0}
+.gis-env-map-card .gis-map-wrap{height:auto;min-height:0;flex:1;border:0;border-radius:0}
+.gis-env-map-card .gis-map-tools{right:12px;bottom:12px}
+.gis-env-map-overlay{position:absolute;z-index:650;border:1px solid var(--line);border-radius:3px;background:rgba(255,255,255,.96);box-shadow:0 4px 14px rgba(28,52,91,.12)}
+.gis-env-layer-panel{left:12px;top:12px;width:162px;padding:8px}
+.gis-env-layer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding-bottom:5px;border-bottom:1px solid var(--divider);color:var(--title);font-size:11px;font-weight:600}
+.gis-env-layer-count{color:var(--muted);font-weight:400}
+.gis-env-layer-panel .gis-layers{gap:2px}.gis-env-layer-panel .gis-layer{padding:3px 2px;font-size:11px}
+.gis-env-map-search{top:12px;right:12px;width:210px;height:32px;display:flex;align-items:center;gap:7px;padding:0 9px}
+.gis-env-map-search i{color:var(--muted);font-size:11px}.gis-env-map-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font-size:11px}
+.gis-env-band-panel{left:184px;right:12px;bottom:12px;padding:7px 8px}
+.gis-env-band-panel .gis-band{margin:0;gap:2px}.gis-env-band-panel .gis-band button{height:23px;font-size:10px}
+.gis-env-status-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.gis-env-status-item{padding:8px 6px;border:1px solid var(--line);border-radius:3px;background:#fbfcff;text-align:center}
+.gis-env-status-item b{display:block;color:var(--title);font-size:17px;line-height:1}.gis-env-status-item span{display:block;margin-top:5px;color:var(--muted);font-size:10px;white-space:nowrap}
+.gis-env-status-item.online b{color:#0e9e92}.gis-env-status-item.offline b{color:#7c8796}.gis-env-status-item.fault b{color:var(--danger)}
+.gis-env-status-bar{display:flex;height:5px;margin-top:7px;overflow:hidden;border-radius:3px;background:#eef1f6}.gis-env-status-bar i{display:block;height:100%}.gis-env-status-bar .online{width:95.2%;background:var(--ok)}.gis-env-status-bar .offline{width:3.2%;background:#a8b1bf}.gis-env-status-bar .fault{width:1.6%;background:var(--danger)}
+.gis-segmented{display:inline-flex;margin-left:auto;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#f6f8fc}
+.gis-segmented button{height:24px;padding:0 8px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--muted);font-size:11px;cursor:pointer}.gis-segmented button:first-child{border-left:0}.gis-segmented button:hover{color:var(--primary)}.gis-segmented button.active{background:var(--primary);color:#fff}
+.gis-runtime-legend{display:flex;align-items:center;gap:12px;padding-left:42px;color:var(--muted);font-size:10px}.gis-runtime-legend span{display:inline-flex;align-items:center;gap:4px}.gis-runtime-legend i{width:7px;height:7px;border-radius:50%}
+.gis-runtime-chart{position:relative;flex:1;min-height:0;cursor:crosshair}
+.gis-runtime-chart svg{display:block;width:100%;height:180px;min-height:180px;flex:0 0 180px;overflow:visible}
+.gis-runtime-unit{position:absolute;left:0;top:0;z-index:2;color:var(--title);font-size:10px;font-weight:600}
+.gis-runtime-tooltip{position:absolute;z-index:5;display:none;min-width:112px;padding:7px 9px;border:1px solid var(--line);border-radius:3px;background:rgba(255,255,255,.98);box-shadow:0 6px 18px rgba(26,28,31,.16);color:var(--text);font-size:10px;pointer-events:none}
+.gis-runtime-tooltip.show{display:block}.gis-runtime-tooltip b{display:block;margin-bottom:4px;color:var(--title);font-size:11px}.gis-runtime-tooltip span{display:flex;align-items:center;justify-content:space-between;gap:12px;line-height:18px}.gis-runtime-tooltip i{width:6px;height:6px;margin-right:5px;border-radius:50%;display:inline-block}
+.gis-env-alarm-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex:0 0 auto}
+.gis-env-alarm-summary div{padding:7px 8px;border-left:3px solid var(--primary);background:#f6f8fd}.gis-env-alarm-summary div:nth-child(2){border-left-color:var(--danger)}.gis-env-alarm-summary div:nth-child(3){border-left-color:var(--ok)}
+.gis-env-alarm-summary b{display:block;color:var(--title);font-size:16px;line-height:1}.gis-env-alarm-summary span{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+.gis-env-alarm-scroll{min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#c9d2e3 transparent}
+.gis-env-alarm-list{display:flex;flex-direction:column;gap:6px;padding-right:2px}
+.gis-env-alarm-item{display:grid;grid-template-columns:3px minmax(0,1fr) auto;gap:8px;align-items:center;min-height:52px;padding:7px 8px 7px 0;border:1px solid var(--line);border-radius:3px;background:#fff;overflow:hidden}
+.gis-env-alarm-item::before{content:"";align-self:stretch;background:var(--warn)}.gis-env-alarm-item.critical::before{background:var(--danger)}
+.gis-env-alarm-item b{display:block;color:var(--title);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gis-env-alarm-item small{display:block;margin-top:3px;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gis-env-alarm-item time{color:var(--muted);font-size:10px;white-space:nowrap}
+.gis-env-alarm-item .status{display:block;margin-top:3px;color:var(--danger);font-size:10px;text-align:right}.gis-env-alarm-item .status.done{color:#0e9e92}
+@media (max-width:1250px){.gis-env-dashboard{--env-gap:8px;grid-template-columns:238px minmax(250px,1fr) 276px}.gis-env-layer-panel{width:145px}.gis-env-band-panel{left:157px}.gis-env-map-search{width:175px}}
+@media (max-width:960px){.gis-env-body{overflow:auto}.gis-env-shell{height:auto;min-height:100vh}.gis-env-main{overflow:visible}.gis-env-dashboard{display:flex;flex-direction:column;overflow:visible}.gis-env-column{display:flex;flex-direction:column;overflow:visible}.gis-env-dashboard .gis-card{min-height:160px}.gis-env-map-card{height:520px}.gis-env-alarm-scroll{max-height:126px}}
 </style>
 </head>
-<body data-page-title="环境监控">
-<div class="flex min-h-screen">
+<body class="gis-env-body" data-page-title="环境监控">
+<div class="flex min-h-screen gis-env-shell">
   <aside class="hidden lg:flex flex-col w-[223px] shrink-0 bg-white border-r" style="border-color:#E5EAF3">
     <div class="gis-brand"><span class="lg"><i class="fa-solid fa-tunnel"></i></span><b>科学岛管廊监控中心</b></div>
     <div class="flex-1 overflow-auto py-2 px-2">
@@ -218,11 +297,164 @@ a{color:inherit;text-decoration:none}
         <span style="display:inline-flex;align-items:center;gap:6px;color:#50565D"><i class="fa-regular fa-circle-user" style="font-size:16px"></i> 值班长 张工</span>
       </div>
     </header>
-    <main class="flex-1 p-4" style="display:flex;flex-direction:column;gap:16px">
-      <section class="flex items-end gap-3 flex-wrap">
+    <main class="gis-env-main">
+      <section class="gis-env-page-head">
         <div><h1 style="font-size:20px">环境监控</h1><p style="margin-top:4px;font-size:12px;color:#86909C">温湿度 / 氧气 / 甲烷 / 硫化氢 / 水位 六参数在线监测与通风排水联动</p></div>
         <div class="ml-auto flex items-center gap-2"><button class="gis-btn" type="button">本分区群开</button><button class="gis-btn" type="button">全舱室群开</button></div>
       </section>
+      <div class="gis-env-dashboard">
+        <div class="gis-env-column gis-env-left">
+          <section class="gis-card">
+            <div class="gis-card-head"><h3>环境实时参数</h3></div>
+            <div class="gis-card-body">
+              <div class="gis-env-metric-grid">
+                <div class="gis-env-metric"><span class="gis-env-metric-label"><i class="fa-solid fa-temperature-half"></i>温度</span><strong>26.4<small>℃</small></strong></div>
+                <div class="gis-env-metric"><span class="gis-env-metric-label"><i class="fa-solid fa-droplet"></i>湿度</span><strong>78<small>%</small></strong></div>
+                <div class="gis-env-metric warn"><span class="gis-env-metric-label"><i class="fa-solid fa-wind"></i>氧气</span><strong>19.8<small>%</small></strong></div>
+                <div class="gis-env-metric danger"><span class="gis-env-metric-label"><i class="fa-solid fa-fire-flame-simple"></i>甲烷</span><strong>42<small>%LEL</small></strong></div>
+                <div class="gis-env-metric"><span class="gis-env-metric-label"><i class="fa-solid fa-flask"></i>硫化氢</span><strong>2<small>ppm</small></strong></div>
+                <div class="gis-env-metric"><span class="gis-env-metric-label"><i class="fa-solid fa-water"></i>水位</span><strong>0.6<small>m</small></strong></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="gis-card">
+            <div class="gis-card-head"><h3>分区环境矩阵</h3></div>
+            <div class="gis-card-body">
+              <div class="gis-env-matrix-scroll">
+                <table class="gis-table">
+                  <thead><tr><th>防火分区</th><th>温度</th><th>湿度</th><th>氧气</th><th>甲烷</th><th>水位</th></tr></thead>
+                  <tbody>
+                    <tr><td>综合舱 F0101</td><td>23.1</td><td>71</td><td>20.8</td><td>2</td><td>0.4</td></tr>
+                    <tr><td>综合舱 F0102</td><td>23.6</td><td>73</td><td>20.7</td><td>3</td><td>0.5</td></tr>
+                    <tr class="hot"><td>电力舱 F0103</td><td>26.4</td><td>78</td><td class="w">19.8</td><td class="a">42</td><td>0.6</td></tr>
+                    <tr><td>电力舱 F0104</td><td>25.2</td><td>74</td><td>20.4</td><td>6</td><td>0.4</td></tr>
+                    <tr><td>燃气舱 F0201</td><td>22.8</td><td>69</td><td>20.9</td><td>8</td><td>0.3</td></tr>
+                    <tr><td>燃气舱 F0202</td><td>22.5</td><td>68</td><td>20.9</td><td>5</td><td>0.3</td></tr>
+                    <tr><td>水信舱 F0301</td><td>21.9</td><td>82</td><td>20.8</td><td>1</td><td class="w">1.2</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="gis-card">
+            <div class="gis-card-head"><h3>集水井水位与泵组</h3></div>
+            <div class="gis-card-body">
+              <div class="gis-env-pump-layout">
+                <div class="gis-env-water"><div class="gis-env-water-fill"></div><div class="gis-env-water-level">0.60 m</div></div>
+                <div class="gis-env-pumps">
+                  <div class="gis-env-pump"><i class="fa-solid fa-fan"></i><span><b>1# 排水泵</b><small>已运行 42 min</small></span><span class="gis-env-state">运行</span></div>
+                  <div class="gis-env-pump"><i class="fa-solid fa-fan"></i><span><b>2# 备用泵</b><small>自动待命</small></span><span class="gis-env-state off">停止</span></div>
+                  <div class="gis-hint"><b>联锁</b> · 低液位强制停泵，连续启停间隔 ≥ 3 min</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="gis-env-column gis-env-center">
+          <section class="gis-card gis-env-map-card">
+            <div class="gis-card-head"><h3>环境点位 GIS 一张图</h3></div>
+            <div class="gis-card-body">
+              <div class="gis-map-wrap">
+                <div class="gis-map" id="gisMap"></div>
+                <div class="gis-map-tools">
+                  <button type="button" data-map-act="in" title="放大" aria-label="放大"><i class="fa-solid fa-plus"></i></button>
+                  <button type="button" data-map-act="out" title="缩小" aria-label="缩小"><i class="fa-solid fa-minus"></i></button>
+                  <button type="button" data-map-act="reset" title="复位" aria-label="复位"><i class="fa-solid fa-crosshairs"></i></button>
+                  <button type="button" data-map-act="full" title="全屏" aria-label="全屏"><i class="fa-solid fa-expand"></i></button>
+                </div>
+              </div>
+              <div class="gis-env-map-overlay gis-env-layer-panel">
+                <div class="gis-env-layer-head"><span>图层控制</span><span class="gis-env-layer-count" id="gisPointCount">0 个点位</span></div>
+                <div class="gis-layers" id="gisLayers">
+                  <label class="gis-layer" data-layer="fan"><input type="checkbox" checked><i style="background:#135AFA"></i>风机 / 水泵<span class="c">12</span></label>
+                  <label class="gis-layer" data-layer="light"><input type="checkbox" checked><i style="background:#F7BA1E"></i>照明回路<span class="c">46</span></label>
+                  <label class="gis-layer" data-layer="env"><input type="checkbox" checked><i style="background:#14C9BA"></i>环境传感器<span class="c">21</span></label>
+                  <label class="gis-layer" data-layer="sec"><input type="checkbox" checked><i style="background:#9359E3"></i>摄像机 / 门禁<span class="c">40</span></label>
+                  <label class="gis-layer" data-layer="pipe"><input type="checkbox" checked><i style="background:#8A93A0"></i>入廊管线<span class="c">6</span></label>
+                </div>
+              </div>
+              <label class="gis-env-map-overlay gis-env-map-search">
+                <i class="fa-solid fa-magnifying-glass"></i><input id="gisSearch" placeholder="搜索设备 / 位号" aria-label="搜索设备或位号">
+              </label>
+              <div class="gis-env-map-overlay gis-env-band-panel">
+                <div class="gis-band" id="gisBand">
+                  <button type="button" data-zone="0" title="F0101 · 正常">F01</button><button type="button" data-zone="1" title="F0102 · 正常">F02</button><button type="button" data-zone="2" title="F0103 · 正常">F03</button><button type="button" data-zone="3" title="F0104 · 正常">F04</button><button type="button" data-zone="4" title="F0105 · 正常">F05</button><button type="button" data-zone="5" title="F0106 · 正常">F06</button><button type="button" data-zone="6" title="F0107 · 正常">F07</button><button type="button" data-zone="7" class="a" title="F0108 · 报警">F08</button><button type="button" data-zone="8" title="F0109 · 正常">F09</button><button type="button" data-zone="9" title="F0110 · 正常">F10</button><button type="button" data-zone="10" title="F0111 · 正常">F11</button><button type="button" data-zone="11" title="F0112 · 正常">F12</button><button type="button" data-zone="12" class="w" title="F0113 · 预警">F13</button><button type="button" data-zone="13" title="F0114 · 正常">F14</button><button type="button" data-zone="14" title="F0115 · 正常">F15</button><button type="button" data-zone="15" title="F0116 · 正常">F16</button><button type="button" data-zone="16" title="F0117 · 正常">F17</button><button type="button" data-zone="17" title="F0118 · 正常">F18</button><button type="button" data-zone="18" class="o" title="F0119 · 离线">F19</button><button type="button" data-zone="19" title="F0120 · 正常">F20</button><button type="button" data-zone="20" title="F0121 · 正常">F21</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="gis-env-column gis-env-right">
+          <section class="gis-card">
+            <div class="gis-card-head"><h3>设备数量及状态统计</h3></div>
+            <div class="gis-card-body">
+              <div class="gis-env-status-grid">
+                <div class="gis-env-status-item"><b>125</b><span>设备总数</span></div>
+                <div class="gis-env-status-item online"><b>119</b><span>在线</span></div>
+                <div class="gis-env-status-item offline"><b>4</b><span>离线</span></div>
+                <div class="gis-env-status-item fault"><b>1.6%</b><span>故障率</span></div>
+              </div>
+              <div class="gis-env-status-bar" aria-label="在线119，离线4，故障2"><i class="online"></i><i class="offline"></i><i class="fault"></i></div>
+            </div>
+          </section>
+
+          <section class="gis-card gis-env-runtime-card">
+            <div class="gis-card-head">
+              <h3>实时 / 历史运行监测</h3>
+              <span class="gis-segmented" role="tablist" aria-label="运行监测时间范围">
+                <button type="button" class="active" data-runtime-period="day" role="tab" aria-selected="true">今日</button>
+                <button type="button" data-runtime-period="month" role="tab" aria-selected="false">本月</button>
+                <button type="button" data-runtime-period="year" role="tab" aria-selected="false">本年</button>
+              </span>
+            </div>
+            <div class="gis-card-body">
+              <div class="gis-runtime-legend"><span><i style="background:#14C9BA"></i>在线</span><span><i style="background:#A8B1BF"></i>离线</span><span><i style="background:#F53F57"></i>故障率</span></div>
+              <div class="gis-runtime-chart" id="runtimeChart">
+                <span class="gis-runtime-unit">单位（％）</span>
+                <svg viewBox="0 0 600 220" preserveAspectRatio="none" aria-label="设备在线、离线、故障率趋势图">
+                  <g id="runtimeDay" data-runtime-chart="day">
+                    <line x1="42" y1="18" x2="582" y2="18" stroke="#E5EAF3"/><line x1="42" y1="60" x2="582" y2="60" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="101" x2="582" y2="101" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="143" x2="582" y2="143" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="184" x2="582" y2="184" stroke="#E5EAF3"/>
+                    <polyline points="42,25 160,26 278,24 396,26 514,23 582,25" fill="none" stroke="#14C9BA" stroke-width="2.5"/><polyline points="42,179 160,180 278,179 396,181 514,180 582,179" fill="none" stroke="#A8B1BF" stroke-width="2.5"/><polyline points="42,181 160,180 278,182 396,179 514,181 582,180" fill="none" stroke="#F53F57" stroke-width="2.5"/>
+                    <text x="42" y="207" font-size="10" fill="#86909C">00:00</text><text x="177" y="207" text-anchor="middle" font-size="10" fill="#86909C">06:00</text><text x="312" y="207" text-anchor="middle" font-size="10" fill="#86909C">12:00</text><text x="447" y="207" text-anchor="middle" font-size="10" fill="#86909C">18:00</text><text x="582" y="207" text-anchor="end" font-size="10" fill="#86909C">24:00</text>
+                  </g>
+                  <g id="runtimeMonth" data-runtime-chart="month" style="display:none">
+                    <line x1="42" y1="18" x2="582" y2="18" stroke="#E5EAF3"/><line x1="42" y1="60" x2="582" y2="60" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="101" x2="582" y2="101" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="143" x2="582" y2="143" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="184" x2="582" y2="184" stroke="#E5EAF3"/>
+                    <polyline points="42,25 132,24 222,26 312,23 402,25 492,24 582,26" fill="none" stroke="#14C9BA" stroke-width="2.5"/><polyline points="42,179 132,180 222,179 312,181 402,179 492,180 582,179" fill="none" stroke="#A8B1BF" stroke-width="2.5"/><polyline points="42,181 132,180 222,182 312,179 402,181 492,180 582,181" fill="none" stroke="#F53F57" stroke-width="2.5"/>
+                    <text x="42" y="207" font-size="10" fill="#86909C">1</text><text x="132" y="207" text-anchor="middle" font-size="10" fill="#86909C">7</text><text x="222" y="207" text-anchor="middle" font-size="10" fill="#86909C">13</text><text x="312" y="207" text-anchor="middle" font-size="10" fill="#86909C">19</text><text x="402" y="207" text-anchor="middle" font-size="10" fill="#86909C">25</text><text x="582" y="207" text-anchor="end" font-size="10" fill="#86909C">31</text>
+                  </g>
+                  <g id="runtimeYear" data-runtime-chart="year" style="display:none">
+                    <line x1="42" y1="18" x2="582" y2="18" stroke="#E5EAF3"/><line x1="42" y1="60" x2="582" y2="60" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="101" x2="582" y2="101" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="143" x2="582" y2="143" stroke="#E5EAF3" stroke-dasharray="3 4"/><line x1="42" y1="184" x2="582" y2="184" stroke="#E5EAF3"/>
+                    <polyline points="42,25 132,24 222,26 312,23 402,25 492,24 582,26" fill="none" stroke="#14C9BA" stroke-width="2.5"/><polyline points="42,179 132,180 222,179 312,181 402,179 492,180 582,179" fill="none" stroke="#A8B1BF" stroke-width="2.5"/><polyline points="42,181 132,180 222,182 312,179 402,181 492,180 582,181" fill="none" stroke="#F53F57" stroke-width="2.5"/>
+                    <text x="42" y="207" font-size="10" fill="#86909C">1月</text><text x="132" y="207" text-anchor="middle" font-size="10" fill="#86909C">3月</text><text x="222" y="207" text-anchor="middle" font-size="10" fill="#86909C">5月</text><text x="312" y="207" text-anchor="middle" font-size="10" fill="#86909C">7月</text><text x="402" y="207" text-anchor="middle" font-size="10" fill="#86909C">9月</text><text x="582" y="207" text-anchor="end" font-size="10" fill="#86909C">12月</text>
+                  </g>
+                  <rect id="runtimeHitArea" x="42" y="18" width="540" height="166" fill="transparent"></rect>
+                </svg>
+                <div class="gis-runtime-tooltip" id="runtimeTooltip" role="status" aria-live="polite"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="gis-card">
+            <div class="gis-card-head"><h3>设备报警</h3></div>
+            <div class="gis-card-body">
+              <div class="gis-env-alarm-summary"><div><b>8</b><span>报警总数</span></div><div><b>2</b><span>未处理</span></div><div><b>6</b><span>已处理</span></div></div>
+              <div class="gis-env-alarm-scroll" id="gisEnvAlarmScroll">
+                <div class="gis-env-alarm-list">
+                  <div class="gis-env-alarm-item critical"><span><b>甲烷检测仪浓度越限</b><small>电力舱 F0103 · K1+280</small></span><span><time>14:26</time><em class="status">未处理</em></span></div>
+                  <div class="gis-env-alarm-item"><span><b>通风机通信中断</b><small>综合舱 F0102 · 2# 风机</small></span><span><time>14:18</time><em class="status">未处理</em></span></div>
+                  <div class="gis-env-alarm-item"><span><b>集水井液位预警</b><small>水信舱 F0301 · 集水井</small></span><span><time>13:54</time><em class="status done">已处理</em></span></div>
+                  <div class="gis-env-alarm-item"><span><b>氧气浓度偏低</b><small>电力舱 F0104 · O₂-04</small></span><span><time>13:31</time><em class="status done">已处理</em></span></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+<template id="gisEnvLegacyMarkup">
       <section style="display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))"><article class="gis-kpi ">
       <div class="k-label"><i class="fa-solid fa-temperature-half"></i>温度</div>
       <div class="k-value">26.4<small>℃</small></div>
@@ -340,6 +572,7 @@ a{color:inherit;text-decoration:none}
   </div><div class="gis-hint"><b>电力舱 F0103</b> · 24h 曲线 · 甲烷已越过 40 %LEL 三级阈值</div></div></section><section class="gis-card "><div class="gis-card-head"><h3>分区断面示意</h3><span class="gis-card-sub">/ 三舱布置</span><span class="rt"></span></div><div class="gis-card-body"><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
           <div class="gis-mini" style="text-align:center;"><div class="n" style="justify-content:center">综合舱</div><div class="v">净宽 2.8m · 净高 3.2m</div></div><div class="gis-mini" style="text-align:center;border-color:rgba(247,186,30,.5);background:rgba(247,186,30,.06)"><div class="n" style="justify-content:center">电力舱</div><div class="v">净宽 2.8m · 净高 3.2m</div></div><div class="gis-mini" style="text-align:center;"><div class="n" style="justify-content:center">燃气舱</div><div class="v">净宽 2.8m · 净高 3.2m</div></div>
         </div><div class="gis-hint"><b>箱涵</b> · 3 舱 · 总净宽 8.6m · 覆土 2.5m · 全线 K0+000 ~ K2+100</div></div></section></div>
+    </template>
     </main>
   </div>
 </div>
@@ -499,6 +732,27 @@ tick();setInterval(tick,1000);})();
   if(suffix===''){
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', run); else run();
   }
+})();
+</script>
+<script>
+(function(){
+  var chart=document.getElementById('runtimeChart'),svg=chart&&chart.querySelector('svg');
+  if(!chart||!svg)return;
+  var tooltip=document.getElementById('runtimeTooltip'),left=42,right=582;
+  var colors={online:'#14C9BA',offline:'#A8B1BF',fault:'#F53F57'};
+  function makePoints(labels,seed){return labels.map(function(label,i){var wave=Math.sin((i+seed)*.58)*1.5;return {label:label,online:Math.round(96+wave-(i%5===0?1:0)),offline:Math.max(1,Math.round(3-wave*.4+(i%7===0?1:0))),fault:Math.max(0,Math.round(1.5+Math.cos((i+seed)*.74)*1.1+(i%11===0?1:0)))};});}
+  var dayLabels=[];for(var i=0;i<24;i++)dayLabels.push(String(i).padStart(2,'0')+':00');
+  var monthLabels=[];for(var m=1;m<=31;m++)monthLabels.push(String(m));
+  var yearLabels=[];for(var y=1;y<=12;y++)yearLabels.push(y+'月');
+  var runtimeData={day:makePoints(dayLabels,1),month:makePoints(monthLabels,4),year:makePoints(yearLabels,7)};
+  var current='day';
+  var chartGroups={day:document.getElementById('runtimeDay'),month:document.getElementById('runtimeMonth'),year:document.getElementById('runtimeYear')};
+  function render(period){current=period;Object.keys(chartGroups).forEach(function(key){if(chartGroups[key])chartGroups[key].style.display=key===period?'':'none';});}
+  function show(index){var data=runtimeData[current],point=data[Math.max(0,Math.min(data.length-1,index))];if(!point)return;tooltip.innerHTML='<b>'+point.label+'</b><span><em><i style="background:'+colors.online+'"></i>在线</em><strong>'+point.online+'%</strong></span><span><em><i style="background:'+colors.offline+'"></i>离线</em><strong>'+point.offline+'%</strong></span><span><em><i style="background:'+colors.fault+'"></i>故障率</em><strong>'+point.fault+'%</strong></span>';tooltip.classList.add('show');var box=chart.getBoundingClientRect(),x=left+(right-left)*(index/(data.length-1)),px=x/600*box.width;tooltip.style.left=Math.max(4,Math.min(box.width-tooltip.offsetWidth-4,px-48))+'px';tooltip.style.top='12px';}
+  document.querySelectorAll('[data-runtime-period]').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('[data-runtime-period]').forEach(function(b){b.classList.toggle('active',b===button);b.setAttribute('aria-selected',b===button?'true':'false');});render(button.dataset.runtimePeriod);});});
+  chart.addEventListener('mousemove',function(event){var rect=chart.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width)),index=Math.round(ratio*(runtimeData[current].length-1));show(index);});
+  chart.addEventListener('mouseleave',function(){tooltip.classList.remove('show');});
+  render(current);
 })();
 </script>
 </body>
