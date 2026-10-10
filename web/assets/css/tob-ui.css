@@ -1324,6 +1324,15 @@ html:not([data-sidebar="collapsed"]) .nav-block.open:has(> .submenu .submenu-ite
 .requirement-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .requirement-table th, .requirement-table td { padding: 8px 10px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
 .requirement-table th { color: var(--text-primary); background: var(--primary-bg); font-weight: 600; white-space: nowrap; }
+.requirement-block { margin-bottom: 22px; }
+.requirement-block:last-child { margin-bottom: 0; }
+.requirement-subtitle { margin: 0 0 10px; color: var(--text-title); font-size: 14px; font-weight: 600; }
+.requirement-module-title { margin: 14px 0 6px; color: var(--text-primary); font-size: 13px; font-weight: 600; }
+.requirement-module-title:first-of-type { margin-top: 0; }
+.requirement-source .requirement-table { margin-bottom: 6px; }
+.requirement-source .requirement-table:last-child { margin-bottom: 0; }
+.requirement-source .requirement-table td:nth-child(1) { width: 24%; }
+.requirement-source .requirement-table td:nth-child(2) { width: 33%; }
 
 .user-filters { padding: 16px 24px; }
 .user-filters .filter-actions { grid-template-columns: repeat(5, minmax(140px, 1fr)) auto auto auto; }
